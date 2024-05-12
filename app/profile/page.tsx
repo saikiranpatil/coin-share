@@ -17,10 +17,30 @@ import {
 } from "@/components/ui/card";
 import Groups from "../components/Groups";
 import { Button } from '@/components/ui/button';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 export default function Dashboard() {
   return (
-    <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
+    <main className="relative flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
+      <div className="absolute top-0">
+        <Avatar className='relative inline-block h-48 w-48 m-6'>
+          <AvatarImage src="https://github.com/shadcn.png" />
+          <AvatarFallback>CN</AvatarFallback>
+        </Avatar>
+      </div>
+      <Card className='flex flex-col sm:flex-row gap-4 justify-between items-center relative sm:text-left text-center p-6 mt-28 pt-24'>
+        <div className="space-y-1.5">
+          <h1 className="whitespace-nowrap text-3xl font-semibold tracking-tight">
+            Saikiran Patil
+          </h1>
+          <div>
+            <p className="text-sm text-muted-foreground">Joined on 26 July 2022</p>
+          </div>
+        </div>
+        <Button>
+          Edit Profile
+        </Button>
+      </Card>
       <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-3">
         <Card x-chunk="dashboard-01-chunk-0">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">

@@ -1,71 +1,126 @@
-import Link from 'next/link';
-
+import TransactionsTable from "@/components/TransactionsTable";
 import {
-    Breadcrumb,
-    BreadcrumbItem,
-    BreadcrumbLink,
-    BreadcrumbList,
-    BreadcrumbPage,
-    BreadcrumbSeparator
-} from '@/components/ui/breadcrumb';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+  Avatar,
+  AvatarFallback,
+  AvatarImage
+} from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from "@/components/ui/card";
+import { Plus, UserPlus } from "lucide-react";
+import Link from "next/link";
 
-interface GroupProps {
-    params: {
-        groupId: string
-    }
-};
-
-const Group = ({ params }: GroupProps) => {
-    const groupId = params.groupId;
-    return (
-        <div className="flex min-h-screen w-full flex-col bg-muted/40">
-            <div className="flex flex-col sm:gap-4 sm:py-4">
-                <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
-                    <Breadcrumb className="hidden md:flex">
-                        <BreadcrumbList>
-                            <BreadcrumbItem>
-                                <BreadcrumbLink asChild>
-                                    <Link href="/dashboard">Dashboard</Link>
-                                </BreadcrumbLink>
-                            </BreadcrumbItem>
-                            <BreadcrumbSeparator />
-                            <BreadcrumbItem>
-                                <BreadcrumbLink asChild>
-                                    <Link href="/groups">All Groups</Link>
-                                </BreadcrumbLink>
-                            </BreadcrumbItem>
-                            <BreadcrumbSeparator />
-                            <BreadcrumbItem>
-                                <BreadcrumbPage>Kumara Parvata Trek</BreadcrumbPage>
-                            </BreadcrumbItem>
-                        </BreadcrumbList>
-                    </Breadcrumb>
-                </header>
-                <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
-                    <div className="flex sm:gap-6 gap-2">
-                        <Avatar className='sm:h-24 sm:w-24 h-16 w-16'>
-                            <AvatarImage src="https://github.com/shadcn.png" />
-                            <AvatarFallback>CN</AvatarFallback>
-                        </Avatar>
-                        <div className="flex flex-col space-y-1.5">
-                            <h1 className="flex-1 shrink-0 whitespace-nowrap text-2xl font-semibold tracking-tight sm:grow-0">
-                                Kumara Parvata Trek
-                            </h1>
-                            <div>
-                                <p className="text-sm text-muted-foreground">Created on 26 July 2022</p>
-                                <p className="text-sm text-muted-foreground">Created on 26 July 2022</p>
-                                <p className="text-sm text-muted-foreground">Created on 26 July 2022</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-
-                    </div>
-                </main>
+const GroupPage = () => {
+  return (
+    <main className="flex flex-col justify-center gap-4 p-4 md:gap-8 md:p-8">
+      <div className="flex flex-col sm:flex-row items-center justify-center">
+        <Avatar className='inline-block h-48 w-48 z-[1] m-6'>
+          <AvatarImage src="https://github.com/shadcn.png" />
+          <AvatarFallback>CN</AvatarFallback>
+        </Avatar>
+        <Card className='space-y-4 p-6 text-center sm:text-left'>
+          <h1 className="whitespace-nowrap text-3xl font-semibold tracking-tight">
+            Sunday Trekking
+          </h1>
+          <p className="text-sm text-muted-foreground">you owe a total of Rs.256</p>
+        </Card>
+      </div>
+      <div className="grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-3">
+        <Card className="xl:col-span-2" x-chunk="dashboard-01-chunk-4">
+          <CardHeader className="flex flex-row items-center">
+            <div className="grid gap-2">
+              <CardTitle>Transactions</CardTitle>
+              <CardDescription>Recent transactions from this group.</CardDescription>
             </div>
-        </div>
-    )
+            <Button
+              asChild
+              className="ml-auto gap-1"
+              size="sm"
+            >
+              <Link href="/transactions">
+                <Plus className="h-4 w-4" />
+                Add Transaction
+              </Link>
+            </Button>
+          </CardHeader>
+          <CardContent>
+            <TransactionsTable />
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center">
+            <div className="grid gap-2">
+              <CardTitle>Group Members</CardTitle>
+              <CardDescription>All the members of the group.</CardDescription>
+            </div>
+            <Button asChild className="ml-auto gap-1" size="sm">
+              <Link href="/groups">
+                <UserPlus className="h-4 w-4" />
+                Add Member
+              </Link>
+            </Button>
+          </CardHeader>
+          <CardContent className="grid gap-4">
+            <Link
+              className="flex items-center gap-4 rounded-md bg-gray-100 p-4 transition-colors hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700"
+              href="#"
+            >
+              <Avatar className="hidden h-9 w-9 sm:flex">
+                <AvatarImage alt="Avatar" src="https://github.com/shadcn.png" />
+                <AvatarFallback>OM</AvatarFallback>
+              </Avatar>
+              <div className="grid gap-1 flex-1">
+                <p className="text-sm font-medium leading-none">Acme Design Team</p>
+                <p className="text-sm text-muted-foreground">sample@sample.com</p>
+              </div>
+              <div className="flex flex-col items-end gap-1">
+                <span className="text-xs font-medium text-red-500">You owe $500</span>
+                <Button variant="outline" size="sm">Remind</Button>
+              </div>
+            </Link>
+            <Link
+              className="flex items-center gap-4 rounded-md bg-gray-100 p-4 transition-colors hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700"
+              href="#"
+            >
+              <Avatar className="hidden h-9 w-9 sm:flex">
+                <AvatarImage alt="Avatar" src="https://github.com/shadcn.png" />
+                <AvatarFallback>JL</AvatarFallback>
+              </Avatar>
+              <div className="grid gap-1 flex-1">
+                <p className="text-sm font-medium leading-none">Marketing Mavens</p>
+                <p className="text-sm text-muted-foreground">sample@sample.com</p>
+              </div>
+              <div className="flex flex-col items-end gap-1">
+                <span className="text-xs font-medium text-green-500">You get $200</span>
+                <Button variant="outline" size="sm">Settle</Button>
+              </div>
+            </Link>
+            <Link
+              className="flex items-center gap-4 rounded-md bg-gray-100 p-4 transition-colors hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700"
+              href="#"
+            >
+              <Avatar className="hidden h-9 w-9 sm:flex">
+                <AvatarImage alt="Avatar" src="https://github.com/shadcn.png" />
+                <AvatarFallback>IN</AvatarFallback>
+              </Avatar>
+              <div className="grid gap-1 flex-1">
+                <p className="text-sm font-medium leading-none">Product Pioneers</p>
+                <p className="text-sm text-muted-foreground">sample@sample.com</p>
+              </div>
+              <div className="flex flex-col items-end gap-1">
+                <span className="text-xs font-medium text-gray-500">All settled</span>
+              </div>
+            </Link>
+          </CardContent>
+        </Card>
+      </div>
+    </main>
+  )
 }
 
-export default Group
+export default GroupPage

@@ -18,7 +18,7 @@ import {
 
 const Groups = () => {
     return (
-        <Card x-chunk="dashboard-01-chunk-5">
+        <Card>
             <CardHeader className="flex flex-row items-center">
                 <div className="grid gap-2">
                     <CardTitle>Recent Groups</CardTitle>
@@ -37,7 +37,7 @@ const Groups = () => {
                     href="#"
                 >
                     <Avatar className="hidden h-9 w-9 sm:flex">
-                        <AvatarImage alt="Avatar" src="/avatars/01.png" />
+                        <AvatarImage alt="Avatar" src="https://github.com/shadcn.png" />
                         <AvatarFallback>OM</AvatarFallback>
                     </Avatar>
                     <div className="grid gap-1 flex-1">
@@ -53,7 +53,7 @@ const Groups = () => {
                     href="#"
                 >
                     <Avatar className="hidden h-9 w-9 sm:flex">
-                        <AvatarImage alt="Avatar" src="/avatars/02.png" />
+                        <AvatarImage alt="Avatar" src="https://github.com/shadcn.png" />
                         <AvatarFallback>JL</AvatarFallback>
                     </Avatar>
                     <div className="grid gap-1 flex-1">
@@ -69,7 +69,7 @@ const Groups = () => {
                     href="#"
                 >
                     <Avatar className="hidden h-9 w-9 sm:flex">
-                        <AvatarImage alt="Avatar" src="/avatars/03.png" />
+                        <AvatarImage alt="Avatar" src="https://github.com/shadcn.png" />
                         <AvatarFallback>IN</AvatarFallback>
                     </Avatar>
                     <div className="grid gap-1 flex-1">

@@ -1,7 +1,7 @@
 export const navItems = [
     {
-        id:"/dashboard",
-        title:"Dasahboard",
+        id:"/",
+        title:"Home",
     },
     {
         id:"/transactions",
