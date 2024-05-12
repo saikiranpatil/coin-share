@@ -1,0 +1,22 @@
+export const navItems = [
+    {
+        id:"/dashboard",
+        title:"Dasahboard",
+    },
+    {
+        id:"/transactions",
+        title:"Transactions",
+    },
+    {
+        id:"/groups",
+        title:"Groups",
+    },
+    {
+        id:"/friends",
+        title:"Friends",
+    },
+    {
+        id:"/sample",
+        title:"Sample",
+    },
+];
