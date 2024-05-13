@@ -34,7 +34,7 @@ const Groups = () => {
             <CardContent className="grid gap-4">
                 <Link
                     className="flex items-center gap-4 rounded-md bg-gray-100 p-4 transition-colors hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700"
-                    href="#"
+                    href="/group/asdasdasdsaads"
                 >
                     <Avatar className="hidden h-9 w-9 sm:flex">
                         <AvatarImage alt="Avatar" src="https://github.com/shadcn.png" />
@@ -50,7 +50,7 @@ const Groups = () => {
                 </Link>
                 <Link
                     className="flex items-center gap-4 rounded-md bg-gray-100 p-4 transition-colors hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700"
-                    href="#"
+                    href="/group/asdasdasdsaads"
                 >
                     <Avatar className="hidden h-9 w-9 sm:flex">
                         <AvatarImage alt="Avatar" src="https://github.com/shadcn.png" />
@@ -66,7 +66,7 @@ const Groups = () => {
                 </Link>
                 <Link
                     className="flex items-center gap-4 rounded-md bg-gray-100 p-4 transition-colors hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700"
-                    href="#"
+                    href="/group/asdasdasdsaads"
                 >
                     <Avatar className="hidden h-9 w-9 sm:flex">
                         <AvatarImage alt="Avatar" src="https://github.com/shadcn.png" />

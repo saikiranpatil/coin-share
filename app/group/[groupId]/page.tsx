@@ -49,7 +49,7 @@ const GroupPage = () => {
             </Button>
           </CardHeader>
           <CardContent>
-            <TransactionsTable />
+            <TransactionsTable showGroupName={false} />
           </CardContent>
         </Card>
         <Card>
