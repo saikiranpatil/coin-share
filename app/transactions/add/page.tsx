@@ -81,7 +81,7 @@ export default function AddTransaction() {
                       <IndianRupee className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                       <Input
                         className="block w-full border-gray-300 rounded-r-md shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300 dark:focus:ring-blue-500 dark:focus:border-blue-500 sm:text-sm pl-8"
-                        id="amount"
+                        id="amount" 
                         placeholder="Enter transaction amount"
                         type="number"
                       />

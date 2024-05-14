@@ -18,7 +18,7 @@ const SingleSelectionUserCard = ({ tag }: { tag: String }) => {
                 </Avatar>
                 <span className="text-gray-900 dark:text-gray-100">Emily Davis</span>
             </div>
-            <MyCheckIcon className="mr-4" />
+            <MyCheckIcon />
         </label>
     )
 }
