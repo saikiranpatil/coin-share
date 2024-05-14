@@ -42,7 +42,7 @@ const GroupPage = () => {
               className="ml-auto gap-1"
               size="sm"
             >
-              <Link href="/transactions">
+              <Link href="/transactions/add">
                 <Plus className="h-4 w-4" />
                 Add Transaction
               </Link>
