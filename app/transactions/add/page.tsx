@@ -19,8 +19,8 @@ import {
   CardHeader,
   CardTitle
 } from "@/components/ui/card"
-import AddTransactionContributers from "./AddTransactionContributers"
-import AddTransactionRecipents from "./components/AddTransactionRecipents"
+import AddTransactionContributers from "./components/AddContributers/AddContributers"
+import AddTransactionRecipents from "./components/AddRecipents/AddRecipents"
 
 export default function AddTransaction() {
   return (
@@ -42,7 +42,7 @@ export default function AddTransaction() {
                   <span className="absolute bg-accent w-full h-full flex justify-center items-center opacity-0 group-hover/editavatar:opacity-80 transition-all ease-in">
                     Change
                   </span>
-                  <DumbbellIcon className="w-auto h-full p-6" />
+                  <DumbbellIcon className="w-auto h-full text-gray-400 p-6" />
                 </Button>
                 <div className="space-y-4">
                   <div>

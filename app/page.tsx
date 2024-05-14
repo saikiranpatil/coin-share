@@ -31,17 +31,19 @@ export default function Dashboard() {
         </Avatar>
       </div>
       <Card className='flex flex-col sm:flex-row gap-4 justify-between items-end relative sm:text-left text-center p-6 mt-28 pt-24'>
-        <div className="space-y-3">
-          <div className="grid">
-            <h1 className="whitespace-nowrap text-3xl font-semibold tracking-tight">
-              Saikiran Patil
-            </h1>
-            <p className="text-sm text-muted-foreground">patilrsaikiran@gmail.com</p>
+        <div>
+          <h4 className="whitespace-nowrap text-3xl font-semibold tracking-tight">
+            Saikiran Patil
+          </h4>
+          <p className="text-sm text-muted-foreground">
+            patilrsaikiran@gmail.com
+          </p>
+          <div className="flex items-center pt-4">
+            <Calendar className="mr-2 h-4 w-4 opacity-70" />{" "}
+            <span className="text-xs text-muted-foreground">
+              Joined on 26 July 2022
+            </span>
           </div>
-          <span className="text-xs text-muted-foreground flex items-center gap-2">
-            <Calendar size="16" />
-            Joined on 26 July 2022
-          </span>
         </div>
         <Button>
           Edit Profile
