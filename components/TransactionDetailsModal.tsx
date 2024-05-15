@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/table"
 import { Button } from "./ui/button"
 import { ReceiptText } from "lucide-react";
+import { ScrollArea } from "./ui/scroll-area";
 
 const TransactionDetailsModal = () => {
   return (
@@ -29,16 +30,18 @@ const TransactionDetailsModal = () => {
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[750px]">
-        <ReceiptText size="48" />
-        <div>
-          <h3 className="text-xl font-semibold leading-none tracking-tight">Transacrion Details</h3>
-          <p className="text-xs pt-1 text-muted-foreground">2023-06-23, 8:30 PM</p>
+        <ScrollArea className="w-full">
+          <ReceiptText size="48" className="mb-4" />
+          <div>
+            <h3 className="text-xl font-semibold leading-none tracking-tight">Transacrion Details</h3>
+            <p className="text-sm pt-1 text-muted-foreground">2023-06-23, 8:30 PM</p>
+          </div>
           <div className="flex flex-col space-y-4 my-4 text-sm">
             <div className="flex flex-col flex-1 justify-between">
               <span className="font-medium">Description</span>
               <p className="text-gray-500 dark:text-gray-400">Amount paid for some sample reason Lorem ipsum dolor sit amet consectetur, adipisicing elit. Soluta quod consequatur expedita veritatis deserunt ipsum laborum reprehenderit, a quasi distinctio eos consectetur, vero cum fuga vel voluptatem minima recusandae exercitationem eius blanditiis. Impedit, iure.</p>
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div className="flex flex-col">
                 <span className="font-medium">Total Amount</span>
                 <p className="text-gray-500 dark:text-gray-400">₹1,000</p>
@@ -103,7 +106,7 @@ const TransactionDetailsModal = () => {
               </div>
             </div>
           </div>
-        </div>
+        </ScrollArea>
       </DialogContent>
     </Dialog>
   )
