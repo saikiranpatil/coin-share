@@ -8,8 +8,15 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import { Separator } from "@/components/ui/separator"
+
+import UserCardWithAmount from "../UserCards/UserCardWithAmount";
+import UserCombobox from "../UserCombobox";
+import { ScrollArea } from "@/components/ui/scroll-area";
+
+const tags = Array.from({ length: 10 }).map(
+    (_, i, a) => `v1.2.0-beta.${a.length - i}`
+)
 
 export function AddRecipentsModal() {
     return (
@@ -19,37 +26,42 @@ export function AddRecipentsModal() {
                     Choose Recipents
                 </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
+            <DialogContent className="sm:max-w-[450px]">
                 <DialogHeader>
-                    <DialogTitle>Edit profile</DialogTitle>
+                    <DialogTitle>Choose Contributers</DialogTitle>
                     <DialogDescription>
-                        Make changes to your profile here. Click save when youre done.
+                        Choose appropriate Contributers type and click save when youre done.
                     </DialogDescription>
                 </DialogHeader>
-                <div className="grid gap-4 py-4">
-                    <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="name" className="text-right">
-                            Name
-                        </Label>
-                        <Input
-                            id="name"
-                            defaultValue="Pedro Duarte"
-                            className="col-span-3"
-                        />
+                <div className="py-4">
+                    <UserCombobox />
+                </div>
+                <ScrollArea className="h-40 rounded-md border p-4">
+                    {tags.map((tag, idx) => (
+                        <>
+                            <UserCardWithAmount key={"usercardcontributers" + tag} tag={tag} />
+                            {idx !== tags.length - 1 && <Separator className="my-4" />}
+                        </>
+                    ))}
+                </ScrollArea>
+                <div className="flex flex-col gap-4 my-4 text-sm">
+                    <div className="flex items-center justify-between">
+                        <span className="text-gray-500 dark:text-gray-400">Total Amount:</span>
+                        <span className="font-medium">₹1,000</span>
                     </div>
-                    <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="username" className="text-right">
-                            Username
-                        </Label>
-                        <Input
-                            id="username"
-                            defaultValue="@peduarte"
-                            className="col-span-3"
-                        />
+                    <div className="flex items-center justify-between">
+                        <span className="text-gray-500 dark:text-gray-400">Selected Total:</span>
+                        <span className="font-medium">₹1,500</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                        <span className="text-red-500">Left Amount:</span>
+                        <span className="text-red-500 font-medium">₹500</span>
                     </div>
                 </div>
                 <DialogFooter>
-                    <Button type="submit">Save changes</Button>
+                    <Button className="w-full" type="submit">
+                        Save changes
+                    </Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>

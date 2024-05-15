@@ -39,7 +39,7 @@ export function AddContributersModal() {
                         Choose appropriate Contributers type and click save when youre done.
                     </DialogDescription>
                 </DialogHeader>
-                <Tabs defaultValue="account" className="w-[400px] space-y-4">
+                <Tabs defaultValue="contributers" className="w-[400px] space-y-4">
                     <TabsList className="grid w-full grid-cols-2">
                         <TabsTrigger value="single">
                             Single

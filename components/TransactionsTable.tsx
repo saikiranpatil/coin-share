@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 import {
   WalletMinimal,
   CreditCard,
@@ -12,7 +14,8 @@ import {
   Table
 } from "@/components/ui/table"
 import { Button } from './ui/button';
-import Link from 'next/link';
+
+import TransactionDetailsModal from './TransactionDetailsModal';
 
 const TransactionsTable = ({ showGroupName = true }) => {
   return (
@@ -55,11 +58,7 @@ const TransactionsTable = ({ showGroupName = true }) => {
             <span className="text-xs font-medium text-red-500">You borrowed Rs.500</span>
           </TableCell>
           <TableCell className="text-right">
-            <Button variant="outline">
-              <Link href="/transaction/sadasdads">
-                View Details
-              </Link>
-            </Button>
+            <TransactionDetailsModal />
           </TableCell>
         </TableRow>
         <TableRow>
