@@ -43,13 +43,13 @@ const frameworks = [
   },
 ]
 
-export default function UserCombobox() {
+export default function             UserCombobox() {
   const [open, setOpen] = useState(false)
   const [value, setValue] = useState("")
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>  
+      <PopoverTrigger asChild className="w-full">  
         <Button
           variant="outline"
           role="combobox"

@@ -10,10 +10,9 @@ const UserCardWithAmount = ({ tag }: { tag: String }) => {
   return (
     <label
       htmlFor={"terms " + tag}
-      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 flex justify-between items-center space-x-2 px-6"
+      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 flex justify-between items-center space-x-2"
     >
       <div className="flex items-center">
-        <MyCheckIcon />
         <Avatar className="w-12 h-12 rounded-full mr-2">
           <AvatarImage alt="User Avatar" src="/placeholder.svg" />
           <AvatarFallback>ED</AvatarFallback>
