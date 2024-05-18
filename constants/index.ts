@@ -1,7 +1,7 @@
 export const navItems = [
     {
         id:"/",
-        title:"Home",
+        title:"Dashboard",
     },
     {
         id:"/transactions",
@@ -14,9 +14,5 @@ export const navItems = [
     {
         id:"/friends",
         title:"Friends",
-    },
-    {
-        id:"/sample",
-        title:"Sample",
     },
 ];

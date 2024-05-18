@@ -4,15 +4,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import {
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import {
-  TableHead,
   TableRow,
-  TableHeader,
   TableCell,
   TableBody,
   Table
@@ -30,7 +22,7 @@ const TransactionDetailsModal = () => {
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[750px]">
-        <ScrollArea className="w-full">
+        <ScrollArea className="w-full p-4 max-h-[100vh]">
           <ReceiptText size="48" className="mb-4" />
           <div>
             <h3 className="text-xl font-semibold leading-none tracking-tight">Transacrion Details</h3>

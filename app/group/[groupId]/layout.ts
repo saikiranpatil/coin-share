@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "Transactions | Coin Share",
-    description: "Transactions | Coin Share : All the Transactions made by you.",
+    title: "Group | Coin Share",
+    description: "Group page fot the group ${group name}$",
 };
 
 export default function RootLayout({

@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "Transactions | Coin Share",
-    description: "Page listing all the transactions made by you.",
+    title: "Add Transaction | Coin Share",
+    description: "Page to create new transaction.",
 };
 
 export default function RootLayout({
