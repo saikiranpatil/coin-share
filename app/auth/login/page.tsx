@@ -1,4 +1,4 @@
-import LoginPage from '@/components/LoginPage'
+import LoginPage from '@/components/pages/LoginPage'
 
 const LoginForm = () => (<LoginPage />)
 export default LoginForm

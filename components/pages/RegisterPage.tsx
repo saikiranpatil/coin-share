@@ -4,7 +4,7 @@ import { useState, useTransition } from "react";
 
 import { useForm } from 'react-hook-form'
 import { zodResolver } from "@hookform/resolvers/zod"
-import { LoginSchema, type loginType } from "@/lib/schemas/login";
+import { RegisterSchema, type registerType } from "@/lib/schemas/register";
 
 import {
     Form,
@@ -15,37 +15,36 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 
-import AuthenticationCard from "./authenticationCard/AuthenticationCard";
+import AuthenticationCard from "@/components/authenticationCard/AuthenticationCard";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
-import FormError from "./form/FormError";
-import FormSuccess from "./form/FormSucess";
+import FormError from "../form/FormError";
+import FormSuccess from "../form/FormSucess";
 
-import { login } from "@/lib/actions/login";
+import { register } from "@/lib/actions/login";
 
-
-const LoginPage = () => {
+const RegisterPage = () => {
     const [isPending, startTransation] = useTransition();
 
-    const [formError, setFormError] = useState<string | undefined>(undefined);
-    const [formSuccess, setFormSuccess] = useState<string | undefined>(undefined);
+    const [formError, setFormError] = useState<string | undefined>("");
+    const [formSuccess, setFormSuccess] = useState<string | undefined>("");
 
-    const form = useForm<loginType>({
-        resolver: zodResolver(LoginSchema),
+    const form = useForm<registerType>({
+        resolver: zodResolver(RegisterSchema),
         defaultValues: {
             email: "",
             password: ""
         }
     });
 
-    const onSubmit = (values: loginType) => {
-        setFormError(undefined);
-        setFormSuccess(undefined);
+    const onSubmit = (values: registerType) => {
+        setFormError("");
+        setFormSuccess("");
 
         startTransation(async () => {
-            const { error, success } = await login(values);
+            const { error, success } = await register(values);
 
             setFormError(error);
             setFormSuccess(success);
@@ -55,14 +54,32 @@ const LoginPage = () => {
     return (
         <main className="flex flex-1 justify-center items-center">
             <AuthenticationCard
-                headerLabel="Welcome Back"
-                backButtonLabel="Don't have an account?"
-                backButtonHref="/auth/register"
+                headerLabel="Create account"
+                backButtonLabel="Already have an account?"
+                backButtonHref="/auth/login"
                 showSocial
             >
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                         <div className="space-y-4">
+                            <FormField
+                                control={form.control}
+                                name="name"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Name</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                {...field}
+                                                type="text"
+                                                placeholder="Mahesh Kumar"
+                                                disabled={isPending}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
                             <FormField
                                 control={form.control}
                                 name="email"
@@ -107,7 +124,7 @@ const LoginPage = () => {
                             className="w-full"
                             disabled={isPending}
                         >
-                            Login
+                            Create Account
                         </Button>
                     </form>
                 </Form>
@@ -116,4 +133,4 @@ const LoginPage = () => {
     )
 }
 
-export default LoginPage;
+export default RegisterPage
