@@ -1,5 +1,5 @@
 import React from 'react';
-import { IconKey, icons } from '../constants/icons';
+import { IconKey, icons } from '../lib/constants/icons';
 import {
     CardTitle,
     CardHeader,

@@ -26,7 +26,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { ModeToggle } from "@/components/ModeToggle";
-import { navItems } from "@/constants";
+import { navItems } from "@/lib/constants";
 import { DEFAULT_LOGIN_REDIRECT } from "@/lib/db/routes";
 import { logout } from "@/lib/actions/logout";
 

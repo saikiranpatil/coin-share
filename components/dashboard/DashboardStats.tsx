@@ -1,5 +1,5 @@
 import StatsCard from '@/components/StatsCard';
-import { IconKey } from '@/constants/icons';
+import { IconKey } from '@/lib/constants/icons';
 
 interface statsProps {
     statsTitle: string;
