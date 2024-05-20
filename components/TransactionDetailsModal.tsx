@@ -10,8 +10,9 @@ import {
   Table
 } from "@/components/ui/table"
 import { Button } from "./ui/button"
-import { ReceiptText } from "lucide-react";
+import { Dot, ReceiptText } from "lucide-react";
 import { ScrollArea } from "./ui/scroll-area";
+import { Badge } from "./ui/badge";
 
 const TransactionDetailsModal = () => {
   return (
@@ -26,7 +27,11 @@ const TransactionDetailsModal = () => {
           <ReceiptText size="48" className="mb-4" />
           <div>
             <h3 className="text-xl font-semibold leading-none tracking-tight">Transacrion Details</h3>
-            <p className="text-sm pt-1 text-muted-foreground">2023-06-23, 8:30 PM</p>
+            <p className="flex items-center pt-1 text-xs text-muted-foreground">
+              Payment
+              <Dot size="16" />
+              2023-06-23, 8:30 PM
+            </p>
           </div>
           <div className="flex flex-col space-y-4 my-4 text-sm">
             <div className="flex flex-col flex-1 justify-between">

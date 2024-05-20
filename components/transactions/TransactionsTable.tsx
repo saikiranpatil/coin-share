@@ -16,8 +16,9 @@ import {
 import { Button } from '../ui/button';
 
 import TransactionDetailsModal from '../TransactionDetailsModal';
+import { Badge } from '../ui/badge';
 
-const TransactionsTable = ({ showGroupName = true }) => {
+const TransactionsTable = () => {
   return (
     <Table>
       <TableHeader>
@@ -41,12 +42,8 @@ const TransactionsTable = ({ showGroupName = true }) => {
           </TableCell>
           <TableCell>
             <div className="flex flex-col items-start">
-              <div className="font-medium">Ramesh</div>
-              {showGroupName &&
-                <div className="grid grid-flow-col gap-2">
-                  <Users size={12} />
-                  <span className="text-xs text-muted-foreground">Sunday Trekking Group</span>
-                </div>}
+              <div className="font-medium">Group 1</div>
+              <span className="text-xs text-muted-foreground">Settlement</span>
             </div>
           </TableCell>
           <TableCell>
@@ -67,10 +64,8 @@ const TransactionsTable = ({ showGroupName = true }) => {
           </TableCell>
           <TableCell>
             <div className="flex flex-col items-start">
-              <div className="flex">
-                <div className="font-medium">You</div>
-              </div>
-              <span className="text-xs text-muted-foreground">Individual</span>
+            <div className="font-medium">Group 2</div>
+              <span className="text-xs text-muted-foreground">Settlement</span>
             </div>
           </TableCell>
           <TableCell>
@@ -95,8 +90,8 @@ const TransactionsTable = ({ showGroupName = true }) => {
           </TableCell>
           <TableCell>
             <div className="flex flex-col items-start">
-              <div className="font-medium">Individual</div>
-              <span className="text-xs text-muted-foreground">Individual</span>
+              <div className="font-medium">Group 3</div>
+              <span className="text-xs text-muted-foreground">Payment</span>
             </div>
           </TableCell>
           <TableCell>
@@ -121,8 +116,8 @@ const TransactionsTable = ({ showGroupName = true }) => {
           </TableCell>
           <TableCell>
             <div className="flex flex-col items-start">
-              <div className="font-medium">Saikiran Patil</div>
-              <span className="text-xs text-muted-foreground">Individual</span>
+              <div className="font-medium">Group 4</div>
+              <span className="text-xs text-muted-foreground">Payment</span>
             </div>
           </TableCell>
           <TableCell>
@@ -147,8 +142,8 @@ const TransactionsTable = ({ showGroupName = true }) => {
           </TableCell>
           <TableCell>
             <div className="flex flex-col items-start">
-              <div className="font-medium">Individual</div>
-              <span className="text-xs text-muted-foreground">Individual</span>
+              <div className="font-medium">Group 5</div>
+              <span className="text-xs text-muted-foreground">Payment</span>
             </div>
           </TableCell>
           <TableCell>
