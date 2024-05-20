@@ -3,7 +3,7 @@ import {
     ListFilter,
 } from "lucide-react"
 
-import TransactionsTable from "@/components/TransactionsTable"
+import TransactionsTable from "@/components/transactions/TransactionsTable"
 import { Button } from "@/components/ui/button"
 import {
     DropdownMenu,

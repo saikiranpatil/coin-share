@@ -3,8 +3,8 @@ import Link from "next/link";
 import { Plus, UserPlus } from "lucide-react";
 
 import CardWrapper from "@/components/CardWrapper";
-import GroupMembersCard from "@/components/GroupMembersCard";
-import TransactionsTable from "@/components/TransactionsTable";
+import GroupMembersCard from "@/components/group/GroupMembersCard";
+import TransactionsTable from "@/components/transactions/TransactionsTable";
 
 import {
   Avatar,

@@ -20,8 +20,8 @@ import {
     TabsTrigger,
 } from "@/components/ui/tabs"
 
-import { Button } from "./ui/button";
-import CardWrapper from "./CardWrapper"
+import { Button } from "../ui/button";
+import CardWrapper from "../CardWrapper"
 import TransactionsTable from "./TransactionsTable";
 
 interface TransactionsCardProps extends React.HTMLAttributes<HTMLDivElement> {

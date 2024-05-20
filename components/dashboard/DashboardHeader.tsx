@@ -3,8 +3,8 @@ import React from 'react'
 import { Calendar } from 'lucide-react'
 
 import DashboardAvatar from './DashboardAvatar'
-import { Card } from './ui/card'
-import { Button } from './ui/button'
+import { Card } from '../ui/card'
+import { Button } from '../ui/button'
 
 const userData = {
     name: "Saikiran Patil",

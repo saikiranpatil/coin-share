@@ -13,9 +13,9 @@ import {
   TableBody,
   Table
 } from "@/components/ui/table"
-import { Button } from './ui/button';
+import { Button } from '../ui/button';
 
-import TransactionDetailsModal from './TransactionDetailsModal';
+import TransactionDetailsModal from '../TransactionDetailsModal';
 
 const TransactionsTable = ({ showGroupName = true }) => {
   return (

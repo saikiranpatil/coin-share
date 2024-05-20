@@ -1,5 +1,4 @@
-import DashboardPage from '@/containers/DashboardPage';
+import HomePage from '@/containers/HomePage'
 
-export default function Dashboard() {
-  return <DashboardPage />
-}
+const Home = () => (<HomePage />)
+export default Home

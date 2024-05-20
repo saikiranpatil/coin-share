@@ -1,6 +1,6 @@
 export const navItems = [
     {
-        id:"/",
+        id:"/dashboard",
         title:"Dashboard",
     },
     {

@@ -1,4 +1,4 @@
-import GroupCard from '@/components/GroupCard'
+import GroupCard from '@/components/group/GroupCard'
 
 const GroupsPage = () => {
   return (

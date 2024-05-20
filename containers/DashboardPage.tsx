@@ -3,12 +3,11 @@ import Link from 'next/link';
 import { ArrowUpRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-import TransactionsTable from '@/components/TransactionsTable';
-import Groups from '@/app/components/Groups';
-import DashboardHeader from '@/components/DashboardHeader';
-import DashboardStats from '@/components/DashboardStats';
-import CardWrapper from '@/components/CardWrapper';
-import TransactionsCard from '@/components/TransactionsCard';
+import TransactionsTable from '@/components/transactions/TransactionsTable';
+import Groups from '@/components/Groups';
+import DashboardHeader from '@/components/dashboard/DashboardHeader';
+import DashboardStats from '@/components/dashboard/DashboardStats';
+import TransactionsCard from '@/components/transactions/TransactionsCard';
 
 const ViewAllTransactionButton = (
   <Button
