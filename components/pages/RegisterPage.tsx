@@ -23,7 +23,7 @@ import { Button } from "@/components/ui/button";
 import FormError from "../form/FormError";
 import FormSuccess from "../form/FormSucess";
 
-import { register } from "@/lib/actions/login";
+import { register } from "@/lib/actions/register";
 
 const RegisterPage = () => {
     const [isPending, startTransation] = useTransition();

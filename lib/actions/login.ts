@@ -27,7 +27,7 @@ export const login = async (values: loginType) => {
             redirectTo: DEFAULT_LOGIN_REDIRECT
         });
 
-        return { sucess: true };
+        return { success: "Logged In" };
     } catch (error) {
         if (error instanceof AuthError) {
             switch (error.type) {

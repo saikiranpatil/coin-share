@@ -45,10 +45,10 @@ const LoginPage = () => {
         setFormSuccess(undefined);
 
         startTransation(async () => {
-            const { error, success } = await login(values);
+            const data = await login(values);
 
-            setFormError(error);
-            setFormSuccess(success);
+            setFormError(data?.error);
+            setFormSuccess(data?.success);
         });
     }
 
