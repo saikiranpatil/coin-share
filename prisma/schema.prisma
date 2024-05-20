@@ -20,10 +20,13 @@ model User {
   emailVerified DateTime?
   image         String?
   password      String?
-  accounts      Account[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  accounts     Account[]
+  groups       GroupMember[]
+  contributors TransactionContributor[]
+  recipients   TransactionRecipient[]
 }
 
 model Account {
@@ -45,4 +48,60 @@ model Account {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([provider, providerAccountId])
+}
+
+model Group {
+  id        String   @id @default(cuid())
+  name      String?
+  image     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  groupMembers GroupMember[]
+}
+
+model GroupMember {
+  userId  String
+  groupId String
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  group   Group  @relation(fields: [groupId], references: [id], onDelete: Cascade)
+
+  @@id([userId, groupId])
+}
+
+model Transaction {
+  id          String          @id @default(cuid())
+  type        TransactionType @default(PAYMENT)
+  description String
+  amount      Float
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  contributors TransactionContributor[]
+  recipients   TransactionRecipient[]
+}
+
+enum TransactionType {
+  PAYMENT
+  SETTLEMENT
+}
+
+model TransactionContributor {
+  transactionId String
+  userId        String
+  transaction   Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  amount        Float
+
+  @@id([transactionId, userId])
+}
+
+model TransactionRecipient {
+  transactionId String
+  userId        String
+  transaction   Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  amount        Float
+
+  @@id([transactionId, userId])
 }
