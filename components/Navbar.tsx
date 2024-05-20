@@ -27,8 +27,8 @@ import {
 
 import { ModeToggle } from "@/components/ModeToggle";
 import { navItems } from "@/constants";
-import { DEFAULT_LOGIN_REDIRECT } from "@/db/routes";
-import { logout } from "@/actions/logout";
+import { DEFAULT_LOGIN_REDIRECT } from "@/lib/db/routes";
+import { logout } from "@/lib/actions/logout";
 
 export default function Navbar() {
   const pathname = usePathname();

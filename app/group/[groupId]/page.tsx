@@ -1,4 +1,4 @@
-import GroupPage from '@/containers/GroupPage'
+import GroupPage from '@/components/GroupPage'
 
 const Group = () => (<GroupPage />)
 export default Group

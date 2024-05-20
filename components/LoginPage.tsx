@@ -4,7 +4,7 @@ import { useState, useTransition } from "react";
 
 import { useForm } from 'react-hook-form'
 import { zodResolver } from "@hookform/resolvers/zod"
-import { LoginSchema, type loginType } from "@/schemas/login";
+import { LoginSchema, type loginType } from "@/lib/schemas/login";
 
 import {
     Form,
@@ -15,15 +15,15 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 
-import AuthenticationCard from "../components/authenticationCard/AuthenticationCard";
+import AuthenticationCard from "./authenticationCard/AuthenticationCard";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
-import FormError from "../components/form/FormError";
-import FormSuccess from "../components/form/FormSucess";
+import FormError from "./form/FormError";
+import FormSuccess from "./form/FormSucess";
 
-import { login } from "@/actions/login";
+import { login } from "@/lib/actions/login";
 
 
 const LoginPage = () => {

@@ -6,8 +6,8 @@ import Credentials from "next-auth/providers/credentials"
 import Github from "next-auth/providers/github"
 import Google from "next-auth/providers/google"
 
-import { LoginSchema } from "@/schemas/login"
-import { getUserByEmail } from "@/data/user"
+import { LoginSchema } from "@/lib/schemas/login"
+import { getUserByEmail } from "@/lib/data/user"
 
 const authConfig: NextAuthConfig = {
     providers: [

@@ -2,13 +2,13 @@
 
 import bcrypt from "bcryptjs"
 
-import { getUserByEmail } from "@/data/user";
+import { getUserByEmail } from "@/lib/data/user";
 
-import { db } from "@/lib/db";
+import { db } from "@/lib/db/db";
 import {
     RegisterSchema,
     type registerType,
-} from "@/schemas/register";
+} from "@/lib/schemas/register";
 
 export const register = async (values: registerType) => {
     const validatedSchema = RegisterSchema.safeParse(values);

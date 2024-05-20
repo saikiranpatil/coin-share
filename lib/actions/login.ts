@@ -2,14 +2,14 @@
 
 import { AuthError } from "next-auth";
 
-import { signIn } from "@/db/auth";
+import { signIn } from "@/lib/db/auth";
 
 import {
     LoginSchema,
     type loginType
-} from "@/schemas/login";
+} from "@/lib/schemas/login";
 
-import { DEFAULT_LOGIN_REDIRECT } from "@/db/routes";
+import { DEFAULT_LOGIN_REDIRECT } from "@/lib/db/routes";
 
 export const login = async (values: loginType) => {
     const validatedSchema = LoginSchema.safeParse(values);

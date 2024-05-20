@@ -1,4 +1,4 @@
-import GroupsPage from '@/containers/GroupsPage';
+import GroupsPage from '@/components/GroupsPage';
 
 export default function Groups() {
   return <GroupsPage />

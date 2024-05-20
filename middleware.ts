@@ -1,19 +1,15 @@
 import NextAuth from "next-auth";
 
-import authConfig from "./db/auth.config";
+import authConfig from "./lib/db/auth.config";
 import {
     DEFAULT_LOGIN_REDIRECT,
     apiAuthPrefix,
     authRoutes,
     publicRoutes
-} from "@/db/routes";
+} from "@/lib/db/routes";
 const { auth } = NextAuth(authConfig);
 
-export default auth((req) => {
-    console.log("auth start");
-    console.log(req.auth);
-    console.log("auth end");
-    
+export default auth((req) => {    
     const isLoggedIn = !!req.auth;
 
     const { nextUrl } = req;

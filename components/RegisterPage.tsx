@@ -4,7 +4,7 @@ import { useState, useTransition } from "react";
 
 import { useForm } from 'react-hook-form'
 import { zodResolver } from "@hookform/resolvers/zod"
-import { RegisterSchema, type registerType } from "@/schemas/register";
+import { RegisterSchema, type registerType } from "@/lib/schemas/register";
 
 import {
     Form,
@@ -20,10 +20,10 @@ import AuthenticationCard from "@/components/authenticationCard/AuthenticationCa
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
-import FormError from "../components/form/FormError";
-import FormSuccess from "../components/form/FormSucess";
+import FormError from "./form/FormError";
+import FormSuccess from "./form/FormSucess";
 
-import { register } from "@/actions/login";
+import { register } from "@/lib/actions/login";
 
 const RegisterPage = () => {
     const [isPending, startTransation] = useTransition();
