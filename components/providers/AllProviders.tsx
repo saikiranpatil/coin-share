@@ -1,3 +1,4 @@
+import { Toaster } from "../ui/toaster";
 import { TooltipProvider } from "../ui/tooltip";
 import { ThemeProvider } from "./ThemeProvider";
 
@@ -15,6 +16,7 @@ export default function AllProviders({
         >
             <TooltipProvider>
                 {children}
+                <Toaster />
             </TooltipProvider>
         </ThemeProvider>
     );

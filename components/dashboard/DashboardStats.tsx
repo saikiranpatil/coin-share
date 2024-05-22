@@ -1,4 +1,4 @@
-import StatsCard from '@/components/StatsCard';
+import StatsCard from '@/components/dashboard/StatsCard';
 import { IconKey } from '@/lib/constants/icons';
 
 interface statsProps {

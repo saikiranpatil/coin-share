@@ -38,6 +38,7 @@ const AddUserButton = (
 )
 
 const GroupPage = () => {
+  // const groupData = 
   return (
     <main className="flex flex-col justify-center gap-4 p-4 md:gap-8 md:p-8">
       <div className="flex flex-col sm:flex-row items-center justify-center">
@@ -59,7 +60,7 @@ const GroupPage = () => {
           cardHeaderButton={AddTransactionsButton}
           className="xl:col-span-2"
         >
-          <TransactionsTable showGroupName={false} />
+          <TransactionsTable />
         </CardWrapper>
         <CardWrapper
           cardTitle="Group Members"

@@ -1,9 +1,10 @@
-import MyCheckIcon from "@/components/MyCheckIcon";
 import {
     AvatarImage,
     AvatarFallback,
     Avatar
 } from "@/components/ui/avatar";
+
+import {CheckIcon} from "@radix-ui/react-icons"
 
 const SingleSelectionUserCard = ({ tag }: { tag: String }) => {
     return (
@@ -18,7 +19,7 @@ const SingleSelectionUserCard = ({ tag }: { tag: String }) => {
                 </Avatar>
                 <span className="text-gray-900 dark:text-gray-100">Emily Davis</span>
             </div>
-            <MyCheckIcon active={true} />
+            <CheckIcon />
         </label>
     )
 }

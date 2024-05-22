@@ -4,7 +4,7 @@ import {
     Avatar
 } from "@/components/ui/avatar"
 
-const UsersCard = () => {
+const UserCard = () => {
     return (
         <div className="flex items-center justify-between">
             <div className="flex items-center">
@@ -19,4 +19,4 @@ const UsersCard = () => {
     )
 }
 
-export default UsersCard
+export default UserCard

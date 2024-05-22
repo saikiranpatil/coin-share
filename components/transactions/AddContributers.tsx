@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/tooltip";
 
 import AddTransactionContributersModal from "./AddContributersModal";
-import UsersCardWithAmount from "@/app/transactions/add/components/UsersCard";
+import UsersCardWithAmount from "@/components/transactions/UserCard";
 
 const AddContributers = () => {
     return (

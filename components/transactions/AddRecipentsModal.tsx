@@ -10,8 +10,8 @@ import {
 } from "@/components/ui/dialog"
 import { Separator } from "@/components/ui/separator"
 
-import UserCardWithAmount from "../UserCards/UserCardWithAmount";
-import UserCombobox from "../UserCombobox";
+import UserCardWithAmount from "./UserCardWithAmount";
+import UserCombobox from "./UserCombobox";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 const tags = Array.from({ length: 10 }).map(

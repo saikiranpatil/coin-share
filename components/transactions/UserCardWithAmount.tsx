@@ -1,4 +1,3 @@
-import MyCheckIcon from "@/components/MyCheckIcon";
 import {
   AvatarImage,
   AvatarFallback,

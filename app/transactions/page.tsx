@@ -1,4 +1,4 @@
-import TransactionsPage from '@/components/pages/TransactionsPage'
+import TransactionsPage from '@/components/transactions/TransactionsPage'
 import React from 'react'
 
 const Transactions = () => (<TransactionsPage />)

@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/table"
 import { Button } from '../ui/button';
 
-import TransactionDetailsModal from '../TransactionDetailsModal';
+import TransactionDetailsModal from './TransactionDetailsModal';
 import { Badge } from '../ui/badge';
 
 const TransactionsTable = () => {

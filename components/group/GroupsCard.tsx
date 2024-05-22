@@ -8,7 +8,7 @@ import {
     AvatarFallback,
     Avatar
 } from "@/components/ui/avatar";
-import CardWrapper from "./CardWrapper";
+import CardWrapper from "../CardWrapper";
 
 const GroupsCard = () => {
     const ViewAllGroupsButton = (

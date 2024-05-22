@@ -9,10 +9,10 @@ import {
   TableBody,
   Table
 } from "@/components/ui/table"
-import { Button } from "./ui/button"
+import { Button } from "../ui/button"
 import { Dot, ReceiptText } from "lucide-react";
-import { ScrollArea } from "./ui/scroll-area";
-import { Badge } from "./ui/badge";
+import { ScrollArea } from "../ui/scroll-area";
+import { Badge } from "../ui/badge";
 
 const TransactionDetailsModal = () => {
   return (

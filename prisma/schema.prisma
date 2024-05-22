@@ -14,19 +14,19 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String                   @id @default(cuid())
   name          String?
-  email         String    @unique
+  email         String                   @unique
   emailVerified DateTime?
   image         String?
   password      String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-
-  accounts     Account[]
-  groups       GroupMember[]
-  contributors TransactionContributor[]
-  recipients   TransactionRecipient[]
+  createdAt     DateTime                 @default(now())
+  updatedAt     DateTime                 @updatedAt
+  accounts      Account[]
+  groups        GroupMember[]
+  transaction   Transaction[]
+  contributors  TransactionContributor[]
+  recipients    TransactionRecipient[]
 }
 
 model Account {
@@ -41,11 +41,9 @@ model Account {
   scope             String?
   id_token          String?
   session_state     String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([provider, providerAccountId])
 }
@@ -57,7 +55,8 @@ model Group {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  groupMembers GroupMember[]
+  transactions Transaction[]
+  members      GroupMember[]
 }
 
 model GroupMember {
@@ -70,15 +69,18 @@ model GroupMember {
 }
 
 model Transaction {
-  id          String          @id @default(cuid())
-  type        TransactionType @default(PAYMENT)
-  description String
-  amount      Float
-  createdAt   DateTime        @default(now())
-  updatedAt   DateTime        @updatedAt
-
-  contributors TransactionContributor[]
-  recipients   TransactionRecipient[]
+  id            String                   @id @default(cuid())
+  type          TransactionType          @default(PAYMENT)
+  description   String
+  amount        Float
+  createdAt     DateTime                 @default(now())
+  updatedAt     DateTime                 @updatedAt
+  creatorUserId String                  
+  user          User                     @relation(fields: [creatorUserId], references: [id])
+  groupId       String
+  groups        Group                    @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  contributors  TransactionContributor[]
+  recipients    TransactionRecipient[]
 }
 
 enum TransactionType {
@@ -89,9 +91,9 @@ enum TransactionType {
 model TransactionContributor {
   transactionId String
   userId        String
+  amount        Float
   transaction   Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
   user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  amount        Float
 
   @@id([transactionId, userId])
 }
