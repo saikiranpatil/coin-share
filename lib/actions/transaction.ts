@@ -4,10 +4,6 @@ import { auth } from "../db/auth";
 import { db } from "../db/db"
 import { AddTransactionSchema, addTransactionSchemaType } from "../schemas/transaction";
 
-export const getAllTransactions = async () => {
-    const transaction = await db.transaction.findMany();
-}
-
 export const createTransaction = async (values: addTransactionSchemaType) => {
     const session = await auth();
 
@@ -29,7 +25,7 @@ export const createTransaction = async (values: addTransactionSchemaType) => {
     const { description, groupId } = validatedSchema.data;
 
     try {
-        await db.transaction.create({
+        const transaction = await db.transaction.create({
             data: {
                 amount: parsedAmount,
                 description,
@@ -37,8 +33,8 @@ export const createTransaction = async (values: addTransactionSchemaType) => {
                 creatorUserId: userId as string,
             }
         });
-        
-        return { success: "Transaction Created" };
+
+        return { success: "Transaction Created", transaction };
     } catch (error) {
         console.log(error)
         return { error: "Something went wrong while creating transaction" }

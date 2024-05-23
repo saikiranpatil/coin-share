@@ -10,8 +10,6 @@ import {
     SelectItem,
     SelectContent,
     Select,
-    SelectLabel,
-    SelectGroup
 } from "@/components/ui/select"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -45,11 +43,12 @@ import {
     FormLabel,
     FormMessage
 } from "../ui/form"
+
 import FormError from "../form/FormError"
 import FormSuccess from "../form/FormSucess"
+
 import { getAllGroupsTitle } from "@/lib/actions/group"
 import { Textarea } from "../ui/textarea"
-import { auth } from "@/lib/db/auth"
 import { redirect } from "next/navigation"
 import { toast } from "../ui/use-toast"
 
@@ -86,7 +85,12 @@ const AddTransactionPage = () => {
                     title: "Success",
                     description: "Transaction created Sucessfully!"
                 })
-                redirect("/");
+
+                if (data.transaction?.groupId) {
+                    redirect("/group/" + data.transaction.groupId);
+                } else {
+                    redirect("/");
+                }
             }
 
             setFormError(data?.error);

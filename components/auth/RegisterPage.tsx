@@ -24,6 +24,7 @@ import FormError from "../form/FormError";
 import FormSuccess from "../form/FormSucess";
 
 import { register } from "@/lib/actions/register";
+import { redirect } from "next/navigation";
 
 const RegisterPage = () => {
     const [isPending, startTransation] = useTransition();
@@ -46,6 +47,10 @@ const RegisterPage = () => {
         startTransation(async () => {
             const { error, success } = await register(values);
 
+            if (!error && success) {
+                redirect("/dashboard");
+            }
+            
             setFormError(error);
             setFormSuccess(success);
         });

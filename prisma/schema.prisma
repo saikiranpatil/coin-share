@@ -5,7 +5,8 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch", "fullTextIndex"]
 }
 
 datasource db {
@@ -70,12 +71,12 @@ model GroupMember {
 
 model Transaction {
   id            String                   @id @default(cuid())
-  type          TransactionType          @default(PAYMENT)
+  type          TransactionType          @default(Payment)
   description   String
   amount        Float
   createdAt     DateTime                 @default(now())
   updatedAt     DateTime                 @updatedAt
-  creatorUserId String                  
+  creatorUserId String
   user          User                     @relation(fields: [creatorUserId], references: [id])
   groupId       String
   groups        Group                    @relation(fields: [groupId], references: [id], onDelete: Cascade)
@@ -84,8 +85,8 @@ model Transaction {
 }
 
 enum TransactionType {
-  PAYMENT
-  SETTLEMENT
+  Payment
+  Settlement
 }
 
 model TransactionContributor {

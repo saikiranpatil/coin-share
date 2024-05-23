@@ -1,4 +1,4 @@
-import RegisterPage from "@/components/auh/RegisterPage"
+import RegisterPage from "@/components/auth/RegisterPage"
 
 const Register = () => (<RegisterPage />)
 export default Register

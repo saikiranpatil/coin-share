@@ -1,5 +1,4 @@
-import { loginWithOAuth } from "@/lib/actions"
-import { signIn } from "next-auth/react"
+import { loginWithOAuth } from "@/lib/actions/login"
 
 import { Button } from "@/components/ui/button"
 

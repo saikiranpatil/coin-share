@@ -1,5 +1,6 @@
 "use server"
 
+import moment from "moment";
 import { auth } from "../db/auth";
 import { db } from "../db/db"
 import { CreateGroupSchema, type createGroupSchemaType } from "../schemas/group";
@@ -108,9 +109,7 @@ export const getAllGroupsTitle = async () => {
     }
 }
 
-getAllGroupsTitle();
-
-export const getGroup = async (groupId: string) => {
+export const getGroupDetails = async (groupId: string) => {
     const session = await auth();
 
     if (!session?.user?.id) {
@@ -133,13 +132,27 @@ export const getGroup = async (groupId: string) => {
                 transactions: true,
                 members: {
                     include: {
-                        user: true, // Include user details if needed
+                        user: true,
                     },
                 },
             },
         });
 
-        console.log(group);
+        if (!group) {
+            return { error: "Group Not Found" };
+        }
+
+        const formattedGroup = {
+            ...group,
+            members: group.members.map(({ user: { id, name, email, image } }) => ({
+                id, name, email, image
+            })),
+            transactions: group.transactions.map(({ id, type, description, createdAt, amount }) => ({
+                id, type, description, createdAt: moment(createdAt).format("YYYY-MM-DD, h:mm A"), amount
+            }))
+        };
+
+        return { group: formattedGroup };
     } catch (err) {
         return { error: "Something went wrong while fetching group data" };
     }
