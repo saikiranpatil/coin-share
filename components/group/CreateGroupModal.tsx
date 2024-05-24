@@ -52,10 +52,10 @@ const CreateGroupModal = () => {
 
         startTransation(async () => {
             const res = await createGroup(values);
-            const { error, success, data } = res;
+            const { error, success, groupId } = res;
 
             if (success) {
-                redirect("/group/" + data.id);
+                redirect("/group/" + groupId);
             }
 
             setFormError(error);

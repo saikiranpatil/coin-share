@@ -60,8 +60,8 @@ const AddGroupMemberModal = () => {
 
         if (success) {
             toast({
-                title: "Sucess",
-                description: "User Sucessfully added to the group"
+                title: "Success",
+                description: "User Successfully added to the group"
             });
         }
 

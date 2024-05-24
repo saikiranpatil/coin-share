@@ -43,12 +43,12 @@ const TransactionsTable = ({ transactions }) => {
                   </TableCell>
                   <TableCell>
                     <div className="flex flex-col items-start">
-                      <div className="font-medium">{transaction.description}</div>
+                      <div className="font-medium">{transaction.creatorName}</div>
                       <span className="text-xs text-muted-foreground">{transaction.type}</span>
                     </div>
                   </TableCell>
                   <TableCell>
-                    <div>Paid for dinner with friends</div>
+                    <div>{transaction.description}</div>
                     <div className="text-sm text-muted-foreground">{transaction.createdAt}</div>
                   </TableCell>
                   <TableCell className="text-right">{transaction.amount}</TableCell>

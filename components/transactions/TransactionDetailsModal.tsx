@@ -12,12 +12,17 @@ import {
 import { Button } from "../ui/button"
 import { Dot, ReceiptText } from "lucide-react";
 import { ScrollArea } from "../ui/scroll-area";
+import { getTransactionDetails } from "@/lib/actions/transaction";
 
 interface TransactionDetailsModalProps {
   transactionId: string;
 }
 
-const TransactionDetailsModal = ({ transactionId }: TransactionDetailsModalProps) => {
+const TransactionDetailsModal = async ({ transactionId }: TransactionDetailsModalProps) => {
+  const { transaction } = await getTransactionDetails(transactionId);
+
+  if (!transaction) return;
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -31,24 +36,28 @@ const TransactionDetailsModal = ({ transactionId }: TransactionDetailsModalProps
           <div>
             <h3 className="text-xl font-semibold leading-none tracking-tight">Transacrion Details</h3>
             <p className="flex items-center pt-1 text-xs text-muted-foreground">
-              Payment
+              {transaction.type}
               <Dot size="16" />
-              2023-06-23, 8:30 PM
+              {transaction.createdAt}
             </p>
           </div>
           <div className="flex flex-col space-y-4 my-4 text-sm">
-            <div className="flex flex-col flex-1 justify-between">
-              <span className="font-medium">Description</span>
-              <p className="text-gray-500 dark:text-gray-400">Amount paid for some sample reason Lorem ipsum dolor sit amet consectetur, adipisicing elit. Soluta quod consequatur expedita veritatis deserunt ipsum laborum reprehenderit, a quasi distinctio eos consectetur, vero cum fuga vel voluptatem minima recusandae exercitationem eius blanditiis. Impedit, iure.</p>
-            </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div className="flex flex-col">
-                <span className="font-medium">Total Amount</span>
-                <p className="text-gray-500 dark:text-gray-400">₹1,000</p>
+                <span className="font-medium">Description</span>
+                <p className="text-gray-500 dark:text-gray-400">{transaction.description}</p>
               </div>
               <div className="flex flex-col">
-                <span className="font-medium">Group Name</span>
-                <p className="text-gray-500 dark:text-gray-400">Sunday Trekking</p>
+                <span className="font-medium">Total Amount</span>
+                <p className="text-gray-500 dark:text-gray-400">₹{transaction.amount}</p>
+              </div>
+              <div className="flex flex-col">
+                <span className="font-medium">Created By</span>
+                <p className="text-gray-500 dark:text-gray-400">{transaction.creatorName}</p>
+              </div>
+              <div className="flex flex-col">
+                <span className="font-medium">Group</span>
+                <p className="text-gray-500 dark:text-gray-400">{transaction.groupName}</p>
               </div>
               <div>
                 <span className="font-medium">Contributors:</span>

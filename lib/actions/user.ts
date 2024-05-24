@@ -16,7 +16,15 @@ export const getUserDetails = async () => {
         const user = await db.user.findUnique({
             where: { id: userId },
             include: {
-                transaction: true,
+                transaction: {
+                    include: {
+                        user: {
+                            select: {
+                                name: true,
+                            }
+                        }
+                    },
+                },
                 groups: {
                     include: {
                         group: {
@@ -41,8 +49,8 @@ export const getUserDetails = async () => {
         const formattedUser = {
             id, name, email, image,
             createdAt: moment(createdAt).format("MMMM YYYY"),
-            transactions: transaction.map(({ id, type, description, createdAt, amount }) => ({
-                id, type, description, createdAt: moment(createdAt).format("YYYY-MM-DD, h:mm A"), amount
+            transactions: transaction.map(({ id, type, description, createdAt, amount, user: name }) => ({
+                id, type, description, createdAt: moment(createdAt).format("YYYY-MM-DD, h:mm A"), amount, creatorName: name,
             })),
             groups: groups.map(({ group: { id, name, image, _count: { members: membersCount } } }) => ({
                 id, name, image, membersCount
@@ -57,8 +65,6 @@ export const getUserDetails = async () => {
 
 export const allAddGroupMembers = async (groupId: string) => {
     const session = await auth();
-
-    console.log(groupId);
 
     if (!session?.user) {
         return { error: "Session or user information is missing" };

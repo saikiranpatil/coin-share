@@ -33,9 +33,7 @@ export const createGroup = async (values: createGroupSchemaType) => {
             }
         });
 
-        console.log(data);
-
-        return { success: "Group created sucessfully!", data };
+        return { success: "Group created sucessfully!", groupId: data.id };
     } catch (err) {
         return { error: "Something went wrong while creating group" };
     }
@@ -129,10 +127,18 @@ export const getGroupDetails = async (groupId: string) => {
                 },
             },
             include: {
-                transactions: true,
+                transactions: {
+                    include: {
+                        user: {
+                            select: {
+                                name: true,
+                            }
+                        }
+                    }
+                },
                 members: {
                     include: {
-                        user: true,
+                        user: true
                     },
                 },
             },
@@ -147,8 +153,8 @@ export const getGroupDetails = async (groupId: string) => {
             members: group.members.map(({ user: { id, name, email, image } }) => ({
                 id, name, email, image
             })),
-            transactions: group.transactions.map(({ id, type, description, createdAt, amount }) => ({
-                id, type, description, createdAt: moment(createdAt).format("YYYY-MM-DD, h:mm A"), amount
+            transactions: group.transactions.map(({ id, type, description, createdAt, amount, user: { name } }) => ({
+                id, type, description, createdAt: moment(createdAt).format("YYYY-MM-DD, hh:mm A"), amount, creatorName: name
             }))
         };
 
