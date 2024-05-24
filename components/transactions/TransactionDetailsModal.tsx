@@ -26,7 +26,7 @@ const TransactionDetailsModal = async ({ transactionId }: TransactionDetailsModa
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline">
+        <Button variant="outline" size="sm">
           View Details
         </Button>
       </DialogTrigger>
@@ -83,7 +83,7 @@ const TransactionDetailsModal = async ({ transactionId }: TransactionDetailsModa
                 </Table>
               </div>
               <div className="flex-1">
-                <span className="font-medium">Recipents:</span>
+                <span className="font-medium">Recipients:</span>
                 <Table>
                   <TableBody>
                     <TableRow>

@@ -25,95 +25,62 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { toast } from "../ui/use-toast";
 import { useParams } from "next/navigation";
-
-interface AddGroupUsersProps {
-    id: string;
-    email: string;
-    name: string;
-    image: string;
-}
+import SelectUser from "../select-user";
 
 const AddGroupMemberModal = () => {
     const { groupId }: { groupId: string } = useParams();
 
-    const [users, setUsers] = useState<AddGroupUsersProps[]>([]);
-    const [open, setOpen] = useState(false);
+    const [users, setUsers] = useState<UserSelectListProps[]>([]);
+    const [selectedUser, setSelectedUser] = useState<UserSelectListProps | undefined>();
 
     useEffect(() => {
         const fetchData = async () => {
             const { users: usersData } = await allAddGroupMembers(groupId);
 
             if (usersData) {
-                setUsers(usersData as AddGroupUsersProps[]);
+                setUsers(usersData);
             }
         }
         fetchData();
     }, [groupId]);
 
-    const onAddUserToGroup = async (addMemberUserId: string) => {
-        setOpen(false);
-        toast({
-            description: "Adding User to group"
-        });
+    useEffect(() => {
+        if (!selectedUser) return;
 
-        const { success, error } = await addUserToGroup(groupId, addMemberUserId);
-
-        if (success) {
+        const onAddUserToGroup = async (addMemberUserId: string) => {
             toast({
-                title: "Success",
-                description: "User Successfully added to the group"
+                description: "Adding User to group....."
             });
+
+            const { success, error } = await addUserToGroup(groupId, addMemberUserId);
+
+            if (success) {
+                toast({
+                    title: "Success",
+                    description: "User Successfully added to the group"
+                });
+            }
+
+            if (error) {
+                toast({
+                    variant: "destructive",
+                    description: error
+                })
+            }
         }
 
-        if (error) {
-            toast({
-                variant: "destructive",
-                description: error
-            })
-        }
-    }
+        onAddUserToGroup(selectedUser.id);
+
+        setSelectedUser(undefined);
+    }, [selectedUser, groupId]);
 
     return (
-        <Popover open={open} onOpenChange={setOpen}>
-            <PopoverTrigger asChild>
-                <Button>
-                    <UserPlus size="16" className="mr-2" />
-                    Add Member
-                </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-80 p-0 bg-transparent border-none shadow-none">
-                <Command className="rounded-lg border shadow-md">
-                    <CommandInput placeholder="Type name or email of user to search..." />
-                    <CommandList>
-                        <CommandEmpty>No users found.</CommandEmpty>
-                        <CommandGroup>
-                            {
-                                users.map(user => (
-                                    <CommandItem key={user.id}>
-                                        <Avatar className='mr-4 h-12 w-12'>
-                                            <AvatarImage className="rounded-full" src={user.image || "https://github.com/shadcn.png"} />
-                                            <AvatarFallback>CN</AvatarFallback>
-                                        </Avatar>
-                                        <div
-                                            className="flex flex-col"
-                                            onClick={() => onAddUserToGroup(user.id)}
-                                        >
-                                            <span>
-                                                {user.name}
-                                            </span>
-                                            <span className="text-xs text-muted-foreground">
-                                                {user.email}
-                                            </span>
-                                        </div>
-                                        <span></span>
-                                    </CommandItem>
-                                ))
-                            }
-                        </CommandGroup>
-                    </CommandList>
-                </Command>
-            </PopoverContent>
-        </Popover>
+        <SelectUser users={users} setClickedUser={setSelectedUser}>
+            <Button size="sm">
+                <UserPlus size="16" className="mr-2" />
+                Add Member
+            </Button>
+        </SelectUser>
     )
 }
 

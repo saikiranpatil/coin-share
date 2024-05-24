@@ -6,16 +6,16 @@ import {
     TooltipTrigger,
 } from "@/components/ui/tooltip"
 
-import AddTransactionRecipentsModal from "./AddRecipentsModal"
+import AddTransactionRecipientsModal from "./AddRecipientsModal"
 import UsersCardWithAmount from "@/components/transactions/UserCard"
 
-const AddRecipents = () => {
+const AddRecipients = () => {
     return (
         <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" htmlFor="recipients">
                 <div className="flex items-center gap-1">
                     <span className="relative">
-                        Recipents
+                        Recipients
                         <div className="absolute top-0 left-[100%] pl-1">
                             <Tooltip>
                                 <TooltipTrigger asChild>
@@ -25,14 +25,14 @@ const AddRecipents = () => {
                                     />
                                 </TooltipTrigger>
                                 <TooltipContent>
-                                    <p>Edit Recipents</p>
+                                    <p>Edit Recipients</p>
                                 </TooltipContent>
                             </Tooltip>
                         </div>
                     </span>
                 </div>
             </label>
-            <AddTransactionRecipentsModal />
+            <AddTransactionRecipientsModal />
             <div className="space-y-4">
                 <UsersCardWithAmount />
             </div>
@@ -40,4 +40,4 @@ const AddRecipents = () => {
     )
 }
 
-export default AddRecipents
+export default AddRecipients

@@ -12,7 +12,7 @@ const GroupMemberCard = ({ groupMember }: { groupMember: GroupMemberPageProps })
         <div
             className="flex items-center gap-4 rounded-md bg-gray-100 p-4 transition-colors dark:bg-gray-800"
         >
-            <Avatar className="hidden h-9 w-9 sm:flex">
+            <Avatar className="hidden h-12 w-12 sm:flex">
                 <AvatarImage alt="Avatar" src="https://github.com/shadcn.png" />
                 <AvatarFallback>OM</AvatarFallback>
             </Avatar>

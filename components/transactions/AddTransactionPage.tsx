@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/card"
 
 import AddContributers from "@/components/transactions/AddContributers"
-import AddRecipents from "@/components/transactions/AddRecipents"
+import AddRecipients from "@/components/transactions/AddRecipients"
 import {
     AddTransactionSchema,
     addTransactionSchemaType
@@ -58,11 +58,17 @@ interface groupSelectListProps {
 }
 
 const AddTransactionPage = () => {
+
     const [isPending, startTransation] = useTransition();
 
     const [groupsList, setGroupsList] = useState<groupSelectListProps[]>([]);
+    const [areGroupsLoading, setAreGroupsLoading] = useState<boolean>(false);
+
     const [formError, setFormError] = useState<string | undefined>(undefined);
     const [formSuccess, setFormSuccess] = useState<string | undefined>(undefined);
+
+    const [contributers, setContributers] = useState([]);
+    const [receipients, setReceipients] = useState([]);
 
     const form = useForm<addTransactionSchemaType>({
         resolver: zodResolver(AddTransactionSchema),
@@ -100,7 +106,10 @@ const AddTransactionPage = () => {
 
     useEffect(() => {
         const fetchGroups = async () => {
+            setAreGroupsLoading(true);
             const { error, groups } = await getAllGroupsTitle() as { error: string | undefined, groups: groupSelectListProps[] | undefined };
+            setAreGroupsLoading(false);
+
             if (!error && groups) setGroupsList(groups);
         };
         fetchGroups();
@@ -143,11 +152,16 @@ const AddTransactionPage = () => {
                                                                 </SelectTrigger>
                                                             </FormControl>
                                                             <SelectContent>
-                                                                {groupsList.map((group) => (
-                                                                    <SelectItem key={group.id} value={group.id}>
-                                                                        {group.name}
-                                                                    </SelectItem>
-                                                                ))}
+                                                                {groupsList?.length && !areGroupsLoading ?
+                                                                    groupsList.map((group) => (
+                                                                        <SelectItem key={group.id} value={group.id}>
+                                                                            {group.name}
+                                                                        </SelectItem>
+                                                                    )) :
+                                                                    <h1 className="text-xs text-muted-foreground">
+                                                                        Loading Groups
+                                                                    </h1>
+                                                                }
                                                             </SelectContent>
                                                         </Select>
                                                         <FormMessage />
@@ -196,10 +210,10 @@ const AddTransactionPage = () => {
                                         />
                                     </div>
                                     <div>
-                                        <AddContributers />
+                                        <AddContributers setContributers={setContributers} />
                                     </div>
                                     <div>
-                                        <AddRecipents />
+                                        <AddRecipients setReciepents={setReceipients} />
                                     </div>
                                 </div>
                                 <div className="flex flex-col gap-4 justify-end ">

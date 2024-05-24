@@ -1,6 +1,5 @@
 import {
   CreditCard,
-  Users,
 } from 'lucide-react';
 import {
   TableHead,
@@ -14,7 +13,11 @@ import {
 import TransactionDetailsModal from './TransactionDetailsModal';
 import { CardDescription } from '../ui/card';
 
-const TransactionsTable = ({ transactions }) => {
+interface TransactionsTableProps {
+  transactions: TransactionTableProps[];
+}
+
+const TransactionsTable = ({ transactions }: TransactionsTableProps) => {
   return (
     <>
       <Table>
@@ -34,7 +37,7 @@ const TransactionsTable = ({ transactions }) => {
         </TableHeader>
         <TableBody>
           {
-            transactions && transactions.length>0 && transactions.map(transaction => {
+            transactions && transactions.length > 0 && transactions.map(transaction => {
               const shareClassName = transaction.amount ? transaction.amount > 0 ? "text-blue-500" : "text-red-500" : "text-gray-500";
               return (
                 <TableRow key={transaction.id}>
@@ -65,7 +68,7 @@ const TransactionsTable = ({ transactions }) => {
         </TableBody>
       </Table>
       {
-        !transactions?.length > 0 &&
+        transactions?.length == 0 &&
         <CardDescription className="text-center py-4">
           No Transactions
         </CardDescription>

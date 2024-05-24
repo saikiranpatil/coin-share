@@ -29,7 +29,7 @@ const DashboardGoupCard = ({ group }: { group: DashboardGoupCardProps }) => {
             className="flex items-center gap-4 rounded-md bg-gray-100 p-4 transition-colors hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700"
             href={`/group/${group.id}`}
         >
-            <Avatar className="hidden h-9 w-9 sm:flex">
+            <Avatar className="hidden h-12 w-12 sm:flex">
                 <AvatarImage alt="Avatar" src="https://github.com/shadcn.png" />
                 <AvatarFallback>OM</AvatarFallback>
             </Avatar>

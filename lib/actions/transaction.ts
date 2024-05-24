@@ -8,6 +8,33 @@ import { error } from "console";
 import moment from "moment";
 
 export const createTransaction = async (values: addTransactionSchemaType) => {
+    // const transaction = {
+    //     amount: "23",
+    //     description: "asdas",
+    //     groupId: "clwi5ehx500009vhtvljki786",
+    //     creatorUserId:"clwd6pib30000r01sj0ml3hl9",
+    //     contributers:[
+    //         {
+    //             userId:"clwd6pib30000r01sj0ml3hl9",
+    //             amount:45
+    //         },
+    //         {
+    //             userId:"clwk4yac300055fb26lpn82zy",
+    //             amount:45
+    //         },
+    //     ],
+    //     reciepients:[
+    //         {
+    //             userId:"clwk4rbjj00025fb2y9qxcv29",
+    //             amount:45
+    //         },
+    //         {
+    //             userId:"clwk4rbjj00025fb2y9qxcv29",
+    //             amount:45
+    //         },
+    //     ]
+    // };
+    // return;
     const session = await auth();
 
     if (!session?.user) {

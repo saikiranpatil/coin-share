@@ -19,6 +19,7 @@ import { Separator } from "@/components/ui/separator"
 import UserCardWithAmount from "./UserCardWithAmount";
 import UserCombobox from "./UserCombobox";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import SelectUser from "../select-user";
 
 const tags = Array.from({ length: 10 }).map(
     (_, i, a) => `v1.2.0-beta.${a.length - i}`
@@ -44,10 +45,12 @@ export function AddContributersModal() {
                         <TabsTrigger value="single">
                             Single
                         </TabsTrigger>
-                        <TabsTrigger value="multiple">Multiple</TabsTrigger>
+                        <TabsTrigger value="multiple">
+                            Multiple
+                        </TabsTrigger>
                     </TabsList>
                     <TabsContent value="single">
-                        <UserCombobox />
+                        <SelectUser />
                     </TabsContent>
                     <TabsContent value="multiple">
                         <div className="py-4">
@@ -75,13 +78,11 @@ export function AddContributersModal() {
                                 <span className="text-red-500 font-medium">₹500</span>
                             </div>
                         </div>
+                        <Button className="w-full" type="submit">
+                            Save changes
+                        </Button>
                     </TabsContent>
                 </Tabs>
-                <DialogFooter>
-                    <Button className="w-full" type="submit">
-                        Save changes
-                    </Button>
-                </DialogFooter>
             </DialogContent>
         </Dialog>
     )

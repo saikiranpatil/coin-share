@@ -18,12 +18,12 @@ const tags = Array.from({ length: 10 }).map(
     (_, i, a) => `v1.2.0-beta.${a.length - i}`
 )
 
-export function AddRecipentsModal() {
+export function AddRecipientsModal() {
     return (
         <Dialog>
             <DialogTrigger asChild>
                 <Button className="text-muted-foreground font-normal text-xs mb-4" variant="outline" size="sm">
-                    Choose Recipents
+                    Choose Recipients
                 </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[450px]">
@@ -68,4 +68,4 @@ export function AddRecipentsModal() {
     )
 }
 
-export default AddRecipentsModal
+export default AddRecipientsModal

@@ -9,7 +9,11 @@ import {
 import AddTransactionContributersModal from "./AddContributersModal";
 import UsersCardWithAmount from "@/components/transactions/UserCard";
 
-const AddContributers = () => {
+interface AddContributersProps {
+    setContributers: (any) => void;
+}
+
+const AddContributers = ({ setContributers }: AddContributersProps) => {
     return (
         <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2" htmlFor="recipients">
