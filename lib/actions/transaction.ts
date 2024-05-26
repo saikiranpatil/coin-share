@@ -3,11 +3,10 @@
 import { MdOutlineEmergency } from "react-icons/md";
 import { auth } from "../db/auth";
 import { db } from "../db/db"
-import { AddTransactionSchema, addTransactionSchemaType } from "../schemas/transaction";
 import { error } from "console";
 import moment from "moment";
 
-export const createTransaction = async (values: addTransactionSchemaType) => {
+export const createTransaction = async (values) => {
     // const transaction = {
     //     amount: "23",
     //     description: "asdas",
@@ -35,39 +34,15 @@ export const createTransaction = async (values: addTransactionSchemaType) => {
     //     ]
     // };
     // return;
+
+    console.log(values);
     const session = await auth();
 
     if (!session?.user) {
         return { error: "Session or user information is missing" };
     }
 
-    const userId = session.user.id;
-
-    const validatedSchema = AddTransactionSchema.safeParse(values);
-    if (!validatedSchema.success) {
-        return { error: "Invalid Data Format" }
-    }
-
-    const parsedAmount = Number(validatedSchema.data.amount);
-    if (isNaN(parsedAmount)) {
-        return { error: "Invalid Amount Format" };
-    }
-    const { description, groupId } = validatedSchema.data;
-
-    try {
-        const transaction = await db.transaction.create({
-            data: {
-                amount: parsedAmount,
-                description,
-                groupId,
-                creatorUserId: userId as string,
-            }
-        });
-
-        return { success: "Transaction Created", transaction };
-    } catch (error) {
-        return { error: "Something went wrong while creating transaction" }
-    }
+    return {};
 }
 
 export const getTransactionDetails = async (transactionId: string) => {

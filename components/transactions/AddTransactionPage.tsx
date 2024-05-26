@@ -158,7 +158,7 @@ const AddTransactionPage = () => {
                                                                             {group.name}
                                                                         </SelectItem>
                                                                     )) :
-                                                                    <h1 className="text-xs text-muted-foreground">
+                                                                    <h1 className="p-2 text-xs text-muted-foreground">
                                                                         Loading Groups
                                                                     </h1>
                                                                 }

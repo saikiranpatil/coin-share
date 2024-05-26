@@ -16,7 +16,6 @@ import BasicDetails from "./BasicDetails";
 import Contributers from "./Contributers";
 import Recipients from "./Recipients";
 import { useEffect, useState } from "react";
-import { addTransactionSchemaType } from "@/lib/schemas/transaction";
 import { allAddGroupMembers } from "@/lib/actions/user";
 
 const steps = [
@@ -32,7 +31,11 @@ const AddTransactionPage = () => {
             description: undefined,
             amount: undefined,
         },
-        contributers: [],
+        contributers: {
+            isMultiple: false,
+            single: undefined,
+            multiple: [],
+        },
         recipients: []
     });
     const [users, setUsers] = useState<UserSelectListProps[]>([]);
@@ -49,12 +52,6 @@ const AddTransactionPage = () => {
 
         fetchUsers();
     }, [transactionData.basicDetails.groupId]);
-
-    useEffect(() => {
-        console.log(transactionData);
-    }, [transactionData]);
-
-
 
     return (
         <div className="container mx-auto px-4 py-8 md:py-12 lg:py-16 max-w-2xl">

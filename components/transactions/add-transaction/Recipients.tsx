@@ -2,59 +2,167 @@
 
 import { Button } from "@/components/ui/button"
 import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs";
-import { Separator } from "@/components/ui/separator"
-
-import UserCardWithAmount from "../UserCardWithAmount";
-import UserCombobox from "../UserCombobox";
+  AvatarImage,
+  AvatarFallback,
+  Avatar
+} from "@/components/ui/avatar";
+import { Input } from "@/components/ui/input";
+import { ChevronsUpDown, X } from "lucide-react";
 
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useStepper } from "@/components/stepper";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
+import { useEffect, useState } from "react";
+import SelectUser from "@/components/select-user";
+import { Card } from "@/components/ui/card";
+import FormError from "@/components/form/FormError";
+import { createTransaction } from "@/lib/actions/transaction";
 
-const tags = Array.from({ length: 10 }).map(
-  (_, i, a) => `v1.2.0-beta.${a.length - i}`
-)
-
-const users = [];
-
-const Recipients = ({ transactionData, setTransactionData, users }) => {
+const Recipients = ({ users, transactionData, setTransactionData }) => {
   const {
-    nextStep,
     prevStep,
-    resetSteps,
     isDisabledStep,
-    hasCompletedAllSteps,
-    isLastStep,
-    isOptionalStep,
   } = useStepper();
+
+  const totalAmount = transactionData.basicDetails?.amount || 0;
+  const [selectedAmount, setSelectedAmount] = useState(0);
+  const [leftAmount, setLeftAmount] = useState(0);
+
+  const [errorState, setErrorState] = useState<string | undefined>(undefined);
+
+  const [amountErrors, setAmountErrors] = useState({});
+  const [recipients, setRecipients] = useState([]);
+
+  const [filteredRecipients, setFilteredRecipients] = useState([]);
+
+  useEffect(() => {
+    const selectedUsers = transactionData.contributers.isMultiple ?
+      transactionData.contributers.multiple : [transactionData.contributers.single];
+
+    const filteredUsers = users
+      .filter(user => !selectedUsers.some(selectedUser => selectedUser.id === user.id))
+      .filter(user => !recipients.some(recipient => recipient.id === user.id));
+    setFilteredRecipients(filteredUsers);
+  }, [users, transactionData, recipients]);
+
+  const onUserSelect = (user) => {
+    if (!recipients.some(recipients => recipients.id === user.id)) {
+      setRecipients([...recipients, { ...user, amount: 0 }]);
+    }
+  }
+
+  const onUserRemoveClick = (userId) => {
+    const updatedMultipleContributors = recipients.filter(recipients => recipients.id !== userId);
+    setRecipients(updatedMultipleContributors);
+  }
+
+  const handleAmountChange = (userId, amount) => {
+    const updatedRecipients = recipients.map(recipients =>
+      recipients.id === userId ? { ...recipients, amount: parseFloat(amount) || 0 } : recipients
+    );
+    setRecipients(updatedRecipients);
+  }
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+
+    let hasError = false;
+    const errors = {};
+
+    recipients.forEach(recipient => {
+      if (recipient.amount <= 0) {
+        errors[recipient.id] = "Amount cannot be 0";
+        hasError = true;
+      }
+    });
+
+    setAmountErrors(errors);
+
+    if (!hasError) {
+      if (leftAmount) {
+        setErrorState("Total Amount is not Equal to Selected Amount");
+        return;
+      }
+      const { success, error } = await createTransaction({
+        ...transactionData,
+        recipients
+      });
+
+      console.log(success, error);
+    }
+  }
+
+  useEffect(() => {
+    const totalSelected = recipients.reduce((total, contributor) => total + contributor.amount, 0);
+    setSelectedAmount(totalSelected);
+    setLeftAmount(totalAmount - totalSelected);
+  }, [recipients, totalAmount, leftAmount]);
+
   return (
-    <>
-      <ScrollArea className="h-40 rounded-md border px-32 py-1">
-        {tags.map((tag, idx) => (
-          <>
-            <UserCardWithAmount key={"usercardcontributers" + idx} tag={tag} />
-            {idx !== tags.length - 1 && <Separator className="my-4" />}
-          </>
-        ))}
-      </ScrollArea>
+    <form onSubmit={onSubmit} className="space-y-4">
+      <SelectUser users={filteredRecipients} setClickedUser={onUserSelect} >
+        <Card className="w-full justify-between">
+          <Button
+            variant="outline"
+            className="w-full justify-between"
+          >
+            Add Contributor...
+            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          </Button>
+        </Card>
+      </SelectUser>
+      {recipients.length > 0 &&
+        <ScrollArea className="h-40 rounded-md border py-1 pt-4 mt-4">
+          <div className="w-[max-content] mx-auto">
+            {recipients.map((recipient, idx) => (
+              <div key={"usercardcontributors" + idx} className="w-full">
+                <Label className="flex justify-between items-center gap-4">
+                  <div className="flex items-center gap-2">
+                    <Avatar className="w-12 h-12 rounded-full mr-2">
+                      <AvatarImage alt="User Avatar" src="/placeholder.svg" />
+                      <AvatarFallback>ED</AvatarFallback>
+                    </Avatar>
+                    <span className="text-gray-900 dark:text-gray-100">{recipient.name}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Input
+                      className="w-24"
+                      placeholder="Amount"
+                      type="number"
+                      min="0"
+                      value={recipient.amount}
+                      onChange={(e) => handleAmountChange(recipient.id, e.target.value)}
+                    />
+                    <Button size="icon" variant="secondary" onClick={() => onUserRemoveClick(recipient.id)}><X size="16" /></Button>
+                  </div>
+                </Label>
+                {amountErrors[recipient.id] && (
+                  <div className="pt-2">
+                    <FormError message={amountErrors[recipient.id]} />
+                  </div>
+                )}
+                <Separator className="my-4" />
+              </div>
+            ))}
+          </div>
+        </ScrollArea>
+      }
       <div className="flex flex-col gap-4 my-4 text-sm">
         <div className="flex items-center justify-between">
           <span className="text-gray-500 dark:text-gray-400">Total Amount:</span>
-          <span className="font-medium">₹1,000</span>
+          <span className="font-medium">₹{totalAmount}</span>
         </div>
         <div className="flex items-center justify-between">
           <span className="text-gray-500 dark:text-gray-400">Selected Total:</span>
-          <span className="font-medium">₹1,500</span>
+          <span className="font-medium">₹{selectedAmount}</span>
         </div>
-        <div className="flex items-center justify-between">
-          <span className="text-red-500">Left Amount:</span>
-          <span className="text-red-500 font-medium">₹500</span>
+        <div className={`flex items-center justify-between ${leftAmount ? "text-red-500" : "text-muted-foreground"}`}>
+          <span>Left Amount:</span>
+          <span className="font-medium">₹{leftAmount}</span>
         </div>
       </div>
+      <FormError message={errorState} />
       <div className="flex justify-end w-full gap-4">
         <Button
           disabled={isDisabledStep}
@@ -67,8 +175,8 @@ const Recipients = ({ transactionData, setTransactionData, users }) => {
           Next
         </Button>
       </div>
-    </>
+    </form>
   )
 }
 
-export default Recipients
+export default Recipients;
