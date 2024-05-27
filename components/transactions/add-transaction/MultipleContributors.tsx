@@ -32,7 +32,7 @@ const MultipleContributors = ({ users, transactionData, setTransactionData }) =>
     const [errorState, setErrorState] = useState<string | undefined>(undefined);
 
     const [amountErrors, setAmountErrors] = useState({});
-    const [multipleContributors, setMultipleContributors] = useState(transactionData.contributers.multiple);
+    const [multipleContributors, setMultipleContributors] = useState(transactionData.contributors.multiple);
 
     const [filteredMultipleContributors, setFilteredMultipleContributors] = useState([]);
 
@@ -75,8 +75,8 @@ const MultipleContributors = ({ users, transactionData, setTransactionData }) =>
 
             setTransactionData({
                 ...transactionData,
-                contributers: {
-                    ...transactionData.contributers,
+                contributors: {
+                    ...transactionData.contributors,
                     multiple: multipleContributors,
                     isMultiple: true
                 }

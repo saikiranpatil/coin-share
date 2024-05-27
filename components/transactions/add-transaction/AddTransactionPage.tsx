@@ -13,14 +13,14 @@ import {
     CardTitle
 } from "@/components/ui/card";
 import BasicDetails from "./BasicDetails";
-import Contributers from "./Contributers";
+import Contributors from "./Contributors";
 import Recipients from "./Recipients";
 import { useEffect, useState } from "react";
 import { allAddGroupMembers } from "@/lib/actions/user";
 
 const steps = [
     { label: "Basic Details" },
-    { label: "Contributers" },
+    { label: "Contributors" },
     { label: "Recipents" },
 ] satisfies StepItem[]
 
@@ -31,7 +31,7 @@ const AddTransactionPage = () => {
             description: undefined,
             amount: undefined,
         },
-        contributers: {
+        contributors: {
             isMultiple: false,
             single: undefined,
             multiple: [],
@@ -65,8 +65,8 @@ const AddTransactionPage = () => {
                         <Step label="Basic Details">
                             <BasicDetails transactionData={transactionData} setTransactionData={setTransactionData} />
                         </Step>
-                        <Step label="Contributers">
-                            <Contributers transactionData={transactionData} setTransactionData={setTransactionData} users={users} />
+                        <Step label="Contributors">
+                            <Contributors transactionData={transactionData} setTransactionData={setTransactionData} users={users} />
                         </Step>
                         <Step label="Recipents">
                             <Recipients transactionData={transactionData} setTransactionData={setTransactionData} users={users} />

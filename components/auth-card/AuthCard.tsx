@@ -10,20 +10,20 @@ import Header from "./Header";
 import Social from "./Social";
 import BackButton from "./BackButton";
 
-interface authenticationCardProps {
+interface authCardProps {
   children: React.ReactNode;
   headerLabel: string;
   backButtonLabel: string;
   backButtonHref: string;
   showSocial?: boolean;
 }
-const AuthenticationCard = ({
+const AuthCard = ({
   children,
   headerLabel,
   backButtonLabel,
   backButtonHref,
   showSocial
-}: authenticationCardProps) => {
+}: authCardProps) => {
   return (
     <Card className="w-[400px] shadow-md">
       <CardHeader>
@@ -47,5 +47,5 @@ const AuthenticationCard = ({
   )
 }
 
-export default AuthenticationCard
+export default AuthCard
 

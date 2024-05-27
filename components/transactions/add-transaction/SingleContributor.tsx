@@ -13,27 +13,27 @@ import { useEffect, useState } from "react";
 import SelectUser from "@/components/select-user";
 import { Card } from "@/components/ui/card";
 
-const SingleContributer = ({ users, transactionData, setTransactionData }) => {
+const SingleContributor = ({ users, transactionData, setTransactionData }) => {
     const {
         nextStep,
         prevStep,
         isDisabledStep,
     } = useStepper();
-    const [singleContributer, setSingleContributer] = useState<UserSelectListProps | undefined>(transactionData.contributers.single);
-    const [filteredSingleContributers, setFilteredSingleContributers] = useState<UserSelectListProps[]>([]);
+    const [singleContributor, setSingleContributor] = useState<UserSelectListProps | undefined>(transactionData.contributors.single);
+    const [filteredSingleContributors, setFilteredSingleContributors] = useState<UserSelectListProps[]>([]);
 
     useEffect(() => {
-        const newFilteredSingleContributers = users
-            .filter(user => user.id !== singleContributer?.id);
-        setFilteredSingleContributers(newFilteredSingleContributers);
-    }, [users, singleContributer]);
+        const newFilteredSingleContributors = users
+            .filter(user => user.id !== singleContributor?.id);
+        setFilteredSingleContributors(newFilteredSingleContributors);
+    }, [users, singleContributor]);
 
     const onNextClick = () => {
         setTransactionData({
             ...transactionData,
-            contributers: {
-                ...transactionData.contributers,
-                single: singleContributer,
+            contributors: {
+                ...transactionData.contributors,
+                single: singleContributor,
                 isMultiple: false,
             }
         });
@@ -43,18 +43,18 @@ const SingleContributer = ({ users, transactionData, setTransactionData }) => {
 
     return (
         <>
-            <SelectUser users={filteredSingleContributers} setClickedUser={setSingleContributer} >
+            <SelectUser users={filteredSingleContributors} setClickedUser={setSingleContributor} >
                 <Card
                     className="w-full justify-between"
                 >
-                    {singleContributer ?
+                    {singleContributor ?
                         (
                             <div className="max-w-80 mx-auto flex justify-center items-center gap-4 p-2 cursor-pointer">
                                 <Avatar className="w-12 h-12 rounded-full mr-2">
                                     <AvatarImage alt="User Avatar" src="/placeholder.svg" />
                                     <AvatarFallback>ED</AvatarFallback>
                                 </Avatar>
-                                <span className="text-gray-900 dark:text-gray-100">{singleContributer.name}</span>
+                                <span className="text-gray-900 dark:text-gray-100">{singleContributor.name}</span>
                                 <Edit2 className="h-4 w-4 shrink-0 opacity-50" />
                             </div>
                         )
@@ -64,7 +64,7 @@ const SingleContributer = ({ users, transactionData, setTransactionData }) => {
                                 variant="outline"
                                 className="w-full justify-between"
                             >
-                                Add Contributer...
+                                Add Contributor...
                                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                             </Button>
                         )
@@ -81,7 +81,7 @@ const SingleContributer = ({ users, transactionData, setTransactionData }) => {
                 </Button>
                 <Button
                     onClick={onNextClick}
-                    disabled={!singleContributer}
+                    disabled={!singleContributor}
                 >
                     Next
                 </Button>
@@ -91,4 +91,4 @@ const SingleContributer = ({ users, transactionData, setTransactionData }) => {
     )
 }
 
-export default SingleContributer
+export default SingleContributor

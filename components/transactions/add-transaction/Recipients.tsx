@@ -13,13 +13,19 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useStepper } from "@/components/stepper";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 import SelectUser from "@/components/select-user";
 import { Card } from "@/components/ui/card";
 import FormError from "@/components/form/FormError";
 import { createTransaction } from "@/lib/actions/transaction";
+import { toast } from "@/components/ui/use-toast";
+import { useRouter } from "next/navigation";
 
 const Recipients = ({ users, transactionData, setTransactionData }) => {
+  const router = useRouter();
+
+  const [isPending, startTransation] = useTransition();
+
   const {
     prevStep,
     isDisabledStep,
@@ -37,8 +43,8 @@ const Recipients = ({ users, transactionData, setTransactionData }) => {
   const [filteredRecipients, setFilteredRecipients] = useState([]);
 
   useEffect(() => {
-    const selectedUsers = transactionData.contributers.isMultiple ?
-      transactionData.contributers.multiple : [transactionData.contributers.single];
+    const selectedUsers = transactionData.contributors.isMultiple ?
+      transactionData.contributors.multiple : [transactionData.contributors.single];
 
     const filteredUsers = users
       .filter(user => !selectedUsers.some(selectedUser => selectedUser.id === user.id))
@@ -84,12 +90,29 @@ const Recipients = ({ users, transactionData, setTransactionData }) => {
         setErrorState("Total Amount is not Equal to Selected Amount");
         return;
       }
-      const { success, error } = await createTransaction({
+
+      const finalTransactionData = {
         ...transactionData,
         recipients
-      });
+      };
+      setTransactionData(finalTransactionData);
 
-      console.log(success, error);
+      startTransation(async () => {
+        const res = await createTransaction(finalTransactionData);
+
+        if (res.success) {
+          router.push("/group/" + res.transaction.groupId);
+
+          toast({
+            title: "Success",
+            description: "Transaction created sucessfully",
+          });
+        }
+
+        if (res.error) {
+          setErrorState(res.error);
+        }
+      });
     }
   }
 
@@ -106,6 +129,7 @@ const Recipients = ({ users, transactionData, setTransactionData }) => {
           <Button
             variant="outline"
             className="w-full justify-between"
+            disabled={isPending}
           >
             Add Contributor...
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -133,6 +157,7 @@ const Recipients = ({ users, transactionData, setTransactionData }) => {
                       min="0"
                       value={recipient.amount}
                       onChange={(e) => handleAmountChange(recipient.id, e.target.value)}
+                      disabled={isPending}
                     />
                     <Button size="icon" variant="secondary" onClick={() => onUserRemoveClick(recipient.id)}><X size="16" /></Button>
                   </div>
@@ -171,7 +196,10 @@ const Recipients = ({ users, transactionData, setTransactionData }) => {
         >
           Prev
         </Button>
-        <Button type="submit">
+        <Button
+          type="submit"
+          disabled={isPending}
+        >
           Next
         </Button>
       </div>

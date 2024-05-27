@@ -25,24 +25,25 @@ import CardWrapper from "../CardWrapper"
 import TransactionsTable from "./TransactionsTable";
 
 interface TransactionsCardProps extends React.HTMLAttributes<HTMLDivElement> {
-    cardTitle: string;
-    cardDescription: string;
-    cardHeaderButton?: React.ReactNode;
-    children: React.ReactNode;
+    title: string;
+    description: string;
+    headerButton?: React.ReactNode;
+    transactions: any;
 }
 
 const TransactionsCard = React.forwardRef<HTMLDivElement, TransactionsCardProps>(({
-    cardTitle: transactionCardTitle,
-    cardDescription: transactionCardDescription,
-    cardHeaderButton: transactionCardHeaderButton,
+    title,
+    description,
+    headerButton,
+    transactions,
     ...props
 }, ref) => {
     return (
         <CardWrapper
             ref={ref}
-            cardTitle={transactionCardTitle}
-            cardDescription={transactionCardDescription}
-            cardHeaderButton={transactionCardHeaderButton}
+            cardTitle={title}
+            cardDescription={description}
+            cardHeaderButton={headerButton}
             {...props}
         >
             <Tabs defaultValue="week">
@@ -89,7 +90,7 @@ const TransactionsCard = React.forwardRef<HTMLDivElement, TransactionsCardProps>
                     </div>
                 </div>
                 <TabsContent value="week">
-                    <TransactionsTable />
+                    <TransactionsTable transactions={transactions} />
                 </TabsContent>
             </Tabs>
         </CardWrapper>

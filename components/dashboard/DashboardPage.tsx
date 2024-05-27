@@ -31,13 +31,12 @@ export default async function Dashboard() {
       <DashboardStats />
       <div className="grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-3">
         <TransactionsCard
-          cardTitle="Transactions"
-          cardDescription="Recent transactions made by you."
-          cardHeaderButton={ViewAllTransactionButton}
+          title="Transactions"
+          description="Recent transactions made by you."
+          headerButton={ViewAllTransactionButton}
+          transactions={transactions}
           className="xl:col-span-2"
-        >
-          <TransactionsTable transactions={transactions} />
-        </TransactionsCard>
+        />
         <Card>
           <CardHeader className="flex flex-row items-center">
             <div className="grid gap-2">
@@ -53,7 +52,7 @@ export default async function Dashboard() {
           </CardHeader>
           <CardContent className="grid gap-4">
             {
-              groups && groups?.length>0 ?
+              groups && groups?.length > 0 ?
                 groups.map(group => <DashboardGoupCard key={group.id} group={group} />) :
                 <CardDescription className="text-center">No Groups</CardDescription>
             }

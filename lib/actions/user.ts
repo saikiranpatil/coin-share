@@ -64,7 +64,6 @@ export const getUserDetails = async () => {
 }
 
 export const allAddGroupMembers = async (groupId: string) => {
-    console.log("called");
     const session = await auth();
 
     if (!session?.user) {
@@ -101,8 +100,6 @@ export const allAddGroupMembers = async (groupId: string) => {
                 }
             }
         }) as UserSelectListProps[];
-
-        console.log(users);
 
         return { users };
     } catch (error) {

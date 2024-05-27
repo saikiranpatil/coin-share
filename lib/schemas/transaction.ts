@@ -1,7 +1,7 @@
 import * as z from "zod";
 
 export const AddTransactionSchema = z.object({
-    type: z.enum(["PAYMENT", "SETTLEMENT"]).default("PAYMENT"),
+    type: z.enum(["Payment", "Settlement"]).default("Payment"),
     description: z.string().min(5, "Description should be atleast 5 charaters"),
     amount: z.string(),
     groupId: z.string(),

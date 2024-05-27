@@ -1,48 +1,59 @@
 "use server";
 
-import { MdOutlineEmergency } from "react-icons/md";
 import { auth } from "../db/auth";
 import { db } from "../db/db"
-import { error } from "console";
 import moment from "moment";
 
-export const createTransaction = async (values) => {
-    // const transaction = {
-    //     amount: "23",
-    //     description: "asdas",
-    //     groupId: "clwi5ehx500009vhtvljki786",
-    //     creatorUserId:"clwd6pib30000r01sj0ml3hl9",
-    //     contributers:[
-    //         {
-    //             userId:"clwd6pib30000r01sj0ml3hl9",
-    //             amount:45
-    //         },
-    //         {
-    //             userId:"clwk4yac300055fb26lpn82zy",
-    //             amount:45
-    //         },
-    //     ],
-    //     reciepients:[
-    //         {
-    //             userId:"clwk4rbjj00025fb2y9qxcv29",
-    //             amount:45
-    //         },
-    //         {
-    //             userId:"clwk4rbjj00025fb2y9qxcv29",
-    //             amount:45
-    //         },
-    //     ]
-    // };
-    // return;
-
-    console.log(values);
+export const createTransaction = async (transaction) => {
     const session = await auth();
 
-    if (!session?.user) {
+    if (!session?.user?.id) {
         return { error: "Session or user information is missing" };
     }
+    const userId = session.user.id;
 
-    return {};
+    const parsedAmount = Number(transaction.basicDetails.amount);
+
+    if (isNaN(parsedAmount)) {
+        return { error: "Invalid Amount Format" };
+    }
+
+    const filteredContributors = transaction.contributors.isMultiple ?
+        transaction.contributors.multiple : [{ ...transaction.contributors.single, amount: parsedAmount }];
+
+    const { recipients } = transaction;
+    const { type, description, groupId } = transaction.basicDetails;
+
+    try {
+        const transactionData = await db.transaction.create({
+            data: {
+                type,
+                description,
+                amount: parsedAmount,
+                creatorUserId: userId,
+                groupId,
+                contributors: {
+                    create: filteredContributors.map(contributor => ({
+                        userId: contributor.id,
+                        amount: contributor.amount
+                    }))
+                },
+                recipients: {
+                    create: recipients.map(recipient => ({
+                        userId: recipient.id,
+                        amount: recipient.amount
+                    }))
+                }
+            },
+        });
+
+        return {
+            transaction: transactionData,
+            success: "transaction created Sucessfully."
+        };
+    } catch (error) {
+        return { error: "Something went wrong while creating transaction" };
+    }
 }
 
 export const getTransactionDetails = async (transactionId: string) => {
