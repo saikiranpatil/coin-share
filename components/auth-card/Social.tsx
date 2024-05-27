@@ -1,9 +1,9 @@
-import { loginWithOAuth } from "@/lib/actions/login"
-
-import { Button } from "@/components/ui/button"
+import { loginWithOAuth } from "@/lib/actions/user"
 
 import { FaGoogle } from "react-icons/fa"
 import { FaGithub } from "react-icons/fa"
+
+import { Button } from "@/components/ui/button"
 
 const Social = () => {
   return (

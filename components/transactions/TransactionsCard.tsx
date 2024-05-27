@@ -3,7 +3,10 @@ import React from "react";
 import {
     File,
     ListFilter,
-} from "lucide-react"
+} from "lucide-react";
+
+import CardWrapper from "@/components/card-wrapper"
+import TransactionsTable from "@/components/transactions/TransactionsTable";
 
 import {
     DropdownMenu,
@@ -19,10 +22,7 @@ import {
     TabsList,
     TabsTrigger,
 } from "@/components/ui/tabs"
-
-import { Button } from "../ui/button";
-import CardWrapper from "../CardWrapper"
-import TransactionsTable from "./TransactionsTable";
+import { Button } from "@/components/ui/button";
 
 interface TransactionsCardProps extends React.HTMLAttributes<HTMLDivElement> {
     title: string;

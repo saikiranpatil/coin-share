@@ -1,6 +1,14 @@
 "use client"
 
+import { redirect } from "next/navigation"
 import { useState, useTransition } from "react"
+
+import { createGroup } from "@/lib/actions/group"
+
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { CreateGroupSchema, type createGroupSchemaType } from "@/lib/schemas/group"
+
 import { MdOutlineGroupAdd } from "react-icons/md"
 
 import { Button } from "@/components/ui/button"
@@ -22,15 +30,8 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 
-import { createGroup } from "@/lib/actions/group"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { CreateGroupSchema, type createGroupSchemaType } from "@/lib/schemas/group"
-
-import FormError from "../form/FormError"
-import FormSuccess from "../form/FormSucess"
-
-import { redirect } from "next/navigation"
+import FormError from "@/components/form/FormError"
+import FormSuccess from "@/components/form/FormSucess"
 
 const CreateGroupModal = () => {
     const [isPending, startTransation] = useTransition();

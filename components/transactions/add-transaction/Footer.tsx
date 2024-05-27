@@ -1,7 +1,7 @@
 "use client";
 
-import { useStepper } from "@/components/stepper"
 import { Button } from "@/components/ui/button"
+import { useStepper } from "@/components/stepper"
 
 const Footer = () => {
     const {

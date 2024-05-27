@@ -1,31 +1,18 @@
 "use client";
 
-import { useEffect, useState, useTransition } from "react"
-import { Button } from "@/components/ui/button"
-import {
-    Command,
-    CommandEmpty,
-    CommandGroup,
-    CommandInput,
-    CommandItem,
-    CommandList,
-} from "@/components/ui/command"
-import {
-    UserPlus,
-} from "lucide-react"
+import { useParams } from "next/navigation"
+import { useEffect, useState } from "react"
+
 import {
     addUserToGroup,
     allAddGroupMembers
 } from "@/lib/actions/user"
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from "@/components/ui/popover"
-import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
-import { toast } from "../ui/use-toast";
-import { useParams } from "next/navigation";
-import SelectUser from "../select-user";
+
+import { UserPlus } from "lucide-react"
+
+import { Button } from "@/components/ui/button"
+import { toast } from "@/components/ui/use-toast"
+import SelectUser from "@/components/select-user"
 
 const AddGroupMemberModal = () => {
     const { groupId }: { groupId: string } = useParams();

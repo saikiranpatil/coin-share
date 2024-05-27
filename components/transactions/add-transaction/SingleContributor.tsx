@@ -1,19 +1,27 @@
 "use client";
 
-import { Button } from "@/components/ui/button"
+import { useEffect, useState } from "react";
+
+import { ChevronsUpDown, Edit2 } from "lucide-react";
+
 import {
     AvatarImage,
     AvatarFallback,
     Avatar
 } from "@/components/ui/avatar";
-import { ChevronsUpDown, Edit2 } from "lucide-react";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button"
 
 import { useStepper } from "@/components/stepper";
-import { useEffect, useState } from "react";
 import SelectUser from "@/components/select-user";
-import { Card } from "@/components/ui/card";
 
-const SingleContributor = ({ users, transactionData, setTransactionData }) => {
+interface SingleContributorProps {
+    transactionData: AddTransactionDataProps;
+    setTransactionData: (values: AddTransactionDataProps) => void;
+    users: UserSelectListProps[];
+}
+
+const SingleContributor = ({ users, transactionData, setTransactionData }: SingleContributorProps) => {
     const {
         nextStep,
         prevStep,

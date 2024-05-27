@@ -1,5 +1,12 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { allAddGroupMembers } from "@/lib/actions/user";
+
+import Recipients from "@/components/transactions/add-transaction/Recipients";
+import BasicDetails from "@/components/transactions/add-transaction/BasicDetails";
+import Contributors from "@/components/transactions/add-transaction/Contributors";
+
 import {
     Step,
     Stepper,
@@ -12,11 +19,7 @@ import {
     CardHeader,
     CardTitle
 } from "@/components/ui/card";
-import BasicDetails from "./BasicDetails";
-import Contributors from "./Contributors";
-import Recipients from "./Recipients";
-import { useEffect, useState } from "react";
-import { allAddGroupMembers } from "@/lib/actions/user";
+
 
 const steps = [
     { label: "Basic Details" },
@@ -25,24 +28,16 @@ const steps = [
 ] satisfies StepItem[]
 
 const AddTransactionPage = () => {
-    const [transactionData, setTransactionData] = useState({
-        basicDetails: {
-            groupId: undefined,
-            description: undefined,
-            amount: undefined,
-        },
-        contributors: {
-            isMultiple: false,
-            single: undefined,
-            multiple: [],
-        },
+    const [transactionData, setTransactionData] = useState<AddTransactionDataProps>({
+        basicDetails: undefined,
+        contributors: { isMultiple: false },
         recipients: []
     });
     const [users, setUsers] = useState<UserSelectListProps[]>([]);
 
     useEffect(() => {
         const fetchUsers = async () => {
-            if (!transactionData.basicDetails.groupId) return;
+            if (!transactionData.basicDetails?.groupId) return;
 
             const { users: usersData } = await allAddGroupMembers(transactionData.basicDetails.groupId);
             if (usersData) {
@@ -51,7 +46,7 @@ const AddTransactionPage = () => {
         }
 
         fetchUsers();
-    }, [transactionData.basicDetails.groupId]);
+    }, [transactionData.basicDetails?.groupId]);
 
     return (
         <div className="container mx-auto px-4 py-8 md:py-12 lg:py-16 max-w-2xl">

@@ -23,7 +23,7 @@ import { Button } from "@/components/ui/button";
 import FormError from "../form/FormError";
 import FormSuccess from "../form/FormSucess";
 
-import { login } from "@/lib/actions/login";
+import { login } from "@/lib/actions/user";
 
 const LoginPage = () => {
     const [isPending, startTransation] = useTransition();

@@ -7,7 +7,7 @@ import { Card, CardTitle } from "@/components/ui/card"
 interface groupDataProps {
     id: string
     name: string;
-    image: string;
+    image: string | null;
     membersCount: number;
 }
 

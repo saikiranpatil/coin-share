@@ -1,9 +1,23 @@
 "use client"
 
 import {
+    useEffect,
+    useState,
+} from "react"
+
+import {
     DumbbellIcon,
     IndianRupee,
 } from "lucide-react"
+
+import {
+    AddTransactionSchema,
+    addTransactionSchemaType
+} from "@/lib/schemas/transaction"
+
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+
 import {
     SelectValue,
     SelectTrigger,
@@ -13,16 +27,6 @@ import {
 } from "@/components/ui/select"
 import { Input } from "@/components/ui/input"
 import {
-    AddTransactionSchema,
-    addTransactionSchemaType
-} from "@/lib/schemas/transaction"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import React, {
-    useEffect,
-    useState,
-} from "react"
-import {
     Form,
     FormControl,
     FormField,
@@ -30,13 +34,17 @@ import {
     FormLabel,
     FormMessage
 } from "@/components/ui/form"
-
-import { getAllGroupsTitle } from "@/lib/actions/group"
-import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import { useStepper } from "@/components/stepper"
+import { Textarea } from "@/components/ui/textarea"
+import { getAllGroupsTitle } from "@/lib/actions/group"
 
-const AddTransactionBasicDetails = ({ transactionData, setTransactionData }) => {
+interface AddTransactionBasicDetailsProps {
+    transactionData: AddTransactionDataProps;
+    setTransactionData: (values: AddTransactionDataProps) => void;
+}
+
+const AddTransactionBasicDetails = ({ transactionData, setTransactionData }: AddTransactionBasicDetailsProps) => {
     const {
         nextStep,
         prevStep,

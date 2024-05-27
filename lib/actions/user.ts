@@ -1,8 +1,97 @@
 "use server"
 
-import { auth } from "../db/auth";
-import { db } from "../db/db"
 import moment from "moment";
+import bcrypt from "bcryptjs"
+
+import { AuthError } from "next-auth";
+
+import {
+    auth,
+    signIn,
+    signOut
+} from "@/lib/db/auth";
+import { db } from "../db/db";
+
+import {
+    LoginSchema,
+    type loginType
+} from "@/lib/schemas/login";
+import {
+    RegisterSchema,
+    type registerType,
+} from "@/lib/schemas/register";
+
+import { DEFAULT_LOGIN_REDIRECT } from "@/lib/db/routes";
+import { getUserByEmail } from "@/lib/data/user";
+
+
+export const register = async (values: registerType) => {
+    const validatedSchema = RegisterSchema.safeParse(values);
+
+    if (!validatedSchema.success) {
+        return { error: "Invalid Feild" };
+    }
+
+    const { name, email, password } = validatedSchema.data;
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const existingUser = await getUserByEmail(email);
+
+    if (existingUser) {
+        return { error: "Email already use" }
+    }
+
+    await db.user.create({
+        data: {
+            name,
+            email,
+            password: hashedPassword,
+        }
+    })
+
+    return { success: "User created!" };
+}
+
+export const login = async (values: loginType) => {
+    const validatedSchema = LoginSchema.safeParse(values);
+
+    if (!validatedSchema.success) {
+        return { error: "Invalid Feild" };
+    }
+
+    const { email, password } = validatedSchema.data;
+
+    try {
+        await signIn("credentials", {
+            email,
+            password,
+            redirectTo: DEFAULT_LOGIN_REDIRECT
+        });
+
+        return { success: "Logged In" };
+    } catch (error) {
+        if (error instanceof AuthError) {
+            switch (error.type) {
+                case "CredentialsSignin":
+                    return { error: "Invalid Credentials" };
+
+                default:
+                    return { error: "Something went wrong while sigining in" };
+            }
+        }
+        throw error;
+    }
+}
+
+export const logout = async () => {
+    await signOut();
+}
+
+export const loginWithOAuth = async (provider: "google" | "github") => {
+    await signIn(provider, {
+        redirectTo: DEFAULT_LOGIN_REDIRECT
+    });
+}
 
 export const getUserDetails = async () => {
     const session = await auth();
@@ -47,13 +136,13 @@ export const getUserDetails = async () => {
 
         const { id, name, email, image, createdAt, groups, transaction } = user;
         const formattedUser = {
-            id, name, email, image,
+            id, name: name ?? "Unknown", email, image,
             createdAt: moment(createdAt).format("MMMM YYYY"),
-            transactions: transaction.map(({ id, type, description, createdAt, amount, user: name }) => ({
+            transactions: transaction.map(({ id, type, description, createdAt, amount, user: { name } }) => ({
                 id, type, description, createdAt: moment(createdAt).format("YYYY-MM-DD, h:mm A"), amount, creatorName: name,
             })),
             groups: groups.map(({ group: { id, name, image, _count: { members: membersCount } } }) => ({
-                id, name, image, membersCount
+                id, name: name ?? "Unknown", image, membersCount
             })),
         };
 

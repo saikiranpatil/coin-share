@@ -93,6 +93,63 @@ export const getTransactionDetails = async (transactionId: string) => {
 
         return { transaction: filteredTransaction };
     } catch (error) {
-        return { error };
+        return { error: "Something went wrong while loading transaction Details" };
+    }
+}
+
+export const getAllTransactionsByUser = async () => {
+    const session = await auth();
+
+    if (!session?.user?.id) {
+        return { error: "Session or user information is missing" };
+    }
+    const userId = session.user.id;
+
+    try {
+        const transactions = await db.transaction.findMany({
+            where: {
+                creatorUserId: userId,
+            },
+            select: {
+                id: true,
+                amount: true,
+                type: true,
+                description: true,
+                createdAt: true,
+                user: {
+                    select: {
+                        name: true,
+                    }
+                },
+                groups: {
+                    select: {
+                        name: true,
+                    }
+                }
+            }
+        });
+
+        const filteredTransactions = transactions
+            .map(({
+                id,
+                type,
+                description,
+                createdAt,
+                amount,
+                user: { name: creatorName },
+                groups: { name: groupName },
+            }) => ({
+                id,
+                type,
+                description,
+                createdAt: moment(createdAt).format("YYYY-MM-DD, hh:mm A"),
+                amount,
+                creatorName: creatorName ?? "Unknown",
+                groupName: groupName ?? "Unknown",
+            }));
+
+        return { transactions: filteredTransactions };
+    } catch (error) {
+        return { error: "Something went erong while fetching All Transactions" };
     }
 }

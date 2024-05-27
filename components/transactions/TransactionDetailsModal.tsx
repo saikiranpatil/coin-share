@@ -1,3 +1,9 @@
+import { Dot, ReceiptText } from "lucide-react";
+
+import { getTransactionDetails } from "@/lib/actions/transaction";
+
+import ErrorPage from "@/components/error-page";
+
 import {
   Dialog,
   DialogContent,
@@ -9,19 +15,19 @@ import {
   TableBody,
   Table
 } from "@/components/ui/table"
-import { Button } from "../ui/button"
-import { Dot, ReceiptText } from "lucide-react";
-import { ScrollArea } from "../ui/scroll-area";
-import { getTransactionDetails } from "@/lib/actions/transaction";
+import { Button } from "@/components/ui/button"
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface TransactionDetailsModalProps {
   transactionId: string;
 }
 
 const TransactionDetailsModal = async ({ transactionId }: TransactionDetailsModalProps) => {
-  const { transaction } = await getTransactionDetails(transactionId);
+  const { transaction, error } = await getTransactionDetails(transactionId);
 
-  if (!transaction) return;
+  if (!transaction || error) {
+    return <ErrorPage message={error} />
+  }
 
   return (
     <Dialog>

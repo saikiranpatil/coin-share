@@ -1,27 +1,32 @@
 import Link from "next/link";
 
+import { getGroupDetails } from "@/lib/actions/group";
+
 import { Plus } from "lucide-react";
 
-import CardWrapper from "@/components/CardWrapper";
+import NotFound from "@/components/not-found";
+import CardWrapper from "@/components/card-wrapper";
 import GroupMemberCard from "@/components/group/GroupMemberCard";
 import TransactionsTable from "@/components/transactions/TransactionsTable";
+import AddGroupMemberModal from "@/components/group/AddGroupMemberModal";
 
 import {
   Avatar,
   AvatarFallback,
   AvatarImage
 } from "@/components/ui/avatar";
+import {
+  Card,
+  CardDescription
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Card, CardDescription } from "@/components/ui/card";
-import { getGroupDetails } from "@/lib/actions/group";
-import AddGroupMemberModal from "./AddGroupMemberModal";
 
 const GroupPage = async ({ params }: { params: GroupPageProps }) => {
   const { groupId } = params;
   const { group } = await getGroupDetails(groupId);
 
   if (!group) {
-    return;
+    return <NotFound />;
   }
 
   return (
@@ -50,7 +55,7 @@ const GroupPage = async ({ params }: { params: GroupPageProps }) => {
         <CardWrapper
           cardTitle="Group Members"
           cardDescription="All the members of the group."
-          cardHeaderButton={<AddGroupMemberModal/>}
+          cardHeaderButton={<AddGroupMemberModal />}
         >
           <div className="grid gap-4">
             {

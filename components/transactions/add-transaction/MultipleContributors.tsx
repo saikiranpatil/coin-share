@@ -1,53 +1,59 @@
 "use client";
 
+import { useEffect, useState } from "react";
+
+import { ChevronsUpDown, X } from "lucide-react";
 import { Button } from "@/components/ui/button"
 import {
     AvatarImage,
     AvatarFallback,
     Avatar
 } from "@/components/ui/avatar";
-import { Input } from "@/components/ui/input";
-import { ChevronsUpDown, X } from "lucide-react";
-
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { useStepper } from "@/components/stepper";
-import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
-import { useEffect, useState } from "react";
-import SelectUser from "@/components/select-user";
 import { Card } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import SelectUser from "@/components/select-user";
+import { useStepper } from "@/components/stepper";
 import FormError from "@/components/form/FormError";
+import { Separator } from "@/components/ui/separator";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
-const MultipleContributors = ({ users, transactionData, setTransactionData }) => {
+interface MultipleContributorProps {
+    transactionData: AddTransactionDataProps;
+    setTransactionData: (values: AddTransactionDataProps) => void;
+    users: UserSelectListProps[];
+}
+
+const MultipleContributors = ({ users, transactionData, setTransactionData }: MultipleContributorProps) => {
     const {
         nextStep,
         prevStep,
         isDisabledStep,
     } = useStepper();
 
-    const totalAmount = transactionData.basicDetails?.amount || 0;
+    const totalAmount: number = transactionData.basicDetails?.amount ? Number(transactionData.basicDetails.amount) : 0;
     const [selectedAmount, setSelectedAmount] = useState(0);
     const [leftAmount, setLeftAmount] = useState(0);
 
     const [errorState, setErrorState] = useState<string | undefined>(undefined);
 
-    const [amountErrors, setAmountErrors] = useState({});
-    const [multipleContributors, setMultipleContributors] = useState(transactionData.contributors.multiple);
+    const [amountErrors, setAmountErrors] = useState<{ [key: string]: string }>({});
+    const [multipleContributors, setMultipleContributors] = useState<AddTransactionDataMembersProps[]>(transactionData.contributors?.multiple ?? []);
 
-    const [filteredMultipleContributors, setFilteredMultipleContributors] = useState([]);
+    const [filteredMultipleContributors, setFilteredMultipleContributors] = useState<UserSelectListProps[]>([]);
 
-    const onMultipleUserSelect = (user) => {
-        if (!multipleContributors.some(contributor => contributor.id === user.id)) {
+    const onMultipleUserSelect = (user: UserSelectListProps) => {
+        if (multipleContributors && !multipleContributors.some(contributor => contributor.id === user.id)) {
             setMultipleContributors([...multipleContributors, { ...user, amount: 0 }]);
         }
     }
 
-    const onUserRemoveClick = (userId) => {
+    const onUserRemoveClick = (userId: string) => {
         const updatedMultipleContributors = multipleContributors.filter(contributor => contributor.id !== userId);
         setMultipleContributors(updatedMultipleContributors);
     }
 
-    const handleAmountChange = (userId, amount) => {
+    const handleAmountChange = (userId: string, amount: string) => {
         const updatedContributors = multipleContributors.map(contributor =>
             contributor.id === userId ? { ...contributor, amount: parseFloat(amount) || 0 } : contributor
         );
@@ -56,7 +62,7 @@ const MultipleContributors = ({ users, transactionData, setTransactionData }) =>
 
     const onNextClick = () => {
         let hasError = false;
-        const errors = {};
+        const errors: { [key: string]: string } = {};
 
         multipleContributors.forEach(contributor => {
             if (contributor.amount <= 0) {
@@ -97,8 +103,6 @@ const MultipleContributors = ({ users, transactionData, setTransactionData }) =>
         );
         setFilteredMultipleContributors(newFilteredMultipleContributors);
     }, [users, multipleContributors]);
-
-    
 
     return (
         <div className="space-y-4">

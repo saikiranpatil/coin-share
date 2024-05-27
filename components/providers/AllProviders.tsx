@@ -1,6 +1,6 @@
-import { Toaster } from "../ui/toaster";
-import { TooltipProvider } from "../ui/tooltip";
-import { ThemeProvider } from "./ThemeProvider";
+import { Toaster } from "@/components/ui/toaster";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { ThemeProvider } from "@/components/providers/ThemeProvider";
 
 export default function AllProviders({
     children,

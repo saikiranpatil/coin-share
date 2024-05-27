@@ -67,7 +67,7 @@ export const getAllGroups = async () => {
 
         const filteredGroups = groups.map(group => ({
             id: group.id,
-            name: group.name,
+            name: group.name ?? "Unknown",
             image: group.image,
             membersCount: group._count.members,
         }));
@@ -133,6 +133,11 @@ export const getGroupDetails = async (groupId: string) => {
                             select: {
                                 name: true,
                             }
+                        },
+                        groups: {
+                            select: {
+                                name: true,
+                            }
                         }
                     }
                 },
@@ -150,12 +155,37 @@ export const getGroupDetails = async (groupId: string) => {
 
         const formattedGroup = {
             ...group,
-            members: group.members.map(({ user: { id, name, email, image } }) => ({
-                id, name, email, image
-            })),
-            transactions: group.transactions.map(({ id, type, description, createdAt, amount, user: { name } }) => ({
-                id, type, description, createdAt: moment(createdAt).format("YYYY-MM-DD, hh:mm A"), amount, creatorName: name
-            }))
+            members: group.members
+                .map(({
+                    user: {
+                        id,
+                        name,
+                        email,
+                        image
+                    } }) => ({
+                        id,
+                        name: name ?? "Unknown",
+                        email,
+                        image
+                    })),
+            transactions: group.transactions
+                .map(({
+                    id,
+                    type,
+                    description,
+                    createdAt,
+                    amount,
+                    user: { name },
+                    groups: { name: groupName }
+                }) => ({
+                    id,
+                    type,
+                    description,
+                    groupName: groupName ?? "Unknown",
+                    amount,
+                    creatorName: name ?? "Unknown",
+                    createdAt: moment(createdAt).format("YYYY-MM-DD, hh:mm A"),
+                }))
         };
 
         return { group: formattedGroup };

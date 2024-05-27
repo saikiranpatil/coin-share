@@ -1,27 +1,35 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+import { createTransaction } from "@/lib/actions/transaction";
+
+import { useEffect, useState, useTransition } from "react";
+
 import { Button } from "@/components/ui/button"
 import {
   AvatarImage,
   AvatarFallback,
   Avatar
 } from "@/components/ui/avatar";
+import { Card } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { ChevronsUpDown, X } from "lucide-react";
-
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { useStepper } from "@/components/stepper";
-import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
-import { useEffect, useState, useTransition } from "react";
 import SelectUser from "@/components/select-user";
-import { Card } from "@/components/ui/card";
-import FormError from "@/components/form/FormError";
-import { createTransaction } from "@/lib/actions/transaction";
+import { useStepper } from "@/components/stepper";
 import { toast } from "@/components/ui/use-toast";
-import { useRouter } from "next/navigation";
+import { Separator } from "@/components/ui/separator";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
-const Recipients = ({ users, transactionData, setTransactionData }) => {
+import FormError from "@/components/form/FormError";
+
+interface RecipientsProps {
+  transactionData: AddTransactionDataProps;
+  setTransactionData: (values: AddTransactionDataProps) => void;
+  users: UserSelectListProps[];
+}
+
+const Recipients = ({ users, transactionData, setTransactionData }: RecipientsProps) => {
   const router = useRouter();
 
   const [isPending, startTransation] = useTransition();
@@ -31,50 +39,54 @@ const Recipients = ({ users, transactionData, setTransactionData }) => {
     isDisabledStep,
   } = useStepper();
 
-  const totalAmount = transactionData.basicDetails?.amount || 0;
+  const totalAmount: number = transactionData.basicDetails?.amount ? Number(transactionData.basicDetails.amount) : 0;
   const [selectedAmount, setSelectedAmount] = useState(0);
   const [leftAmount, setLeftAmount] = useState(0);
 
   const [errorState, setErrorState] = useState<string | undefined>(undefined);
 
-  const [amountErrors, setAmountErrors] = useState({});
-  const [recipients, setRecipients] = useState([]);
+  const [amountErrors, setAmountErrors] = useState<{ [key: string]: string }>({});
+  const [recipients, setRecipients] = useState<AddTransactionDataMembersProps[]>([]);
 
-  const [filteredRecipients, setFilteredRecipients] = useState([]);
+  const [filteredRecipients, setFilteredRecipients] = useState<UserSelectListProps[]>([]);
 
   useEffect(() => {
-    const selectedUsers = transactionData.contributors.isMultiple ?
-      transactionData.contributors.multiple : [transactionData.contributors.single];
+    const selectedUsers = transactionData.contributors.isMultiple
+      ? transactionData.contributors.multiple ?? []
+      : transactionData.contributors.single
+        ? [transactionData.contributors.single]
+        : [];
 
     const filteredUsers = users
       .filter(user => !selectedUsers.some(selectedUser => selectedUser.id === user.id))
       .filter(user => !recipients.some(recipient => recipient.id === user.id));
+
     setFilteredRecipients(filteredUsers);
   }, [users, transactionData, recipients]);
 
-  const onUserSelect = (user) => {
+  const onUserSelect = (user: UserSelectListProps) => {
     if (!recipients.some(recipients => recipients.id === user.id)) {
       setRecipients([...recipients, { ...user, amount: 0 }]);
     }
   }
 
-  const onUserRemoveClick = (userId) => {
+  const onUserRemoveClick = (userId: string) => {
     const updatedMultipleContributors = recipients.filter(recipients => recipients.id !== userId);
     setRecipients(updatedMultipleContributors);
   }
 
-  const handleAmountChange = (userId, amount) => {
+  const handleAmountChange = (userId: string, amount: string) => {
     const updatedRecipients = recipients.map(recipients =>
       recipients.id === userId ? { ...recipients, amount: parseFloat(amount) || 0 } : recipients
     );
     setRecipients(updatedRecipients);
   }
 
-  const onSubmit = async (e) => {
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     let hasError = false;
-    const errors = {};
+    const errors: { [key: string]: string } = {};
 
     recipients.forEach(recipient => {
       if (recipient.amount <= 0) {

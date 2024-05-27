@@ -1,6 +1,7 @@
-import {
-  CreditCard,
-} from 'lucide-react';
+import { CreditCard } from 'lucide-react';
+
+import TransactionDetailsModal from '@/components/transactions/TransactionDetailsModal';
+
 import {
   TableHead,
   TableRow,
@@ -9,9 +10,7 @@ import {
   TableBody,
   Table
 } from "@/components/ui/table"
-
-import TransactionDetailsModal from './TransactionDetailsModal';
-import { CardDescription } from '../ui/card';
+import { CardDescription } from '@/components/ui/card';
 
 interface TransactionsTableProps {
   transactions: TransactionTableProps[];

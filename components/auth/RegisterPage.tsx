@@ -23,7 +23,7 @@ import { Button } from "@/components/ui/button";
 import FormError from "../form/FormError";
 import FormSuccess from "../form/FormSucess";
 
-import { register } from "@/lib/actions/register";
+import { register } from "@/lib/actions/user";
 import { redirect } from "next/navigation";
 
 const RegisterPage = () => {

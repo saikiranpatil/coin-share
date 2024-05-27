@@ -26,8 +26,17 @@ import {
     Card,
     CardDescription
 } from "@/components/ui/card"
+import { getAllTransactionsByUser } from "@/lib/actions/transaction"
+import ErrorPage from "../error-page"
 
-export default function TransactionsPage() {
+
+export default async function TransactionsPage() {
+    const { transactions, error } = await getAllTransactionsByUser();
+
+    if (!transactions) {
+        return <ErrorPage message={error} />;
+    }
+
     return (
         <main className="w-full items-start gap-4 p-4 sm:px-6 sm:py-4 sm:gap-6 grid auto-rows-max md:gap-8">
             <Card>
@@ -82,7 +91,7 @@ export default function TransactionsPage() {
                             </div>
                         </div>
                         <TabsContent value="week">
-                            <TransactionsTable />
+                            <TransactionsTable transactions={transactions} />
                         </TabsContent>
                     </Tabs>
                 </CardContent>

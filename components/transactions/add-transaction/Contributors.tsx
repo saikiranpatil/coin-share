@@ -9,7 +9,13 @@ import {
 import SingleContributor from "./SingleContributor";
 import MultipleContributors from "./MultipleContributors";
 
-const Contributors = ({ transactionData, setTransactionData, users }) => {
+interface ContrubutersProps {
+  transactionData: AddTransactionDataProps;
+  setTransactionData: (values: AddTransactionDataProps) => void;
+  users: UserSelectListProps[];
+}
+
+const Contributors = ({ transactionData, setTransactionData, users }: ContrubutersProps) => {
   return (
     <Tabs
       defaultValue={transactionData.contributors.isMultiple ? "multiple" : "single"}

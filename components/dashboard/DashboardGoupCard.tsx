@@ -1,15 +1,5 @@
 import Link from "next/link"
 
-import { ArrowUpRight } from 'lucide-react';
-
-import { Button } from "@/components/ui/button"
-import {
-    CardTitle,
-    CardHeader,
-    CardContent,
-    Card,
-    CardDescription
-} from "@/components/ui/card"
 import {
     AvatarImage,
     AvatarFallback,
@@ -19,7 +9,7 @@ import {
 interface DashboardGoupCardProps {
     id: string;
     name: string;
-    image: string;
+    image: string | null;
     membersCount: number;
 }
 
