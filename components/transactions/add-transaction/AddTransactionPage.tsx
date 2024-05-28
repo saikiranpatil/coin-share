@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { allAddGroupMembers } from "@/lib/actions/user";
+import { allGroupMembers } from "@/lib/actions/user";
 
 import Recipients from "@/components/transactions/add-transaction/Recipients";
 import BasicDetails from "@/components/transactions/add-transaction/BasicDetails";
@@ -19,6 +19,7 @@ import {
     CardHeader,
     CardTitle
 } from "@/components/ui/card";
+import { toast } from "@/components/ui/use-toast";
 
 
 const steps = [
@@ -39,7 +40,14 @@ const AddTransactionPage = () => {
         const fetchUsers = async () => {
             if (!transactionData.basicDetails?.groupId) return;
 
-            const { users: usersData } = await allAddGroupMembers(transactionData.basicDetails.groupId);
+            const { users: usersData, error } = await allGroupMembers(transactionData.basicDetails.groupId);
+
+            if (error) {
+                toast({
+                    title: "Error",
+                    description: error,
+                })
+            }
             if (usersData) {
                 setUsers(usersData);
             }

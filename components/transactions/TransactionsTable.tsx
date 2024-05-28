@@ -37,7 +37,15 @@ const TransactionsTable = ({ transactions }: TransactionsTableProps) => {
         <TableBody>
           {
             transactions && transactions.length > 0 && transactions.map(transaction => {
-              const shareClassName = transaction.amount ? transaction.amount > 0 ? "text-blue-500" : "text-red-500" : "text-gray-500";
+              const { tag, text } = transaction.status;
+              const statusClassMap: { [K in TransactionsStatusTagProps]: string } = {
+                "credit": "text-green-500",
+                "debit": "text-red-500",
+                "return": "text-blue-500",
+                "collect": "text-blue-500",
+                "uninvolved": "text-gray-500",
+              };
+
               return (
                 <TableRow key={transaction.id}>
                   <TableCell>
@@ -55,7 +63,7 @@ const TransactionsTable = ({ transactions }: TransactionsTableProps) => {
                   </TableCell>
                   <TableCell className="text-right">{transaction.amount}</TableCell>
                   <TableCell className="text-right">
-                    <span className={`text-xs font-medium ${shareClassName}`}>You borrowed Rs.500</span>
+                    <span className={`text-xs font-medium ${statusClassMap[tag]}`}>{text}</span>
                   </TableCell>
                   <TableCell className="text-right">
                     <TransactionDetailsModal transactionId={transaction.id} />

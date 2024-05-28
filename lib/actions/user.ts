@@ -23,6 +23,7 @@ import {
 
 import { DEFAULT_LOGIN_REDIRECT } from "@/lib/db/routes";
 import { getUserByEmail } from "@/lib/data/user";
+import { getTransactionStatusOfUser } from "../utils";
 
 
 export const register = async (values: registerType) => {
@@ -96,14 +97,16 @@ export const loginWithOAuth = async (provider: "google" | "github") => {
 export const getUserDetails = async () => {
     const session = await auth();
 
-    if (!session?.user) {
+    if (!session?.user?.id) {
         return { error: "Session or user information is missing" };
     }
 
     const userId = session.user.id;
     try {
         const user = await db.user.findUnique({
-            where: { id: userId },
+            where: {
+                id: userId,
+            },
             include: {
                 transaction: {
                     include: {
@@ -111,8 +114,46 @@ export const getUserDetails = async () => {
                             select: {
                                 name: true,
                             }
-                        }
+                        },
+                        contributors: {
+                            select: {
+                                amount: true,
+                                user: {
+                                    select: {
+                                        id: true,
+                                    }
+                                }
+                            },
+                        },
+                        recipients: {
+                            select: {
+                                amount: true,
+                                user: {
+                                    select: {
+                                        id: true,
+                                    }
+                                }
+                            },
+                        },
                     },
+                    where: {
+                        OR: [
+                            {
+                                contributors: {
+                                    some: {
+                                        userId: userId,
+                                    }
+                                }
+                            },
+                            {
+                                recipients: {
+                                    some: {
+                                        userId: userId,
+                                    }
+                                }
+                            },
+                        ]
+                    }
                 },
                 groups: {
                     include: {
@@ -127,6 +168,26 @@ export const getUserDetails = async () => {
                         }
                     }
                 },
+                contributors: {
+                    select: {
+                        amount: true,
+                        user: {
+                            select: {
+                                id: true,
+                            }
+                        }
+                    },
+                },
+                recipients: {
+                    select: {
+                        amount: true,
+                        user: {
+                            select: {
+                                id: true,
+                            }
+                        }
+                    },
+                },
             },
         });
 
@@ -134,25 +195,44 @@ export const getUserDetails = async () => {
             return { error: "user not found" };
         }
 
-        const { id, name, email, image, createdAt, groups, transaction } = user;
+        const { id, name, email, image, createdAt, groups, transaction: transactionsData } = user;
+
         const formattedUser = {
             id, name: name ?? "Unknown", email, image,
             createdAt: moment(createdAt).format("MMMM YYYY"),
-            transactions: transaction.map(({ id, type, description, createdAt, amount, user: { name } }) => ({
-                id, type, description, createdAt: moment(createdAt).format("YYYY-MM-DD, h:mm A"), amount, creatorName: name,
-            })),
-            groups: groups.map(({ group: { id, name, image, _count: { members: membersCount } } }) => ({
-                id, name: name ?? "Unknown", image, membersCount
-            })),
+            transactions: transactionsData
+                .map(
+                    (transaction) => {
+                        const {
+                            id, type, description, createdAt, amount,
+                            user: { name: creatorName },
+                        } = transaction;
+
+                        return ({
+                            id, type, description, status: getTransactionStatusOfUser(userId, transaction, type),
+                            createdAt: moment(createdAt).format("YYYY-MM-DD, hh:mm A"), amount,
+                            creatorName: creatorName ?? "Unknown",
+                        })
+                    }
+                ),
+            groups: groups.map(
+                ({
+                    group: { id, name, image, _count: { members: membersCount } }
+                }) =>
+                ({
+                    id, name: name ?? "Unknown", image, membersCount
+                })
+            ),
         };
 
         return { user: formattedUser };
     } catch (error) {
+        console.log(error);
         return { error: "Something went wrong while fetching user details" };
     }
 }
 
-export const allAddGroupMembers = async (groupId: string) => {
+export const allGroupMembers = async (groupId: string, withinGroup: boolean = true) => {
     const session = await auth();
 
     if (!session?.user) {
@@ -165,8 +245,6 @@ export const allAddGroupMembers = async (groupId: string) => {
         },
         select: {
             id: true,
-            name: true,
-            image: true,
         }
     });
 
@@ -182,17 +260,22 @@ export const allAddGroupMembers = async (groupId: string) => {
                 email: true,
                 image: true,
             }, where: {
-                groups: {
-                    none: {
-                        groupId: groupId
+                groups: withinGroup ?
+                    {
+                        some: {
+                            groupId: groupId,
+                        }
+                    } : {
+                        none: {
+                            groupId: groupId,
+                        }
                     }
-                }
             }
         }) as UserSelectListProps[];
 
         return { users };
     } catch (error) {
-        return { error };
+        return { error: "Something went wrong while fetching users list" };
     }
 }
 

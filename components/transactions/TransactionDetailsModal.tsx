@@ -69,22 +69,14 @@ const TransactionDetailsModal = async ({ transactionId }: TransactionDetailsModa
                 <span className="font-medium">Contributors:</span>
                 <Table>
                   <TableBody>
-                    <TableRow>
-                      <TableCell className="text-sm">Saikiran Patil</TableCell>
-                      <TableCell className="text-muted-foreground text-right">Rs. 250</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell className="text-sm">Mohan Kumar</TableCell>
-                      <TableCell className="text-muted-foreground text-right">Rs. 250</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell className="text-sm">Ramesh Sharma</TableCell>
-                      <TableCell className="text-muted-foreground text-right">Rs. 250</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell className="text-sm">Shreepad</TableCell>
-                      <TableCell className="text-muted-foreground text-right">Rs. 250</TableCell>
-                    </TableRow>
+                    {
+                      transaction.contributors.map((contributer, index) => (
+                        <TableRow key={transaction.id + "-transaction-contributer-" + index}>
+                          <TableCell className="text-sm">{contributer.name}</TableCell>
+                          <TableCell className="text-muted-foreground text-right">Rs. {" "} {transaction.amount}</TableCell>
+                        </TableRow>
+                      ))
+                    }
                   </TableBody>
                 </Table>
               </div>
@@ -92,30 +84,14 @@ const TransactionDetailsModal = async ({ transactionId }: TransactionDetailsModa
                 <span className="font-medium">Recipients:</span>
                 <Table>
                   <TableBody>
-                    <TableRow>
-                      <TableCell className="text-sm">Ramesh</TableCell>
-                      <TableCell className="text-muted-foreground text-right">Rs. 200</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell className="text-sm">Suresh</TableCell>
-                      <TableCell className="text-muted-foreground text-right">Rs. 200</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell className="text-sm">Ramesh</TableCell>
-                      <TableCell className="text-muted-foreground text-right">Rs. 200</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell className="text-sm">Suresh</TableCell>
-                      <TableCell className="text-muted-foreground text-right">Rs. 200</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell className="text-sm">Ramesh</TableCell>
-                      <TableCell className="text-muted-foreground text-right">Rs. 200</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell className="text-sm">Suresh</TableCell>
-                      <TableCell className="text-muted-foreground text-right">Rs. 200</TableCell>
-                    </TableRow>
+                    {
+                      transaction.recipients.map((recipient, index) => (
+                        <TableRow key={transaction.id + "-transaction-recipient-" + index}>
+                          <TableCell className="text-sm">{recipient.name}</TableCell>
+                          <TableCell className="text-muted-foreground text-right">Rs. {" "} {recipient.amount}</TableCell>
+                        </TableRow>
+                      ))
+                    }
                   </TableBody>
                 </Table>
               </div>

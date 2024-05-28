@@ -4,6 +4,7 @@ import moment from "moment";
 import { auth } from "../db/auth";
 import { db } from "../db/db"
 import { CreateGroupSchema, type createGroupSchemaType } from "../schemas/group";
+import { getTransactionStatusOfUser } from "../utils";
 
 export const createGroup = async (values: createGroupSchemaType) => {
     const session = await auth();
@@ -129,6 +130,26 @@ export const getGroupDetails = async (groupId: string) => {
             include: {
                 transactions: {
                     include: {
+                        contributors: {
+                            select: {
+                                amount: true,
+                                user: {
+                                    select: {
+                                        name: true,
+                                    }
+                                }
+                            },
+                        },
+                        recipients: {
+                            select: {
+                                amount: true,
+                                user: {
+                                    select: {
+                                        name: true,
+                                    }
+                                }
+                            },
+                        },
                         user: {
                             select: {
                                 name: true,
@@ -155,41 +176,32 @@ export const getGroupDetails = async (groupId: string) => {
 
         const formattedGroup = {
             ...group,
-            members: group.members
-                .map(({
-                    user: {
-                        id,
-                        name,
-                        email,
-                        image
-                    } }) => ({
-                        id,
-                        name: name ?? "Unknown",
-                        email,
-                        image
-                    })),
-            transactions: group.transactions
-                .map(({
-                    id,
-                    type,
-                    description,
-                    createdAt,
-                    amount,
-                    user: { name },
-                    groups: { name: groupName }
+            members: group.members.map(
+                ({
+                    user: { id, name, email, image }
                 }) => ({
-                    id,
-                    type,
-                    description,
-                    groupName: groupName ?? "Unknown",
-                    amount,
-                    creatorName: name ?? "Unknown",
-                    createdAt: moment(createdAt).format("YYYY-MM-DD, hh:mm A"),
-                }))
+                    id, name: name ?? "Unknown", email, image
+                })
+            ),
+            transactions: group.transactions.map(
+                (transaction) => {
+                    const {
+                        id, type, description, createdAt, amount,
+                        user: { name: creatorName },
+                    } = transaction;
+
+                    return ({
+                        id, type, description, status: getTransactionStatusOfUser(userId, transaction, type),
+                        createdAt: moment(createdAt).format("YYYY-MM-DD, hh:mm A"), amount,
+                        creatorName: creatorName ?? "Unknown",
+                    })
+                }
+            )
         };
 
         return { group: formattedGroup };
-    } catch (err) {
+    } catch (error) {
+        console.log(error);
         return { error: "Something went wrong while fetching group data" };
     }
 }    

@@ -3,8 +3,25 @@
 import { auth } from "../db/auth";
 import { db } from "../db/db"
 import moment from "moment";
+import { getTransactionStatusOfUser } from "../utils";
 
-export const createTransaction = async (transaction) => {
+interface createTransactionProps {
+    basicDetails: {
+        type: "Payment" | "Settlement";
+        image?: string;
+        amount: string;
+        groupId: string;
+        description: string;
+    },
+    contributors: {
+        isMultiple: boolean;
+        single?: UserSelectListProps;
+        multiple?: AddTransactionDataMembersProps[];
+    },
+    recipients: AddTransactionDataMembersProps[];
+};
+
+export const createTransaction = async (transaction: createTransactionProps) => {
     const session = await auth();
 
     if (!session?.user?.id) {
@@ -12,7 +29,7 @@ export const createTransaction = async (transaction) => {
     }
     const userId = session.user.id;
 
-    const parsedAmount = Number(transaction.basicDetails.amount);
+    const parsedAmount = Number(transaction.basicDetails?.amount);
 
     if (isNaN(parsedAmount)) {
         return { error: "Invalid Amount Format" };
@@ -20,8 +37,15 @@ export const createTransaction = async (transaction) => {
 
     const filteredContributors = transaction.contributors.isMultiple ?
         transaction.contributors.multiple : [{ ...transaction.contributors.single, amount: parsedAmount }];
-
     const { recipients } = transaction;
+
+    const totalContributersAmount = filteredContributors?.reduce((total, contributer) => total + contributer.amount, 0);
+    const totalRecipientsAmount = recipients?.reduce((total, recipient) => total + recipient.amount, 0);
+
+    if (totalContributersAmount !== totalRecipientsAmount) {
+        return { error: "Total Contributers Amount is not equal to total Recipients Amount" };
+    }
+
     const { type, description, groupId } = transaction.basicDetails;
 
     try {
@@ -78,6 +102,26 @@ export const getTransactionDetails = async (transactionId: string) => {
                     select: {
                         name: true,
                     }
+                },
+                contributors: {
+                    select: {
+                        amount: true,
+                        user: {
+                            select: {
+                                name: true,
+                            }
+                        }
+                    },
+                },
+                recipients: {
+                    select: {
+                        amount: true,
+                        user: {
+                            select: {
+                                name: true,
+                            }
+                        }
+                    },
                 }
             }
         });
@@ -86,9 +130,17 @@ export const getTransactionDetails = async (transactionId: string) => {
             return { error: "Transaction not found" };
         }
 
-        const { id, type, description, createdAt, amount, user: { name: creatorName }, groups: { name: groupName } } = transaction;
+        const {
+            id, type, description, createdAt, amount,
+            contributors, recipients,
+            user: { name: creatorName }, groups: { name: groupName },
+        } = transaction;
+
         const filteredTransaction = {
-            id, type, description, createdAt: moment(createdAt).format("YYYY-MM-DD, hh:mm A"), amount, creatorName, groupName
+            id, type, description, amount, creatorName, groupName,
+            createdAt: moment(createdAt).format("YYYY-MM-DD, hh:mm A"),
+            recipients: recipients.map(({ amount, user }) => ({ amount, name: user.name })),
+            contributors: contributors.map(({ amount, user }) => ({ amount, name: user.name })),
         };
 
         return { transaction: filteredTransaction };
@@ -121,35 +173,49 @@ export const getAllTransactionsByUser = async () => {
                         name: true,
                     }
                 },
-                groups: {
+                contributors: {
                     select: {
-                        name: true,
-                    }
-                }
+                        amount: true,
+                        user: {
+                            select: {
+                                id: true,
+                            }
+                        }
+                    },
+                },
+                recipients: {
+                    select: {
+                        amount: true,
+                        user: {
+                            select: {
+                                id: true,
+                            }
+                        }
+                    },
+                },
             }
         });
 
         const filteredTransactions = transactions
-            .map(({
-                id,
-                type,
-                description,
-                createdAt,
-                amount,
-                user: { name: creatorName },
-                groups: { name: groupName },
-            }) => ({
-                id,
-                type,
-                description,
-                createdAt: moment(createdAt).format("YYYY-MM-DD, hh:mm A"),
-                amount,
-                creatorName: creatorName ?? "Unknown",
-                groupName: groupName ?? "Unknown",
-            }));
+            .map(
+                (transaction) => {
+                    const {
+                        id, type, description, createdAt, amount,
+                        user: { name: creatorName },
+                    } = transaction;
+
+                    console.log(getTransactionStatusOfUser(userId, transaction, type),"saasdds");
+
+                    return ({
+                        id, type, description, status: getTransactionStatusOfUser(userId, transaction, type),
+                        createdAt: moment(createdAt).format("YYYY-MM-DD, hh:mm A"), amount,
+                        creatorName: creatorName ?? "Unknown",
+                    })
+                }
+            );
 
         return { transactions: filteredTransactions };
     } catch (error) {
-        return { error: "Something went erong while fetching All Transactions" };
+        return { error: "Something went erong while fetching Transactions Details" };
     }
 }

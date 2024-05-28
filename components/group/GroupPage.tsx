@@ -4,7 +4,7 @@ import { getGroupDetails } from "@/lib/actions/group";
 
 import { Plus } from "lucide-react";
 
-import NotFound from "@/components/not-found";
+import ErrorPage from "@/components/error-page";
 import CardWrapper from "@/components/card-wrapper";
 import GroupMemberCard from "@/components/group/GroupMemberCard";
 import TransactionsTable from "@/components/transactions/TransactionsTable";
@@ -23,10 +23,10 @@ import { Button } from "@/components/ui/button";
 
 const GroupPage = async ({ params }: { params: GroupPageProps }) => {
   const { groupId } = params;
-  const { group } = await getGroupDetails(groupId);
+  const { group, error } = await getGroupDetails(groupId);
 
-  if (!group) {
-    return <NotFound />;
+  if (error) {
+    return <ErrorPage message={error} />;
   }
 
   return (

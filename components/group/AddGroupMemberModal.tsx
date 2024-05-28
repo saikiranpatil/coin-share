@@ -5,7 +5,7 @@ import { useEffect, useState } from "react"
 
 import {
     addUserToGroup,
-    allAddGroupMembers
+    allGroupMembers
 } from "@/lib/actions/user"
 
 import { UserPlus } from "lucide-react"
@@ -22,7 +22,7 @@ const AddGroupMemberModal = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const { users: usersData } = await allAddGroupMembers(groupId);
+            const { users: usersData } = await allGroupMembers(groupId, false);
 
             if (usersData) {
                 setUsers(usersData);
