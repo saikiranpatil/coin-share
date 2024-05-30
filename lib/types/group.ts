@@ -7,6 +7,10 @@ interface GroupMemberPageProps {
     name: string;
     email: string;
     image: string | null;
+    status: {
+        tag: GroupStatusTagProps;
+        text: string;
+    }
 }
 
 interface GroupSelectListProps {

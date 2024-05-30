@@ -11,6 +11,7 @@ import {
   Table
 } from "@/components/ui/table"
 import { CardDescription } from '@/components/ui/card';
+import { transactionStatusClassMap } from '@/lib/constants';
 
 interface TransactionsTableProps {
   transactions: TransactionTableProps[];
@@ -29,7 +30,7 @@ const TransactionsTable = ({ transactions }: TransactionsTableProps) => {
               </div>
             </TableHead>
             <TableHead>Description</TableHead>
-            <TableHead className="text-right">Amount</TableHead>
+            <TableHead className="text-left">Amount</TableHead>
             <TableHead className="text-right">Share</TableHead>
             <TableHead className="text-right">Actions</TableHead>
           </TableRow>
@@ -38,14 +39,6 @@ const TransactionsTable = ({ transactions }: TransactionsTableProps) => {
           {
             transactions && transactions.length > 0 && transactions.map(transaction => {
               const { tag, text } = transaction.status;
-              const statusClassMap: { [K in TransactionsStatusTagProps]: string } = {
-                "credit": "text-green-500",
-                "debit": "text-red-500",
-                "return": "text-blue-500",
-                "collect": "text-blue-500",
-                "uninvolved": "text-gray-500",
-              };
-
               return (
                 <TableRow key={transaction.id}>
                   <TableCell>
@@ -54,16 +47,19 @@ const TransactionsTable = ({ transactions }: TransactionsTableProps) => {
                   <TableCell>
                     <div className="flex flex-col items-start">
                       <div className="font-medium">{transaction.creatorName}</div>
-                      <span className="text-xs text-muted-foreground">{transaction.type}</span>
+                      <span className="text-xs text-muted-foreground">{transaction.groupName}</span>
                     </div>
                   </TableCell>
                   <TableCell>
                     <div>{transaction.description}</div>
-                    <div className="text-sm text-muted-foreground">{transaction.createdAt}</div>
+                    <div className="text-xs text-muted-foreground">{transaction.createdAt}</div>
                   </TableCell>
-                  <TableCell className="text-right">{transaction.amount}</TableCell>
+                  <TableCell className="text-left flex flex-col items-start">
+                    <span>Rs.{transaction.amount}</span>
+                    <span className="text-xs text-muted-foreground">{transaction.type}</span>
+                  </TableCell>
                   <TableCell className="text-right">
-                    <span className={`text-xs font-medium ${statusClassMap[tag]}`}>{text}</span>
+                    <span className={`text-xs font-medium ${transactionStatusClassMap[tag]}`}>{text}</span>
                   </TableCell>
                   <TableCell className="text-right">
                     <TransactionDetailsModal transactionId={transaction.id} />

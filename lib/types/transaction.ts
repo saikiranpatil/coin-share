@@ -1,4 +1,5 @@
 type TransactionsStatusTagProps = "credit" | "debit" | "collect" | "return" | "uninvolved";
+type GroupStatusTagProps = "owe" | "getback" | "settled";
 
 interface TransactionTableProps {
     id: string;
@@ -7,6 +8,7 @@ interface TransactionTableProps {
     createdAt: string;
     amount: number;
     creatorName: string;
+    groupName: string;
     status: {
         tag: TransactionsStatusTagProps;
         text: string;

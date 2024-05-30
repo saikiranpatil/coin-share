@@ -1,3 +1,5 @@
+import { groupStatusClassMap } from "@/lib/constants";
+
 import {
     Avatar,
     AvatarFallback,
@@ -6,11 +8,10 @@ import {
 import { Button } from "@/components/ui/button";
 
 const GroupMemberCard = ({ groupMember }: { groupMember: GroupMemberPageProps }) => {
-    const refundAmount = 200;
-    const settleClass = refundAmount > 0 ? "text-green-500" : refundAmount < 0 ? "text-red-500" : "text-gray-500";
+    const { tag, text } = groupMember.status;
     return (
         <div
-            className="flex items-center gap-4 rounded-md bg-gray-100 p-4 transition-colors dark:bg-gray-800"
+            className="flex items-center gap-4 p-4 transition-colors border-b border-gray-200 dark:border-gray-700"
         >
             <Avatar className="hidden h-12 w-12 sm:flex">
                 <AvatarImage alt="Avatar" src="https://github.com/shadcn.png" />
@@ -21,8 +22,8 @@ const GroupMemberCard = ({ groupMember }: { groupMember: GroupMemberPageProps })
                 <p className="text-sm text-muted-foreground">{groupMember.email}</p>
             </div>
             <div className="flex flex-col items-end gap-1">
-                <span className={`text-xs font-medium ${settleClass}`}>You owe $500</span>
-                <Button variant="outline" size="sm">Remind</Button>
+                <span className={`text-xs font-medium ${groupStatusClassMap[tag]}`}>{text}</span>
+                <Button variant="outline" disabled={tag === "settled"} size="sm">Settle</Button>
             </div>
         </div>
     )

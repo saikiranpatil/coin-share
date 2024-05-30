@@ -20,6 +20,8 @@ import {
   CardDescription
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import NotFound from "../not-found";
+import TransactionsCard from "../transactions/TransactionsCard";
 
 const GroupPage = async ({ params }: { params: GroupPageProps }) => {
   const { groupId } = params;
@@ -27,6 +29,10 @@ const GroupPage = async ({ params }: { params: GroupPageProps }) => {
 
   if (error) {
     return <ErrorPage message={error} />;
+  }
+
+  if (!group) {
+    return <NotFound />;
   }
 
   return (
@@ -40,24 +46,23 @@ const GroupPage = async ({ params }: { params: GroupPageProps }) => {
           <h1 className="whitespace-nowrap text-3xl font-semibold tracking-tight">
             {group.name}
           </h1>
-          <p className="text-sm text-muted-foreground">you owe a total of Rs.256</p>
+          <p className="text-sm text-muted-foreground">{group.statusText}</p>
         </Card>
       </div>
       <div className="grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-3">
-        <CardWrapper
-          cardTitle="Transactions"
-          cardDescription="Recent transactions from this group."
-          cardHeaderButton={AddTransactionsButton}
+        <TransactionsCard
+          title="Transactions"
+          description="Recent transactions made by you."
+          headerButton={AddTransactionsButton}
+          transactions={group.transactions}
           className="xl:col-span-2"
-        >
-          <TransactionsTable transactions={group.transactions} />
-        </CardWrapper>
+        />
         <CardWrapper
           cardTitle="Group Members"
           cardDescription="All the members of the group."
           cardHeaderButton={<AddGroupMemberModal />}
         >
-          <div className="grid gap-4">
+          <div className="grid">
             {
               group && group?.members?.length > 0 ?
                 group.members.map(groupMember => <GroupMemberCard key={groupMember.id} groupMember={groupMember} />) :

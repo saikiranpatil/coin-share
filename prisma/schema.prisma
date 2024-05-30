@@ -16,11 +16,12 @@ datasource db {
 
 model User {
   id            String                   @id @default(cuid())
-  name          String?
+  name          String
   email         String                   @unique
   emailVerified DateTime?
   image         String?
-  password      String?
+  password      String
+  balance       Int                      @default(0)
   createdAt     DateTime                 @default(now())
   updatedAt     DateTime                 @updatedAt
   accounts      Account[]
@@ -28,6 +29,10 @@ model User {
   transaction   Transaction[]
   contributors  TransactionContributor[]
   recipients    TransactionRecipient[]
+  fromUserId    UserGroupBalance[]       @relation("fromUserId")
+  toUserId      UserGroupBalance[]       @relation("toUserId")
+
+  @@map("users")
 }
 
 model Account {
@@ -50,19 +55,21 @@ model Account {
 }
 
 model Group {
-  id        String   @id @default(cuid())
-  name      String?
-  image     String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  transactions Transaction[]
-  members      GroupMember[]
+  id               String             @id @default(cuid())
+  name             String
+  image            String?
+  balance          Int                @default(0)
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  transactions     Transaction[]
+  members          GroupMember[]
+  userGroupBalance UserGroupBalance[]
 }
 
 model GroupMember {
   userId  String
   groupId String
+  balance Int    @default(0)
   user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   group   Group  @relation(fields: [groupId], references: [id], onDelete: Cascade)
 
@@ -107,4 +114,22 @@ model TransactionRecipient {
   amount        Float
 
   @@id([transactionId, userId])
+}
+
+model UserGroupBalance {
+  groupId    String
+  fromUserId String
+  toUserId   String
+  amount     Float    @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  group      Group    @relation(fields: [groupId], references: [id])
+  fromUser   User     @relation(name: "fromUserId", fields: [fromUserId], references: [id])
+  toUser     User     @relation(name: "toUserId", fields: [toUserId], references: [id])
+
+  @@id([groupId, fromUserId, toUserId])
+  @@unique([fromUserId, toUserId])
+  @@index([fromUserId], name: "fromUserId")
+  @@index([toUserId], name: "toUserId")
+  @@map("UserGroupBalances")
 }

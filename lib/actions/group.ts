@@ -1,10 +1,11 @@
 "use server"
 
-import moment from "moment";
 import { auth } from "../db/auth";
 import { db } from "../db/db"
 import { CreateGroupSchema, type createGroupSchemaType } from "../schemas/group";
-import { getTransactionStatusOfUser } from "../utils";
+import { getFilteredGoups, getFilteredTransactions } from "../utils";
+import { transactionTableIncludeQuery } from "../constants/queries";
+import { Entry, getMinCashFlow } from "../algorithms/MinCashFlow";
 
 export const createGroup = async (values: createGroupSchemaType) => {
     const session = await auth();
@@ -116,7 +117,6 @@ export const getGroupDetails = async (groupId: string) => {
     }
 
     const userId = session.user.id;
-
     try {
         const group = await db.group.findUnique({
             where: {
@@ -129,13 +129,72 @@ export const getGroupDetails = async (groupId: string) => {
             },
             include: {
                 transactions: {
+                    include: transactionTableIncludeQuery,
+                },
+                members: {
+                    select: {
+                        user: {
+                            select: {
+                                id: true,
+                                name: true,
+                                email: true,
+                                image: true,
+                            }
+                        },
+                    }
+                },
+                userGroupBalance: {
+                    select: {
+                        amount: true,
+                        fromUserId: true,
+                        toUserId: true,
+                    },
+                    where: {
+                        OR: [
+                            {
+                                fromUserId: userId,
+                            },
+                            {
+                                toUserId: userId,
+                            }
+                        ]
+                    }
+                }
+            },
+        });
+
+        if (!group) {
+            return { error: "Group Not Found" };
+        }
+
+        return { group: getFilteredGoups(group, userId) };
+    } catch (error) {
+        return { error: "Something went wrong while fetching group data" };
+    }
+}
+
+export const resolveGroupBalances = async (groupId: string) => {
+    console.log("Resolve Balance Solve Called");
+
+    const session = await auth();
+    if (!session?.user?.id) {
+        return { error: "Session or user information is missing" };
+    }
+
+    try {
+        const group = await db.group.findUnique({
+            where: {
+                id: groupId,
+            },
+            include: {
+                transactions: {
                     include: {
                         contributors: {
                             select: {
                                 amount: true,
                                 user: {
                                     select: {
-                                        name: true,
+                                        id: true,
                                     }
                                 }
                             },
@@ -145,26 +204,11 @@ export const getGroupDetails = async (groupId: string) => {
                                 amount: true,
                                 user: {
                                     select: {
-                                        name: true,
+                                        id: true,
                                     }
                                 }
                             },
-                        },
-                        user: {
-                            select: {
-                                name: true,
-                            }
-                        },
-                        groups: {
-                            select: {
-                                name: true,
-                            }
                         }
-                    }
-                },
-                members: {
-                    include: {
-                        user: true
                     },
                 },
             },
@@ -174,34 +218,54 @@ export const getGroupDetails = async (groupId: string) => {
             return { error: "Group Not Found" };
         }
 
-        const formattedGroup = {
-            ...group,
-            members: group.members.map(
-                ({
-                    user: { id, name, email, image }
-                }) => ({
-                    id, name: name ?? "Unknown", email, image
+        const balance: { [key: string]: number } = {};
+        const netAmountData: Entry[] = [];
+
+        group.transactions.forEach(transaction => {
+            const { contributors, recipients } = transaction;
+
+            contributors.forEach(contributer => {
+                balance[contributer.user.id] = (balance[contributer.user.id] || 0) + contributer.amount;
+            });
+            recipients.forEach(recipient => {
+                balance[recipient.user.id] = (balance[recipient.user.id] || 0) - recipient.amount;
+            });
+        });
+
+        for (const userId in balance) {
+            await db.groupMember.update({
+                where: { userId_groupId: { groupId, userId } },
+                data: { balance: balance[userId] }
+            });
+        }
+
+        for (const userId in balance) {
+            netAmountData.push({ key: userId, amount: balance[userId] });
+        }
+
+        const minCashFlowData = getMinCashFlow(netAmountData);
+        await db.userGroupBalance.createMany({
+            data: minCashFlowData.map(({ from, to, amount }) => ({ fromUserId: from, toUserId: to, amount, groupId }))
+        });
+
+        await Promise.all(
+            minCashFlowData.map(({ from, to, amount }) => {
+                db.userGroupBalance.upsert({
+                    where: {
+                        groupId_fromUserId_toUserId: {
+                            groupId,
+                            fromUserId: from,
+                            toUserId: to
+                        }
+                    },
+                    update: { amount },
+                    create: { fromUserId: from, toUserId: to, groupId, amount },
                 })
-            ),
-            transactions: group.transactions.map(
-                (transaction) => {
-                    const {
-                        id, type, description, createdAt, amount,
-                        user: { name: creatorName },
-                    } = transaction;
+            })
+        );
 
-                    return ({
-                        id, type, description, status: getTransactionStatusOfUser(userId, transaction, type),
-                        createdAt: moment(createdAt).format("YYYY-MM-DD, hh:mm A"), amount,
-                        creatorName: creatorName ?? "Unknown",
-                    })
-                }
-            )
-        };
-
-        return { group: formattedGroup };
+        return { success: "Group Balance Resolved Sucessfully." };
     } catch (error) {
-        console.log(error);
         return { error: "Something went wrong while fetching group data" };
     }
-}    
+}

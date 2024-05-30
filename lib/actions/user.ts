@@ -23,8 +23,8 @@ import {
 
 import { DEFAULT_LOGIN_REDIRECT } from "@/lib/db/routes";
 import { getUserByEmail } from "@/lib/data/user";
-import { getTransactionStatusOfUser } from "../utils";
-
+import { getFilteredTransactions } from "../utils";
+import { transactionTableIncludeQuery } from "../constants/queries";
 
 export const register = async (values: registerType) => {
     const validatedSchema = RegisterSchema.safeParse(values);
@@ -109,33 +109,7 @@ export const getUserDetails = async () => {
             },
             include: {
                 transaction: {
-                    include: {
-                        user: {
-                            select: {
-                                name: true,
-                            }
-                        },
-                        contributors: {
-                            select: {
-                                amount: true,
-                                user: {
-                                    select: {
-                                        id: true,
-                                    }
-                                }
-                            },
-                        },
-                        recipients: {
-                            select: {
-                                amount: true,
-                                user: {
-                                    select: {
-                                        id: true,
-                                    }
-                                }
-                            },
-                        },
-                    },
+                    include: transactionTableIncludeQuery,
                     where: {
                         OR: [
                             {
@@ -168,26 +142,6 @@ export const getUserDetails = async () => {
                         }
                     }
                 },
-                contributors: {
-                    select: {
-                        amount: true,
-                        user: {
-                            select: {
-                                id: true,
-                            }
-                        }
-                    },
-                },
-                recipients: {
-                    select: {
-                        amount: true,
-                        user: {
-                            select: {
-                                id: true,
-                            }
-                        }
-                    },
-                },
             },
         });
 
@@ -200,21 +154,7 @@ export const getUserDetails = async () => {
         const formattedUser = {
             id, name: name ?? "Unknown", email, image,
             createdAt: moment(createdAt).format("MMMM YYYY"),
-            transactions: transactionsData
-                .map(
-                    (transaction) => {
-                        const {
-                            id, type, description, createdAt, amount,
-                            user: { name: creatorName },
-                        } = transaction;
-
-                        return ({
-                            id, type, description, status: getTransactionStatusOfUser(userId, transaction, type),
-                            createdAt: moment(createdAt).format("YYYY-MM-DD, hh:mm A"), amount,
-                            creatorName: creatorName ?? "Unknown",
-                        })
-                    }
-                ),
+            transactions: getFilteredTransactions(transactionsData, userId),
             groups: groups.map(
                 ({
                     group: { id, name, image, _count: { members: membersCount } }
@@ -227,7 +167,6 @@ export const getUserDetails = async () => {
 
         return { user: formattedUser };
     } catch (error) {
-        console.log(error);
         return { error: "Something went wrong while fetching user details" };
     }
 }

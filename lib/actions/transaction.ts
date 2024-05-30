@@ -3,7 +3,9 @@
 import { auth } from "../db/auth";
 import { db } from "../db/db"
 import moment from "moment";
-import { getTransactionStatusOfUser } from "../utils";
+import { getFilteredTransactions } from "../utils";
+import { transactionTableIncludeQuery } from "../constants/queries";
+import { calculateBalancesForEachGroupMembers, resolveGroupBalances } from "./group";
 
 interface createTransactionProps {
     basicDetails: {
@@ -39,6 +41,10 @@ export const createTransaction = async (transaction: createTransactionProps) => 
         transaction.contributors.multiple : [{ ...transaction.contributors.single, amount: parsedAmount }];
     const { recipients } = transaction;
 
+    if (!filteredContributors) {
+        return { error: "Error while fetching Contributers" };
+    }
+
     const totalContributersAmount = filteredContributors?.reduce((total, contributer) => total + contributer.amount, 0);
     const totalRecipientsAmount = recipients?.reduce((total, recipient) => total + recipient.amount, 0);
 
@@ -71,6 +77,8 @@ export const createTransaction = async (transaction: createTransactionProps) => 
             },
         });
 
+        await resolveGroupBalances(groupId);
+
         return {
             transaction: transactionData,
             success: "transaction created Sucessfully."
@@ -92,38 +100,7 @@ export const getTransactionDetails = async (transactionId: string) => {
             where: {
                 id: transactionId,
             },
-            include: {
-                user: {
-                    select: {
-                        name: true,
-                    }
-                },
-                groups: {
-                    select: {
-                        name: true,
-                    }
-                },
-                contributors: {
-                    select: {
-                        amount: true,
-                        user: {
-                            select: {
-                                name: true,
-                            }
-                        }
-                    },
-                },
-                recipients: {
-                    select: {
-                        amount: true,
-                        user: {
-                            select: {
-                                name: true,
-                            }
-                        }
-                    },
-                }
-            }
+            include: transactionTableIncludeQuery,
         });
 
         if (!transaction) {
@@ -162,57 +139,10 @@ export const getAllTransactionsByUser = async () => {
             where: {
                 creatorUserId: userId,
             },
-            select: {
-                id: true,
-                amount: true,
-                type: true,
-                description: true,
-                createdAt: true,
-                user: {
-                    select: {
-                        name: true,
-                    }
-                },
-                contributors: {
-                    select: {
-                        amount: true,
-                        user: {
-                            select: {
-                                id: true,
-                            }
-                        }
-                    },
-                },
-                recipients: {
-                    select: {
-                        amount: true,
-                        user: {
-                            select: {
-                                id: true,
-                            }
-                        }
-                    },
-                },
-            }
+            include: transactionTableIncludeQuery,
         });
 
-        const filteredTransactions = transactions
-            .map(
-                (transaction) => {
-                    const {
-                        id, type, description, createdAt, amount,
-                        user: { name: creatorName },
-                    } = transaction;
-
-                    console.log(getTransactionStatusOfUser(userId, transaction, type),"saasdds");
-
-                    return ({
-                        id, type, description, status: getTransactionStatusOfUser(userId, transaction, type),
-                        createdAt: moment(createdAt).format("YYYY-MM-DD, hh:mm A"), amount,
-                        creatorName: creatorName ?? "Unknown",
-                    })
-                }
-            );
+        const filteredTransactions = getFilteredTransactions(transactions, userId);
 
         return { transactions: filteredTransactions };
     } catch (error) {

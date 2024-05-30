@@ -2,15 +2,19 @@ import Link from "next/link"
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Card, CardTitle } from "@/components/ui/card"
+import { groupStatusClassMap } from "@/lib/constants";
 
 interface groupDataProps {
     id: string
     name: string;
+    balance: number;
     image: string | null;
     membersCount: number;
 }
 
 const GroupCard = ({ groupData }: { groupData: groupDataProps }) => {
+    const groupStatusName: GroupStatusTagProps = groupData.balance ? groupData.balance > 0 ? "getback" : "owe" : "settled";
+
     return (
         <Link href={"/group/" + groupData.id}>
             <Card className="flex flex-col text-center items-center justify-between space-y-0 gap-2 sm:gap-4 p-6">
@@ -22,7 +26,9 @@ const GroupCard = ({ groupData }: { groupData: groupDataProps }) => {
                     <CardTitle className="font-semibold leading-none tracking-tight">{groupData.name} </CardTitle>
                     <div className='grid'>
                         <p className="text-xs text-muted-foreground"> {groupData.membersCount} Members</p>
-                        <span className="text-xs font-medium text-red-500">You owe $500</span>
+                        <span className={`text-xs font-medium ${groupStatusClassMap[groupStatusName]}`}>
+                            You owe $500
+                        </span>
                     </div>
                 </div>
             </Card>

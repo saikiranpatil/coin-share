@@ -2,8 +2,6 @@ import { Dot, ReceiptText } from "lucide-react";
 
 import { getTransactionDetails } from "@/lib/actions/transaction";
 
-import ErrorPage from "@/components/error-page";
-
 import {
   Dialog,
   DialogContent,
@@ -26,7 +24,7 @@ const TransactionDetailsModal = async ({ transactionId }: TransactionDetailsModa
   const { transaction, error } = await getTransactionDetails(transactionId);
 
   if (!transaction || error) {
-    return <ErrorPage message={error} />
+    return;
   }
 
   return (
@@ -73,7 +71,7 @@ const TransactionDetailsModal = async ({ transactionId }: TransactionDetailsModa
                       transaction.contributors.map((contributer, index) => (
                         <TableRow key={transaction.id + "-transaction-contributer-" + index}>
                           <TableCell className="text-sm">{contributer.name}</TableCell>
-                          <TableCell className="text-muted-foreground text-right">Rs. {" "} {transaction.amount}</TableCell>
+                          <TableCell className="text-muted-foreground text-right">Rs. {" "} {contributer.amount}</TableCell>
                         </TableRow>
                       ))
                     }
