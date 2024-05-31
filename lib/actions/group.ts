@@ -3,7 +3,7 @@
 import { auth } from "../db/auth";
 import { db } from "../db/db"
 import { CreateGroupSchema, type createGroupSchemaType } from "../schemas/group";
-import { getFilteredGoups, getFilteredTransactions } from "../utils";
+import { getFilteredGoupDetails, getStatusTextForGroup } from "../utils";
 import { transactionTableIncludeQuery } from "../constants/queries";
 import { Entry, getMinCashFlow } from "../algorithms/MinCashFlow";
 
@@ -54,11 +54,20 @@ export const getAllGroups = async () => {
             where: {
                 members: {
                     some: {
-                        userId: userId
+                        userId: userId,
                     }
                 }
             },
-            include: {
+            select: {
+                id: true,
+                name: true,
+                image: true,
+                members: {
+                    select: {
+                        userId: true,
+                        balance: true,
+                    }
+                },
                 _count: {
                     select: {
                         members: true,
@@ -67,12 +76,18 @@ export const getAllGroups = async () => {
             },
         });
 
-        const filteredGroups = groups.map(group => ({
-            id: group.id,
-            name: group.name ?? "Unknown",
-            image: group.image,
-            membersCount: group._count.members,
-        }));
+        const filteredGroups = groups.map(({ id, name, image, members, _count: { members: membersCount } }) => {
+            const balance = members.find(member => member.userId === userId)?.balance || 0;
+            const status = getStatusTextForGroup(balance);
+
+            return ({
+                id,
+                name,
+                image,
+                status,
+                membersCount
+            })
+        });
 
         return { groups: filteredGroups };
     } catch (err) {
@@ -133,6 +148,7 @@ export const getGroupDetails = async (groupId: string) => {
                 },
                 members: {
                     select: {
+                        balance: true,
                         user: {
                             select: {
                                 id: true,
@@ -167,15 +183,13 @@ export const getGroupDetails = async (groupId: string) => {
             return { error: "Group Not Found" };
         }
 
-        return { group: getFilteredGoups(group, userId) };
+        return { group: getFilteredGoupDetails(group, userId) };
     } catch (error) {
         return { error: "Something went wrong while fetching group data" };
     }
 }
 
 export const resolveGroupBalances = async (groupId: string) => {
-    console.log("Resolve Balance Solve Called");
-
     const session = await auth();
     if (!session?.user?.id) {
         return { error: "Session or user information is missing" };
@@ -244,25 +258,20 @@ export const resolveGroupBalances = async (groupId: string) => {
         }
 
         const minCashFlowData = getMinCashFlow(netAmountData);
-        await db.userGroupBalance.createMany({
-            data: minCashFlowData.map(({ from, to, amount }) => ({ fromUserId: from, toUserId: to, amount, groupId }))
-        });
-
-        await Promise.all(
-            minCashFlowData.map(({ from, to, amount }) => {
-                db.userGroupBalance.upsert({
-                    where: {
-                        groupId_fromUserId_toUserId: {
-                            groupId,
-                            fromUserId: from,
-                            toUserId: to
-                        }
-                    },
-                    update: { amount },
-                    create: { fromUserId: from, toUserId: to, groupId, amount },
-                })
+        await db.userGroupBalance.deleteMany({ where: { groupId } });
+        minCashFlowData.map(async ({ from, to, amount }) => {
+            await db.userGroupBalance.upsert({
+                where: {
+                    groupId_fromUserId_toUserId: {
+                        groupId,
+                        fromUserId: from,
+                        toUserId: to
+                    }
+                },
+                update: { amount },
+                create: { fromUserId: from, toUserId: to, groupId, amount },
             })
-        );
+        })
 
         return { success: "Group Balance Resolved Sucessfully." };
     } catch (error) {

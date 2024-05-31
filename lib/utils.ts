@@ -6,9 +6,6 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-type getTransactionStatusOfUserProps = (userId: string, transactions: any, type: "Settlement" | "Payment") =>
-  { tag: TransactionsStatusTagProps, text: string };
-
 export const getTransactionStatusOfUser: getTransactionStatusOfUserProps = (userId, transactions, type) => {
   for (const contributor of transactions.contributors) {
     const { user, amount } = contributor;
@@ -65,9 +62,10 @@ export const getFilteredTransactions = (transactions: any, userId: string) => tr
   }
 );
 
-interface getFilteredGoupsProps {
+interface getFilteredGoupDetailsProps {
   (group: {
     members: {
+      balance: number,
       user: {
         id: string;
         name: string;
@@ -84,8 +82,10 @@ interface getFilteredGoupsProps {
   }, userId: string): any
 }
 
-export const getFilteredGoups: getFilteredGoupsProps = (group, userId) => {
+export const getFilteredGoupDetails: getFilteredGoupDetailsProps = (group, userId) => {
+  let userBalanceInGroup = 0;
   const balanceMap: { [key: string]: number } = {};
+
   group.userGroupBalance.forEach(({ amount, fromUserId, toUserId }) => {
     if (fromUserId === userId) {
       balanceMap[toUserId] = (balanceMap[toUserId] || 0) - amount;
@@ -93,22 +93,13 @@ export const getFilteredGoups: getFilteredGoupsProps = (group, userId) => {
       balanceMap[fromUserId] = (balanceMap[fromUserId] || 0) - amount;
     }
   });
-  
-  let userGroupStatusText = "";
+
   const members = group.members.map(
-    ({ user: { id, name, email, image } }) => {
+    ({ balance: groupBalance, user: { id, name, email, image } }) => {
       const balance = balanceMap[id] || 0;
+      const status = getStatusTextForGroup(balance);
 
-      const statusText = balance ? balance > 0 ? `You get back Rs.${balance}` : `You owe Rs.${-1 * balance}` : "All settled";
-      const statusTag: GroupStatusTagProps = balance ? balance > 0 ? "getback" : "owe" : "settled";
-      const status = {
-        tag: statusTag,
-        text: statusText
-      };
-
-      if (id == userId) {
-        userGroupStatusText = statusText;
-      }
+      if (id === userId) userBalanceInGroup = groupBalance;
 
       return ({
         id, status, name: name ?? "Unknown", email, image
@@ -120,6 +111,44 @@ export const getFilteredGoups: getFilteredGoupsProps = (group, userId) => {
     ...group,
     members,
     transactions: getFilteredTransactions(group.transactions, userId),
-    statusText: userGroupStatusText
+    statusText: getStatusTextForGroup(userBalanceInGroup).text
+  };
+}
+
+interface filteredGroupsItemProps {
+  id: string;
+  name: string;
+  image: string | null;
+  members: {
+    userId: string;
+    balance: number;
+  }[],
+  _count: {
+    members: number,
+  }
+}
+
+export const filteredGroups = async (groups: filteredGroupsItemProps[], userId: string) => {
+  groups.map(({ id, name, image, members, _count: { members: membersCount } }) => {
+    const balance = members.find(member => member.userId === userId)?.balance || 0;
+    const status = getStatusTextForGroup(balance);
+
+    return ({
+      id,
+      name,
+      image,
+      status,
+      membersCount
+    })
+  });
+}
+
+export const getStatusTextForGroup = (balance: number) => {
+  const statusText = balance ? balance > 0 ? `You get back Rs.${balance}` : `You owe Rs.${-1 * balance}` : "All settled";
+  const statusTag: GroupStatusTagProps = balance ? balance > 0 ? "getback" : "owe" : "settled";
+
+  return {
+    tag: statusTag,
+    text: statusText
   };
 }

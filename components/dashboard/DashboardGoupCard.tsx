@@ -5,12 +5,17 @@ import {
     AvatarFallback,
     Avatar
 } from "@/components/ui/avatar";
+import { groupStatusClassMap } from "@/lib/constants";
 
 interface DashboardGoupCardProps {
     id: string;
     name: string;
     image: string | null;
     membersCount: number;
+    status: {
+        tag: GroupStatusTagProps,
+        text: string;
+    }
 }
 
 const DashboardGoupCard = ({ group }: { group: DashboardGoupCardProps }) => {
@@ -28,7 +33,7 @@ const DashboardGoupCard = ({ group }: { group: DashboardGoupCardProps }) => {
                 <p className="text-sm text-muted-foreground">{group.membersCount} members</p>
             </div>
             <div className="flex flex-col items-end gap-1">
-                <span className="text-xs font-medium text-red-500">You owe $500</span>
+                <span className={`text-xs font-medium ${groupStatusClassMap[group.status.tag]}`}>{group.status.text}</span>
             </div>
         </Link>
     )

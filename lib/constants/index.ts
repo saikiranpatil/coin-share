@@ -11,10 +11,6 @@ export const navItems = [
         id: "/groups",
         title: "Groups",
     },
-    {
-        id: "/friends",
-        title: "Friends",
-    },
 ];
 
 export const transactionStatusClassMap: { [K in TransactionsStatusTagProps]: string } = {

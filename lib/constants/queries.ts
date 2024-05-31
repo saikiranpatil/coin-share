@@ -33,6 +33,22 @@ export const transactionTableIncludeQuery = {
     }
 };
 
-export const findTransactionsOfUserQuery = {
-
-}
+export const groupsCardIncludeQuery = {
+    include: {
+        group: {
+            include: {
+                members: {
+                    select: {
+                        userId: true,
+                        balance: true,
+                    }
+                },
+                _count: {
+                    select: {
+                        members: true,
+                    }
+                }
+            }
+        }
+    }
+};

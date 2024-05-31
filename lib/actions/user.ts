@@ -23,7 +23,7 @@ import {
 
 import { DEFAULT_LOGIN_REDIRECT } from "@/lib/db/routes";
 import { getUserByEmail } from "@/lib/data/user";
-import { getFilteredTransactions } from "../utils";
+import { getFilteredTransactions, getStatusTextForGroup } from "../utils";
 import { transactionTableIncludeQuery } from "../constants/queries";
 
 export const register = async (values: registerType) => {
@@ -132,7 +132,16 @@ export const getUserDetails = async () => {
                 groups: {
                     include: {
                         group: {
-                            include: {
+                            select: {
+                                id: true,
+                                name: true,
+                                image: true,
+                                members: {
+                                    select: {
+                                        userId: true,
+                                        balance: true,
+                                    }
+                                },
                                 _count: {
                                     select: {
                                         members: true,
@@ -155,14 +164,18 @@ export const getUserDetails = async () => {
             id, name: name ?? "Unknown", email, image,
             createdAt: moment(createdAt).format("MMMM YYYY"),
             transactions: getFilteredTransactions(transactionsData, userId),
-            groups: groups.map(
-                ({
-                    group: { id, name, image, _count: { members: membersCount } }
-                }) =>
-                ({
-                    id, name: name ?? "Unknown", image, membersCount
+            groups: groups.map(({ group: { id, name, image, members, _count: { members: membersCount } } }) => {
+                const balance = members.find(member => member.userId === userId)?.balance || 0;
+                const status = getStatusTextForGroup(balance);
+
+                return ({
+                    id,
+                    name,
+                    image,
+                    status,
+                    membersCount
                 })
-            ),
+            })
         };
 
         return { user: formattedUser };
@@ -245,5 +258,81 @@ export const addUserToGroup = async (groupId: string, userId: string) => {
         return { success: true };
     } catch (error) {
         return { error: "Something went wrong while adding user to group" };
+    }
+}
+
+export const userStatsData = async () => {
+    const session = await auth();
+
+    if (!session?.user) {
+        return ["-", "-", "-"];
+    }
+
+    const userId = session.user.id;
+    try {
+        const transactions = await db.transaction.findMany({
+            where: {
+                OR: [
+                    {
+                        contributors: {
+                            some: {
+                                userId: userId,
+                            }
+                        }
+                    },
+                    {
+                        recipients: {
+                            some: {
+                                userId: userId,
+                            }
+                        }
+                    },
+                ]
+            },
+            select: {
+                contributors: {
+                    select: {
+                        userId: true,
+                        amount: true,
+                    }
+                },
+                recipients: {
+                    select: {
+                        userId: true,
+                        amount: true,
+                    }
+                }
+            }
+        });
+
+        const totalTransactionCount = transactions.length;
+        const totalTransactionAmount = transactions.reduce((sum, transaction) => {
+            const totalContributerAmount = transaction.contributors.reduce((contributerSum, contributer) => {
+                if (contributer.userId === userId) return contributerSum + contributer.amount;
+                return contributerSum;
+            }, 0);
+
+            const totalRecipientAmount = transaction.recipients.reduce((recipientSum, recipient) => {
+                if (recipient.userId === userId) return recipientSum + recipient.amount;
+                return recipientSum;
+            }, 0);
+            return totalContributerAmount + totalRecipientAmount + sum;
+        }, 0);
+        const totalBalance = transactions.reduce((sum, transaction) => {
+            const totalContributerAmount = transaction.contributors.reduce((contributerSum, contributer) => {
+                if (contributer.userId === userId) return contributerSum + contributer.amount;
+                return contributerSum;
+            }, 0);
+
+            const totalRecipientAmount = transaction.recipients.reduce((recipientSum, recipient) => {
+                if (recipient.userId === userId) return recipientSum + recipient.amount;
+                return recipientSum;
+            }, 0);
+            return totalContributerAmount - totalRecipientAmount + sum;
+        }, 0);
+
+        return [totalBalance, totalTransactionAmount, totalTransactionCount];
+    } catch (error) {
+        return ["-", "-", "-"];
     }
 }

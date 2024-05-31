@@ -44,3 +44,6 @@ interface AddTransactionDataProps {
     contributors: AddTransactionDataContributersProps;
     recipients: AddTransactionDataMembersProps[] | undefined;
 }
+
+type getTransactionStatusOfUserProps =
+    (userId: string, transactions: any, type: "Settlement" | "Payment") => { tag: TransactionsStatusTagProps, text: string };

@@ -125,7 +125,7 @@ const CreateGroupModal = () => {
                             className="w-full"
                             disabled={isPending}
                         >
-                            Login
+                            Submit
                         </Button>
                     </form>
                 </Form>

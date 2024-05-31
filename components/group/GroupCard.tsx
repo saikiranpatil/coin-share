@@ -7,13 +7,16 @@ import { groupStatusClassMap } from "@/lib/constants";
 interface groupDataProps {
     id: string
     name: string;
-    balance: number;
+    status: {
+        tag: GroupStatusTagProps,
+        text: string,
+    },
     image: string | null;
     membersCount: number;
 }
 
 const GroupCard = ({ groupData }: { groupData: groupDataProps }) => {
-    const groupStatusName: GroupStatusTagProps = groupData.balance ? groupData.balance > 0 ? "getback" : "owe" : "settled";
+    const { tag, text } = groupData.status;
 
     return (
         <Link href={"/group/" + groupData.id}>
@@ -26,8 +29,8 @@ const GroupCard = ({ groupData }: { groupData: groupDataProps }) => {
                     <CardTitle className="font-semibold leading-none tracking-tight">{groupData.name} </CardTitle>
                     <div className='grid'>
                         <p className="text-xs text-muted-foreground"> {groupData.membersCount} Members</p>
-                        <span className={`text-xs font-medium ${groupStatusClassMap[groupStatusName]}`}>
-                            You owe $500
+                        <span className={`text-xs font-medium ${groupStatusClassMap[tag]}`}>
+                            {text}
                         </span>
                     </div>
                 </div>
