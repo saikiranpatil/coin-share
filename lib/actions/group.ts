@@ -6,6 +6,7 @@ import { CreateGroupSchema, type createGroupSchemaType } from "../schemas/group"
 import { getFilteredGoupDetails, getStatusTextForGroup } from "../utils";
 import { transactionTableIncludeQuery } from "../constants/queries";
 import { Entry, getMinCashFlow } from "../algorithms/MinCashFlow";
+import cloudinary from "../cloudinary";
 
 export const createGroup = async (values: createGroupSchemaType) => {
     const session = await auth();
@@ -21,17 +22,34 @@ export const createGroup = async (values: createGroupSchemaType) => {
     }
 
     const { name, image } = validatedSchema.data;
+    let imageData = null;
+
+    if (image) {
+        const uploaderOptions = {
+            folder: "avatars",
+            height: 800,
+            width: 800,
+            crop: "thumb",
+            gravity: "faces",
+        };
+
+        const myCloud = await cloudinary.uploader.upload(image, uploaderOptions);
+        imageData = {
+            publicId: myCloud.public_id,
+            url: myCloud.secure_url,
+        };
+    }
 
     try {
         const data = await db.group.create({
             data: {
                 name,
-                image,
                 members: {
                     create: {
                         userId: userId
                     }
-                }
+                },
+                image: imageData ? { create: imageData } : undefined,
             }
         });
 
@@ -142,9 +160,14 @@ export const getGroupDetails = async (groupId: string) => {
                     },
                 },
             },
-            include: {
+            select: {
+                name: true,
+                image: {
+                    select: { url: true }
+                },
                 transactions: {
                     include: transactionTableIncludeQuery,
+                    orderBy: { createdAt: "desc" }
                 },
                 members: {
                     select: {
@@ -154,7 +177,9 @@ export const getGroupDetails = async (groupId: string) => {
                                 id: true,
                                 name: true,
                                 email: true,
-                                image: true,
+                                image: {
+                                    select: { url: true }
+                                }
                             }
                         },
                     }
@@ -260,16 +285,10 @@ export const resolveGroupBalances = async (groupId: string) => {
         const minCashFlowData = getMinCashFlow(netAmountData);
         await db.userGroupBalance.deleteMany({ where: { groupId } });
         minCashFlowData.map(async ({ from, to, amount }) => {
-            await db.userGroupBalance.upsert({
-                where: {
-                    groupId_fromUserId_toUserId: {
-                        groupId,
-                        fromUserId: from,
-                        toUserId: to
-                    }
-                },
-                update: { amount },
-                create: { fromUserId: from, toUserId: to, groupId, amount },
+            if (amount == 0) return;
+
+            await db.userGroupBalance.create({
+                data: { fromUserId: from, toUserId: to, groupId, amount },
             })
         })
 

@@ -79,12 +79,12 @@ const AddTransactionBasicDetails = ({ transactionData, setTransactionData }: Add
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="min-h-[260px] space-y-6">
                 <div className="grid gap-6 grid-flow-row sm:grid-flow-col">
-                    <div className="min-h-[30vmin] border rounded-sm relative group/editavatar flex justify-center">
+                    {/* <div className="min-h-[30vmin] border rounded-sm relative group/editavatar flex justify-center">
                         <span className="absolute bg-accent w-full h-full flex justify-center items-center opacity-0 group-hover/editavatar:opacity-80 transition-all ease-in">
                             Change
                         </span>
                         <DumbbellIcon className="w-auto h-full text-gray-400 p-6" />
-                    </div>
+                    </div> */}
                     <div className="space-y-4">
                         <div>
                             <FormField

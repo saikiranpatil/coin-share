@@ -6,7 +6,7 @@ interface GroupMemberPageProps {
     id: string;
     name: string;
     email: string;
-    image: string | null;
+    imageUrl: string | null;
     status: {
         tag: GroupStatusTagProps;
         text: string;

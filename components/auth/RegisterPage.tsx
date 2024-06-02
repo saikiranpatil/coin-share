@@ -50,14 +50,30 @@ const RegisterPage = () => {
             if (!error && success) {
                 redirect("/dashboard");
             }
-            
+
             setFormError(error);
             setFormSuccess(success);
         });
     }
 
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files[0]) {
+            const file = e.target.files[0];
+            const reader = new FileReader();
+
+            reader.onload = () => {
+                if (reader.readyState === 2) {
+                    const result = reader.result as string;
+                    form.setValue('avatar', result);
+                }
+            };
+
+            reader.readAsDataURL(file);
+        }
+    };
+
     return (
-        <main className="flex flex-1 justify-center items-center">
+        <main className="flex flex-1 justify-center items-center p-12">
             <AuthenticationCard
                 headerLabel="Create account"
                 backButtonLabel="Already have an account?"
@@ -114,6 +130,26 @@ const RegisterPage = () => {
                                                 {...field}
                                                 type="password"
                                                 placeholder="******"
+                                                disabled={isPending}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="avatar"
+                                render={({ field: { value, onChange, ...fieldProps } }) => (
+                                    <FormItem>
+                                        <FormLabel>Avatar</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                {...fieldProps}
+                                                type="file"
+                                                placeholder="Avatar"
+                                                accept="image/*"
+                                                onChange={handleFileChange}
                                                 disabled={isPending}
                                             />
                                         </FormControl>

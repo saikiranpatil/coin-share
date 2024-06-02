@@ -7,7 +7,6 @@ import { Plus } from "lucide-react";
 import ErrorPage from "@/components/error-page";
 import CardWrapper from "@/components/card-wrapper";
 import GroupMemberCard from "@/components/group/GroupMemberCard";
-import TransactionsTable from "@/components/transactions/TransactionsTable";
 import AddGroupMemberModal from "@/components/group/AddGroupMemberModal";
 
 import {
@@ -39,7 +38,7 @@ const GroupPage = async ({ params }: { params: GroupPageProps }) => {
     <main className="flex flex-col justify-center gap-4 p-4 md:gap-8 md:p-8">
       <div className="flex flex-col sm:flex-row items-center justify-center">
         <Avatar className='inline-block h-48 w-48 z-[1] m-6'>
-          <AvatarImage src="https://github.com/shadcn.png" />
+          <AvatarImage src={group.imageUrl || "https://github.com/shadcn.png"} />
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
         <Card className='space-y-4 p-6 text-center sm:text-left'>
@@ -65,7 +64,7 @@ const GroupPage = async ({ params }: { params: GroupPageProps }) => {
           <div className="grid">
             {
               group && group?.members?.length > 0 ?
-                group.members.map(groupMember => <GroupMemberCard key={groupMember.id} groupMember={groupMember} />) :
+                group.members.map((groupMember: GroupMemberPageProps) => <GroupMemberCard key={groupMember.id} groupMember={groupMember} />) :
                 <CardDescription className="text-center">No Members</CardDescription>
             }
           </div>

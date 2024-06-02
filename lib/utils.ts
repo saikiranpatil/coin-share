@@ -64,13 +64,15 @@ export const getFilteredTransactions = (transactions: any, userId: string) => tr
 
 interface getFilteredGoupDetailsProps {
   (group: {
+    name: string;
+    image: { url: string } | null;
     members: {
       balance: number,
       user: {
         id: string;
         name: string;
         email: string;
-        image: string | null;
+        image: { url: string } | null;
       },
     }[],
     transactions: any,
@@ -83,10 +85,11 @@ interface getFilteredGoupDetailsProps {
 }
 
 export const getFilteredGoupDetails: getFilteredGoupDetailsProps = (group, userId) => {
+  const { name, image, userGroupBalance } = group;
   let userBalanceInGroup = 0;
   const balanceMap: { [key: string]: number } = {};
 
-  group.userGroupBalance.forEach(({ amount, fromUserId, toUserId }) => {
+  userGroupBalance.forEach(({ amount, fromUserId, toUserId }) => {
     if (fromUserId === userId) {
       balanceMap[toUserId] = (balanceMap[toUserId] || 0) - amount;
     } else if (toUserId === userId) {
@@ -102,13 +105,14 @@ export const getFilteredGoupDetails: getFilteredGoupDetailsProps = (group, userI
       if (id === userId) userBalanceInGroup = groupBalance;
 
       return ({
-        id, status, name: name ?? "Unknown", email, image
+        id, status, name: name ?? "Unknown", email, imageUrl: image?.url
       })
     }
   );
 
   return {
-    ...group,
+    name,
+    imageUrl: image?.url,
     members,
     transactions: getFilteredTransactions(group.transactions, userId),
     statusText: getStatusTextForGroup(userBalanceInGroup).text

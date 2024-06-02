@@ -4,7 +4,7 @@ import moment from "moment";
 import bcrypt from "bcryptjs"
 
 import { AuthError } from "next-auth";
-
+import cloudinary from "@/lib/cloudinary"
 import {
     auth,
     signIn,
@@ -33,7 +33,7 @@ export const register = async (values: registerType) => {
         return { error: "Invalid Feild" };
     }
 
-    const { name, email, password } = validatedSchema.data;
+    const { name, email, password, avatar } = validatedSchema.data;
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const existingUser = await getUserByEmail(email);
@@ -42,15 +42,38 @@ export const register = async (values: registerType) => {
         return { error: "Email already use" }
     }
 
-    await db.user.create({
-        data: {
-            name,
-            email,
-            password: hashedPassword,
-        }
-    })
+    try {
+        let imageData = null;
 
-    return { success: "User created!" };
+        if (avatar) {
+            const uploaderOptions = {
+                folder: "avatars",
+                height: 800,
+                width: 800,
+                crop: "thumb",
+                gravity: "faces",
+            };
+
+            const myCloud = await cloudinary.uploader.upload(avatar, uploaderOptions);
+            imageData = {
+                publicId: myCloud.public_id,
+                url: myCloud.secure_url,
+            };
+        }
+
+        await db.user.create({
+            data: {
+                name,
+                email,
+                password: hashedPassword,
+                image: imageData ? { create: imageData } : undefined,
+            },
+        });
+
+        return { success: "User created!" };
+    } catch (error) {
+        return { error: "Something went wrong while registering user" };
+    }
 }
 
 export const login = async (values: loginType) => {
@@ -108,8 +131,13 @@ export const getUserDetails = async () => {
                 id: userId,
             },
             include: {
+                image: {
+                    select: { url: true }
+                },
                 transaction: {
+                    take: 5,
                     include: transactionTableIncludeQuery,
+                    orderBy: { createdAt: "desc" },
                     where: {
                         OR: [
                             {
@@ -130,12 +158,15 @@ export const getUserDetails = async () => {
                     }
                 },
                 groups: {
+                    take: 5,
                     include: {
                         group: {
                             select: {
                                 id: true,
                                 name: true,
-                                image: true,
+                                image: {
+                                    select: { url: true }
+                                },
                                 members: {
                                     select: {
                                         userId: true,
@@ -161,7 +192,7 @@ export const getUserDetails = async () => {
         const { id, name, email, image, createdAt, groups, transaction: transactionsData } = user;
 
         const formattedUser = {
-            id, name: name ?? "Unknown", email, image,
+            id, name: name ?? "Unknown", email, imageUrl: image?.url,
             createdAt: moment(createdAt).format("MMMM YYYY"),
             transactions: getFilteredTransactions(transactionsData, userId),
             groups: groups.map(({ group: { id, name, image, members, _count: { members: membersCount } } }) => {
@@ -171,7 +202,7 @@ export const getUserDetails = async () => {
                 return ({
                     id,
                     name,
-                    image,
+                    imageUrl: image?.url,
                     status,
                     membersCount
                 })

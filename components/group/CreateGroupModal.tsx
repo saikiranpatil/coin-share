@@ -64,6 +64,22 @@ const CreateGroupModal = () => {
         });
     }
 
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files[0]) {
+            const file = e.target.files[0];
+            const reader = new FileReader();
+
+            reader.onload = () => {
+                if (reader.readyState === 2) {
+                    const result = reader.result as string;
+                    form.setValue('image', result);
+                }
+            };
+
+            reader.readAsDataURL(file);
+        }
+    };
+
     return (
         <Dialog>
             <DialogTrigger asChild>
@@ -103,13 +119,16 @@ const CreateGroupModal = () => {
                             <FormField
                                 control={form.control}
                                 name="image"
-                                render={({ field }) => (
+                                render={({ field: { value, onChange, ...fieldProps } }) => (
                                     <FormItem>
-                                        <FormLabel>Image</FormLabel>
+                                        <FormLabel>Avatar</FormLabel>
                                         <FormControl>
                                             <Input
-                                                {...field}
+                                                {...fieldProps}
                                                 type="file"
+                                                placeholder="Group Image"
+                                                accept="image/*"
+                                                onChange={handleFileChange}
                                                 disabled={isPending}
                                             />
                                         </FormControl>

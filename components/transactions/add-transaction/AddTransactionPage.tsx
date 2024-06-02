@@ -57,7 +57,7 @@ const AddTransactionPage = () => {
     }, [transactionData.basicDetails?.groupId]);
 
     return (
-        <div className="container mx-auto px-4 py-8 md:py-12 lg:py-16 max-w-2xl">
+        <div className="container mx-auto px-4 py-8 md:py-12 lg:py-16 max-w-xl">
             <Card>
                 <CardHeader>
                     <CardTitle>Add Transaction</CardTitle>

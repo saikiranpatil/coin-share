@@ -14,16 +14,26 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Image {
+  id        String   @id @default(cuid())
+  url       String
+  publicId  String
+  createdAt DateTime @default(now())
+  user      User[]
+  Group     Group[]
+}
+
 model User {
   id            String                   @id @default(cuid())
   name          String
   email         String                   @unique
   emailVerified DateTime?
-  image         String?
   password      String
   balance       Int                      @default(0)
   createdAt     DateTime                 @default(now())
   updatedAt     DateTime                 @updatedAt
+  imageId       String?
+  image         Image?                   @relation(fields: [imageId], references: [id], onDelete: Cascade)
   accounts      Account[]
   groups        GroupMember[]
   transaction   Transaction[]
@@ -57,7 +67,8 @@ model Account {
 model Group {
   id               String             @id @default(cuid())
   name             String
-  image            String?
+  imageId          String?
+  image            Image?             @relation(fields: [imageId], references: [id], onDelete: Cascade)
   balance          Int                @default(0)
   createdAt        DateTime           @default(now())
   updatedAt        DateTime           @updatedAt

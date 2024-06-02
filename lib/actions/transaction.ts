@@ -5,7 +5,7 @@ import { db } from "../db/db"
 import moment from "moment";
 import { getFilteredTransactions } from "../utils";
 import { transactionTableIncludeQuery } from "../constants/queries";
-import { calculateBalancesForEachGroupMembers, resolveGroupBalances } from "./group";
+import { resolveGroupBalances } from "./group";
 
 interface createTransactionProps {
     basicDetails: {
@@ -140,6 +140,7 @@ export const getAllTransactionsByUser = async () => {
                 creatorUserId: userId,
             },
             include: transactionTableIncludeQuery,
+            orderBy: { createdAt: "desc" }
         });
 
         const filteredTransactions = getFilteredTransactions(transactions, userId);
@@ -147,5 +148,67 @@ export const getAllTransactionsByUser = async () => {
         return { transactions: filteredTransactions };
     } catch (error) {
         return { error: "Something went erong while fetching Transactions Details" };
+    }
+}
+
+export const makePayment = async (groupId: string, memberId: string, amount: number, tag: GroupStatusTagProps) => {
+    if (!amount) {
+        return { error: "Invalid Amount" };
+    }
+
+    const session = await auth();
+    if (!session?.user?.id) {
+        return { error: "Session or user information is missing" };
+    }
+
+    const userId = session.user.id;
+
+    const group = await db.group.findUnique({
+        where: { id: groupId }
+    });
+    if (!group) {
+        return { error: "Group not found with given groupId" };
+    }
+
+    const member = await db.user.findUnique({
+        where: { id: memberId }
+    });
+    if (!member) {
+        return { error: "Member not found with given userId" };
+    }
+
+    const user = await db.user.findUnique({
+        where: { id: userId }
+    })
+
+    const description = tag === "owe" ? `"${user?.name}" paid "${member?.name}" Rs.${amount}` : `"${member?.name}" paid "${user?.name}" Rs.${amount}`;
+
+    const recipients = tag === "owe" ? [{ userId: userId, amount }] : [{ userId: memberId, amount }];
+    const contributors = tag === "owe" ? [{ userId: memberId, amount }] : [{ userId: userId, amount }];
+
+
+
+    try {
+        await db.transaction.create({
+            data: {
+                type: "Settlement",
+                creatorUserId: userId,
+                groupId,
+                description,
+                amount,
+                contributors: {
+                    create: contributors
+                },
+                recipients: {
+                    create: recipients
+                }
+            }
+        });
+
+        await resolveGroupBalances(groupId);
+
+        return { success: "Payment Sucessful!" };
+    } catch (error) {
+        return { error: "Something went wrong while making payment" };
     }
 }
