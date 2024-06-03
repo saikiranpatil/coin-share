@@ -91,7 +91,7 @@ export const getFilteredGoupDetails: getFilteredGoupDetailsProps = (group, userI
 
   userGroupBalance.forEach(({ amount, fromUserId, toUserId }) => {
     if (fromUserId === userId) {
-      balanceMap[toUserId] = (balanceMap[toUserId] || 0) - amount;
+      balanceMap[toUserId] = (balanceMap[toUserId] || 0) + amount;
     } else if (toUserId === userId) {
       balanceMap[fromUserId] = (balanceMap[fromUserId] || 0) - amount;
     }
