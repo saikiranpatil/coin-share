@@ -12,7 +12,7 @@ interface StepInternalConfig {
 	isLastStep?: boolean;
 }
 
-interface FullStepProps extends StepProps, StepInternalConfig {}
+interface FullStepProps extends StepProps, StepInternalConfig { }
 
 const Step = React.forwardRef<HTMLLIElement, StepProps>(
 	(props, ref: React.Ref<any>) => {
@@ -71,5 +71,7 @@ const Step = React.forwardRef<HTMLLIElement, StepProps>(
 		return renderStep();
 	},
 );
+
+Step.displayName = "Step";
 
 export { Step };

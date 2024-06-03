@@ -143,7 +143,7 @@ const VerticalStep = React.forwardRef<HTMLDivElement, VerticalStepProps>(
 						"stepper__vertical-step-container",
 						"flex items-center",
 						variant === "line" &&
-							"border-s-[3px] data-[active=true]:border-primary py-2 ps-3",
+						"border-s-[3px] data-[active=true]:border-primary py-2 ps-3",
 						styles?.["vertical-step-container"],
 					)}
 				>
@@ -184,5 +184,7 @@ const VerticalStep = React.forwardRef<HTMLDivElement, VerticalStepProps>(
 		);
 	},
 );
+
+VerticalStep.displayName = "VerticalStep"
 
 export { VerticalStep };
