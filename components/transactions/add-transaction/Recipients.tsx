@@ -129,6 +129,27 @@ const Recipients = ({ users, transactionData, setTransactionData }: RecipientsPr
   }
 
   useEffect(() => {
+    let hasError = false;
+    const errors: { [key: string]: string } = {};
+
+    recipients.forEach(recipient => {
+      if (recipient.amount <= 0) {
+        errors[recipient.id] = "Amount cannot be 0";
+        hasError = true;
+      }
+    });
+
+    setAmountErrors(errors);
+
+    if (leftAmount) {
+      setErrorState("Total Amount is not Equal to Selected Amount");
+    } else {
+      setErrorState(undefined);
+    }
+  }, [transactionData, recipients, leftAmount])
+
+
+  useEffect(() => {
     const totalSelected = recipients.reduce((total, contributor) => total + contributor.amount, 0);
     setSelectedAmount(totalSelected);
     setLeftAmount(totalAmount - totalSelected);
@@ -199,7 +220,7 @@ const Recipients = ({ users, transactionData, setTransactionData }: RecipientsPr
           <span className="font-medium">₹{leftAmount}</span>
         </div>
       </div>
-      <FormError message={errorState} />
+      <FormError message={selectedAmount && errorState} />
       <div className="flex justify-end w-full gap-4">
         <Button
           disabled={isDisabledStep}

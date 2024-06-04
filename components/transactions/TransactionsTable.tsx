@@ -22,7 +22,7 @@ interface TransactionsTableProps {
 const TransactionsTable = ({ transactions }: TransactionsTableProps) => {
   return (
     <>
-      <ScrollArea className="w-full pb-2">
+      <ScrollArea className="pb-2">
         <Table>
           <TableHeader>
             <TableRow>
