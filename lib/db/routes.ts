@@ -10,8 +10,8 @@ export const publicRoutes: string[] = ["/", "/profile"];
  * @type {string[]}
  */
 export const authRoutes: string[] = [
-    "/auth/login",
-    "/auth/register",
+    "/login",
+    "/register",
 ];
 
 /**

@@ -1,4 +1,4 @@
-import HomePage from '@/components/HomePage'
+import { redirect } from 'next/navigation'
 
-const Home = () => (<HomePage />)
+const Home = () => redirect('/dashboard')
 export default Home

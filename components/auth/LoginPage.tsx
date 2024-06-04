@@ -56,8 +56,7 @@ const LoginPage = () => {
             <AuthenticationCard
                 headerLabel="Welcome Back"
                 backButtonLabel="Don't have an account?"
-                backButtonHref="/auth/register"
-                showSocial
+                backButtonHref="/register"
             >
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">

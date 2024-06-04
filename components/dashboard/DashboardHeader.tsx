@@ -5,6 +5,7 @@ import { Calendar } from 'lucide-react'
 import DashboardAvatar from './DashboardAvatar'
 import { Card } from '../ui/card'
 import { Button } from '../ui/button'
+import Link from 'next/link'
 
 interface DashboardHeaderProps {
     user: {
@@ -35,7 +36,9 @@ const DashboardHeader = ({ user }: DashboardHeaderProps) => {
                     </div>
                 </div>
                 <Button>
-                    Edit Profile
+                    <Link href="/profile/edit">
+                        Edit Profile
+                    </Link>
                 </Button>
             </Card>
         </>

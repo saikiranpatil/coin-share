@@ -5,9 +5,8 @@ import { usePathname } from "next/navigation";
 
 import {
   CircleUser,
-  Search,
   Menu,
-  Package,
+  PieChart,
 } from 'lucide-react';
 
 import { Button } from "@/components/ui/button"
@@ -16,7 +15,6 @@ import {
   SheetContent,
   Sheet
 } from "@/components/ui/sheet"
-import { Input } from "@/components/ui/input"
 import {
   DropdownMenuTrigger,
   DropdownMenuSeparator,
@@ -34,11 +32,11 @@ export default function Navbar() {
   const pathname = usePathname();
 
   return (
-    <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6 z-20">
+    <header className="sticky top-0 flex h-16 items-center justify-between gap-4 border-b bg-background px-4 md:px-6 z-20">
       <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
-        <Link className="flex items-center gap-2 text-lg font-semibold md:text-base" href={`/${DEFAULT_LOGIN_REDIRECT}`}>
-          <Package className="h-6 w-6" />
-          <span className="sr-only">Acme Inc</span>
+        <Link className="flex items-center gap-2 text-lg font-semibold md:text-base" href={`${DEFAULT_LOGIN_REDIRECT}`}>
+          <PieChart className="h-6 w-6" />
+          <span>Coin Share</span>
         </Link>
         {navItems.map((navItem) => (
           <Link
@@ -60,7 +58,7 @@ export default function Navbar() {
         <SheetContent side="left">
           <nav className="grid gap-6 text-lg font-medium">
             <Link className="flex items-center gap-2 text-lg font-semibold" href="#">
-              <Package className="h-6 w-6" />
+              <PieChart className="h-6 w-6" />
               <span className="sr-only">Acme Inc</span>
             </Link>
             {navItems.map((navItem) => (
@@ -75,17 +73,7 @@ export default function Navbar() {
           </nav>
         </SheetContent>
       </Sheet>
-      <div className="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
-        <form className="ml-auto flex-1 sm:flex-initial">
-          <div className="relative">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              className="pl-8 sm:w-[300px] md:w-[200px] lg:w-[300px]"
-              placeholder="Search..."
-              type="search"
-            />
-          </div>
-        </form>
+      <div className="flex items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button className="rounded-full" size="icon" variant="secondary">
@@ -94,8 +82,11 @@ export default function Navbar() {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem>Settings</DropdownMenuItem>
-            <DropdownMenuItem>Support</DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link href="/profile/edit">
+                Edit Profile
+              </Link>
+            </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={() => logout()}
