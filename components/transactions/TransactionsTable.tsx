@@ -22,13 +22,13 @@ interface TransactionsTableProps {
 const TransactionsTable = ({ transactions }: TransactionsTableProps) => {
   return (
     <>
-      <ScrollArea className="pb-2">
+      <ScrollArea className="w-[70vw] sm:w-full pb-4 ">
         <Table>
           <TableHeader>
             <TableRow>
               <TableHead></TableHead>
               <TableHead>
-                <div className="flex flex-col items-start">
+                <div className="flex flex-col items-center">
                   <div className="font-medium">From</div>
                 </div>
               </TableHead>
@@ -52,7 +52,7 @@ const TransactionsTable = ({ transactions }: TransactionsTableProps) => {
                       }
                     </TableCell>
                     <TableCell>
-                      <div className="flex flex-col items-start">
+                      <div className="flex flex-col items-center">
                         <div className="font-medium">{transaction.creatorName}</div>
                         <span className="text-xs text-muted-foreground">{transaction.groupName}</span>
                       </div>
