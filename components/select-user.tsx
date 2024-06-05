@@ -48,7 +48,7 @@ const SelectUser = ({ users, setClickedUser, children }: SelectUserProps) => {
                                 users.map(user => (
                                     <CommandItem key={user.id}>
                                         <Avatar className='mr-4 h-12 w-12'>
-                                            <AvatarImage className="rounded-full" src={user.image || "https://github.com/shadcn.png"} />
+                                            <AvatarImage className="rounded-full" src={user.imageUrl || "https://github.com/shadcn.png"} />
                                             <AvatarFallback>CN</AvatarFallback>
                                         </Avatar>
                                         <div

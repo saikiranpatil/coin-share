@@ -254,7 +254,7 @@ export const allGroupMembers = async (groupId: string, withinGroup: boolean = tr
                         }
                     }
             }
-        }) as UserSelectListProps[];
+        });
 
         return { users };
     } catch (error) {
@@ -365,5 +365,37 @@ export const userStatsData = async () => {
         return [totalBalance, totalTransactionAmount, totalTransactionCount];
     } catch (error) {
         return ["-", "-", "-"];
+    }
+}
+
+export const changeUserAvatar = async (imageData: string | undefined) => {
+    const session = await auth();
+
+    if (!session?.user) {
+        return { error: "Session or user information is missing" };
+    }
+    const userId = session.user.id;
+
+    try {
+        const image = await db.image.findFirst({
+            where: {
+                user: {
+                    some: { id: userId }
+                }
+            },
+            select: { publicId: true }
+        });
+
+        if (image) {
+            await cloudinary.uploader.destroy(image.publicId);
+        }
+
+        if (imageData) {
+            
+        }
+
+        return { success: "Avatar Updation Completed Sucessfully!" };
+    } catch (error) {
+        return { error: "Something went wrong while changing avatar" };
     }
 }

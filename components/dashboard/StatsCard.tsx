@@ -13,6 +13,7 @@ interface StatsCardProps extends React.HTMLAttributes<HTMLDivElement> {
     statsValue: string;
     statsDescription: string;
 }
+
 const StatsCard = React.forwardRef<HTMLDivElement, StatsCardProps>(({
     statsTitle,
     statsValue,
