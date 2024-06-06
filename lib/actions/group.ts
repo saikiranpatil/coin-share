@@ -7,6 +7,7 @@ import { getFilteredGoupDetails, getStatusTextForGroup } from "../utils";
 import { transactionTableIncludeQuery } from "../constants/queries";
 import { Entry, getMinCashFlow } from "../algorithms/MinCashFlow";
 import cloudinary from "../cloudinary";
+import { uploaderOptions } from "../constants";
 
 export const createGroup = async (values: createGroupSchemaType) => {
     const session = await auth();
@@ -25,19 +26,8 @@ export const createGroup = async (values: createGroupSchemaType) => {
     let imageData = null;
 
     if (image) {
-        const uploaderOptions = {
-            folder: "avatars",
-            height: 800,
-            width: 800,
-            crop: "thumb",
-            gravity: "faces",
-        };
-
-        const myCloud = await cloudinary.uploader.upload(image, uploaderOptions);
-        imageData = {
-            publicId: myCloud.public_id,
-            url: myCloud.secure_url,
-        };
+        const { public_id: publicId, secure_url: url } = await cloudinary.uploader.upload(image, uploaderOptions);
+        imageData = { publicId, url };
     }
 
     try {

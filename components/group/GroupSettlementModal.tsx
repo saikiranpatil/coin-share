@@ -69,7 +69,7 @@ const GroupSettlementModal = ({ groupMember }: { groupMember: GroupMemberPagePro
                     <div className="flex flex-col items-center space-y-4">
                         <div className="space-y-2">
                             <Avatar className="hidden h-24 w-24 sm:flex">
-                                <AvatarImage alt="Avatar" src={groupMember.imageUrl || "https://github.com/shadcn.png"} />
+                                <AvatarImage alt="Avatar" src={groupMember.imageUrl || "/default_user.png"} />
                                 <AvatarFallback>OM</AvatarFallback>
                             </Avatar>
                             <p className="text-muted-foreground">

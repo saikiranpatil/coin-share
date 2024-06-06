@@ -19,20 +19,68 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from '@/lib/utils';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import ViewAvatarModal from './view-avatar-modal';
 import { changeUserAvatar } from '@/lib/actions/user';
+import { toast } from '../ui/use-toast';
 
 interface EditAvatarProps extends React.HTMLAttributes<HTMLDivElement> {
-    user: UserSelectListProps;
+    imageUrl: string | undefined;
 }
 
-const onRemoveClick = async () => {
-    await changeUserAvatar(undefined);
-}
-
-const EditAvatar = React.forwardRef<HTMLDivElement, EditAvatarProps>(({ user, children, className, ...props }, ref) => {
+const EditAvatar = React.forwardRef<HTMLDivElement, EditAvatarProps>(({ imageUrl, children, className, ...props }, ref) => {
     const [open, setOpen] = useState(false);
+
+    const onUpdateAvatarClick = async (image: string | undefined) => {
+        toast({
+            description: "Updating User Avatar..."
+        })
+
+        const { error, success } = await changeUserAvatar(image);
+        if (error) {
+            toast({
+                title: "Error",
+                description: error
+            })
+        }
+
+        if (success) {
+            toast({
+                title: "Sucess",
+                description: success
+            })
+        }
+    }
+
+    const onChangeAvatarClick = () => {
+        let input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*';
+        input.onchange = (e) => handleImageFileChange(e);
+        input.click();
+    }
+
+    const handleImageFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target && e.target.files && e.target.files[0]) {
+            const file = e.target.files[0];
+            if (!file.type.startsWith("image/")) {
+                return toast({
+                    title: "Error",
+                    description: "Inlvalid Image Format"
+                });
+            }
+
+            const reader = new FileReader();
+            reader.onload = async () => {
+                if (reader.readyState === 2) {
+                    const result = reader.result as string;
+                    await onUpdateAvatarClick(result);
+                }
+            };
+
+            reader.readAsDataURL(file);
+        }
+    }
 
     return (
         <Avatar
@@ -42,28 +90,33 @@ const EditAvatar = React.forwardRef<HTMLDivElement, EditAvatarProps>(({ user, ch
         >
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                    <div className="absolute top-0 w-full h-full bg-accent flex justify-center items-center opacity-0 group-hover/editavatar:opacity-80 transition-all ease-in">
+                    <div className="absolute top-0 w-full h-full bg-accent flex justify-center items-center opacity-0 group-hover/editavatar:opacity-80 transition-all ease-in cursor-pointer">
                         <Edit2 size="24" />
                     </div>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                    <DropdownMenuItem onClick={onRemoveClick}>
-                        <Trash className="mr-2 h-4 w-4" />
-                        <span>Remove Image</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
+                    {
+                        imageUrl &&
+                        <>
+                            <DropdownMenuItem onClick={() => onUpdateAvatarClick(undefined)}>
+                                <Trash className="mr-2 h-4 w-4" />
+                                <span>Remove Image</span>
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                        </>
+                    }
                     <DropdownMenuItem onClick={() => setOpen(true)}>
                         <Eye className="mr-2 h-4 w-4" />
                         <span>View Image</span>
                     </DropdownMenuItem>
-                    <DropdownMenuItem>
+                    <DropdownMenuItem onClick={onChangeAvatarClick}>
                         <Edit className="mr-2 h-4 w-4" />
                         <span>Change Image</span>
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
-            <ViewAvatarModal user={user} open={open} setOpen={setOpen} />
-            <AvatarImage className="absolute top-0 -z-40" src={user.imageUrl || "https://github.com/shadcn.png"} />
+            <ViewAvatarModal imageUrl={imageUrl} open={open} setOpen={setOpen} />
+            <AvatarImage className="absolute top-0 -z-40" src={imageUrl || "/default_user.png"} />
         </Avatar>
     )
 });

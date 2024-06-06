@@ -25,7 +25,7 @@ const DashboardGoupCard = ({ group }: { group: DashboardGoupCardProps }) => {
             href={`/group/${group.id}`}
         >
             <Avatar className="hidden h-12 w-12 sm:flex">
-                <AvatarImage alt="Avatar" src={group.imageUrl || "https://github.com/shadcn.png"} />
+                <AvatarImage alt="Avatar" src={group.imageUrl || "/default_user.png"} />
                 <AvatarFallback>OM</AvatarFallback>
             </Avatar>
             <div className="grid gap-1 flex-1">

@@ -26,3 +26,11 @@ export const groupStatusClassMap: { [K in GroupStatusTagProps]: string } = {
     "owe": "text-red-500",
     "settled": "text-gray-500",
 };
+
+export const uploaderOptions = {
+    folder: "avatars",
+    height: 800,
+    width: 800,
+    crop: "thumb",
+    gravity: "faces",
+};

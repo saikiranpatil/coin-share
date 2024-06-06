@@ -51,11 +51,9 @@ const TransactionsTable = ({ transactions }: TransactionsTableProps) => {
                           <PiMoneyDuotone className="h-6 w-6" />
                       }
                     </TableCell>
-                    <TableCell>
-                      <div className="flex flex-col items-center">
-                        <div className="font-medium">{transaction.creatorName}</div>
-                        <span className="text-xs text-muted-foreground">{transaction.groupName}</span>
-                      </div>
+                    <TableCell className="flex flex-col items-center">
+                      <div className="font-medium">{transaction.creatorName}</div>
+                      <span className="text-xs text-muted-foreground">{transaction.groupName}</span>
                     </TableCell>
                     <TableCell>
                       <div>{transaction.description}</div>
@@ -65,8 +63,8 @@ const TransactionsTable = ({ transactions }: TransactionsTableProps) => {
                       <span>Rs.{transaction.amount}</span>
                       <span className="text-xs text-muted-foreground">{transaction.type}</span>
                     </TableCell>
-                    <TableCell className="text-right">
-                      <span className={`text-xs font-medium ${transactionStatusClassMap[tag]}`}>{text}</span>
+                    <TableCell className={`text-right text-xs font-medium ${transactionStatusClassMap[tag]}`}>
+                      {text}
                     </TableCell>
                     <TableCell className="text-right">
                       <TransactionDetailsModal transactionId={transaction.id} />

@@ -25,6 +25,7 @@ import { DEFAULT_LOGIN_REDIRECT } from "@/lib/db/routes";
 import { getUserByEmail } from "@/lib/data/user";
 import { getFilteredTransactions, getStatusTextForGroup } from "../utils";
 import { transactionTableIncludeQuery } from "../constants/queries";
+import { uploaderOptions } from "../constants";
 
 export const register = async (values: registerType) => {
     const validatedSchema = RegisterSchema.safeParse(values);
@@ -368,7 +369,7 @@ export const userStatsData = async () => {
     }
 }
 
-export const changeUserAvatar = async (imageData: string | undefined) => {
+export const changeUserAvatar = async (image: string | undefined) => {
     const session = await auth();
 
     if (!session?.user) {
@@ -377,21 +378,34 @@ export const changeUserAvatar = async (imageData: string | undefined) => {
     const userId = session.user.id;
 
     try {
-        const image = await db.image.findFirst({
+        const prevImage = await db.image.findFirst({
             where: {
                 user: {
-                    some: { id: userId }
+                    id: userId
                 }
             },
-            select: { publicId: true }
+            select: { id: true, publicId: true }
         });
 
-        if (image) {
-            await cloudinary.uploader.destroy(image.publicId);
+        if (prevImage) {
+            await cloudinary.uploader.destroy(prevImage.publicId);
+            await db.image.delete({
+                where: {
+                    id: prevImage.id
+                }
+            });
         }
 
-        if (imageData) {
-            
+        if (image) {
+            const { public_id: publicId, secure_url: url } = await cloudinary.uploader.upload(image, uploaderOptions);
+            await db.user.update({
+                where: { id: userId },
+                data: {
+                    image: {
+                        create: { publicId, url }
+                    }
+                }
+            });
         }
 
         return { success: "Avatar Updation Completed Sucessfully!" };

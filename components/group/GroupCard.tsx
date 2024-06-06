@@ -22,7 +22,7 @@ const GroupCard = ({ groupData }: { groupData: groupDataProps }) => {
         <Link href={"/group/" + groupData.id}>
             <Card className="flex flex-col text-center items-center justify-between space-y-0 gap-2 sm:gap-4 p-6">
                 <Avatar className='h-20 w-20'>
-                    <AvatarImage src={groupData.image || "https://github.com/shadcn.png"} />
+                    <AvatarImage src={groupData.image || "/default_user.png"} />
                     <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
                 <div className="grid gap-2">

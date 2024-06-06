@@ -9,12 +9,12 @@ import {
   AvatarImage,
 } from "@/components/ui/avatar"
 
-const ViewAvatarModal = ({ user, open, setOpen }: { user: UserSelectListProps, open: boolean, setOpen: (params: boolean) => void }) => {
+const ViewAvatarModal = ({ imageUrl, open, setOpen }: { imageUrl: string | undefined, open: boolean, setOpen: (params: boolean) => void }) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="border-none bg-transaparent">
+      <DialogContent className="border-none">
         <Avatar className="mx-auto h-full w-full">
-          <AvatarImage src={user.imageUrl || "https://github.com/shadcn.png"} alt="@shadcn" />
+          <AvatarImage src={imageUrl || "/default_user.png"} alt="@shadcn" />
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
       </DialogContent>

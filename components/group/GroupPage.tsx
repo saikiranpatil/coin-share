@@ -38,7 +38,7 @@ const GroupPage = async ({ params }: { params: GroupPageProps }) => {
     <main className="flex flex-col justify-center gap-4 p-4 md:gap-8 md:p-8">
       <div className="flex flex-col sm:flex-row items-center justify-center">
         <Avatar className='inline-block h-48 w-48 z-[1] m-6'>
-          <AvatarImage src={group.imageUrl || "https://github.com/shadcn.png"} />
+          <AvatarImage src={group.imageUrl || "/default_user.png"} />
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
         <Card className='space-y-4 p-6 text-center sm:text-left'>
