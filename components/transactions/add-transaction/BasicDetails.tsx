@@ -51,6 +51,8 @@ const AddTransactionBasicDetails = ({ transactionData, setTransactionData }: Add
         isDisabledStep,
     } = useStepper();
 
+    const isGroupIdPresent = !!transactionData.basicDetails?.groupId;
+
     const [groupsList, setGroupsList] = useState<GroupSelectListProps[]>([]);
     const [areGroupsLoading, setAreGroupsLoading] = useState<boolean>(false);
 
@@ -73,7 +75,7 @@ const AddTransactionBasicDetails = ({ transactionData, setTransactionData }: Add
             if (!error && groups) setGroupsList(groups);
         };
         fetchGroups();
-    }, []);
+    }, [isGroupIdPresent]);
 
     return (
         <Form {...form}>
@@ -96,6 +98,7 @@ const AddTransactionBasicDetails = ({ transactionData, setTransactionData }: Add
                                         <Select
                                             onValueChange={field.onChange}
                                             defaultValue={field.value}
+                                            disabled={isGroupIdPresent}
                                             value={field.value}
                                         >
                                             <FormControl>

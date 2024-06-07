@@ -40,7 +40,7 @@ interface AddTransactionDataContributersProps {
 }
 
 interface AddTransactionDataProps {
-    basicDetails?: AddTransactionDataBasicDetailsProps | undefined;
+    basicDetails?: AddTransactionDataBasicDetailsProps | { groupId: string } | undefined;
     contributors: AddTransactionDataContributersProps;
     recipients: AddTransactionDataMembersProps[] | undefined;
 }

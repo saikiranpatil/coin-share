@@ -30,6 +30,19 @@ const GroupPage = async ({ params }: { params: GroupPageProps }) => {
     return <NotFound />;
   }
 
+  const AddTransactionsButton = (
+    <Button
+      asChild
+      className="ml-auto gap-1"
+      size="sm"
+    >
+      <Link href={`/${groupId}/transactions/add`}>
+        <Plus className="h-4 w-4" />
+        Add Transaction
+      </Link>
+    </Button>
+  )
+
   return (
     <main className="flex flex-col justify-center gap-4 p-4 md:gap-8 md:p-8">
       <div className="flex flex-col sm:flex-row items-center justify-center">
@@ -66,18 +79,5 @@ const GroupPage = async ({ params }: { params: GroupPageProps }) => {
     </main>
   )
 }
-
-const AddTransactionsButton = (
-  <Button
-    asChild
-    className="ml-auto gap-1"
-    size="sm"
-  >
-    <Link href="/transactions/add">
-      <Plus className="h-4 w-4" />
-      Add Transaction
-    </Link>
-  </Button>
-)
 
 export default GroupPage
