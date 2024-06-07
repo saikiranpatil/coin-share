@@ -1,20 +1,26 @@
 import React from 'react'
 
+import { auth } from '@/lib/db/auth'
+import Link from 'next/link'
+
 import { Calendar } from 'lucide-react'
 
 import { Card } from '../ui/card'
 import { Button } from '../ui/button'
-import Link from 'next/link'
 import EditAvatar from '../edit-avatar/edit-avatar'
 
 interface DashboardHeaderProps {
     user: UserSelectListProps
 }
 
-const DashboardHeader = ({ user }: DashboardHeaderProps) => {
+const DashboardHeader = async ({ user }: DashboardHeaderProps) => {
+    const session = await auth();
+    if (!session?.user?.id) return;
+    const userId = session.user.id;
+
     return (
         <>
-            <EditAvatar className="absolute top-0 left-[calc(50%-120px)] sm:left-8" user={user} />
+            <EditAvatar className="absolute top-0 left-[calc(50%-120px)] sm:left-8" type="user" id={userId} imageUrl={user.imageUrl} />
             <Card className='flex flex-col sm:flex-row gap-4 justify-between items-center sm:items-end relative sm:text-left text-center p-6 mt-28 pt-24'>
                 <div>
                     <h4 className="whitespace-nowrap text-3xl font-semibold tracking-tight">

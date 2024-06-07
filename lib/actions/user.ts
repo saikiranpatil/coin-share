@@ -369,21 +369,16 @@ export const userStatsData = async () => {
     }
 }
 
-export const changeUserAvatar = async (image: string | undefined) => {
+export const changeUserAvatar = async (id: string, type: editAvatarType, image: string | undefined) => {
     const session = await auth();
 
     if (!session?.user) {
         return { error: "Session or user information is missing" };
     }
-    const userId = session.user.id;
 
     try {
         const prevImage = await db.image.findFirst({
-            where: {
-                user: {
-                    id: userId
-                }
-            },
+            where: type == "user" ? { user: { id } } : { group: { id } },
             select: { id: true, publicId: true }
         });
 
@@ -398,14 +393,34 @@ export const changeUserAvatar = async (image: string | undefined) => {
 
         if (image) {
             const { public_id: publicId, secure_url: url } = await cloudinary.uploader.upload(image, uploaderOptions);
-            await db.user.update({
-                where: { id: userId },
-                data: {
-                    image: {
-                        create: { publicId, url }
-                    }
-                }
-            });
+
+            switch (type) {
+                case "user":
+                    await db.user.update({
+                        where: { id },
+                        data: {
+                            image: {
+                                create: { publicId, url }
+                            }
+                        }
+                    });
+                    break;
+
+                case "group":
+                    await db.group.update({
+                        where: { id },
+                        data: {
+                            image: {
+                                create: { publicId, url }
+                            }
+                        }
+                    });
+                    break;
+
+                default:
+                    break;
+            }
+
         }
 
         return { success: "Avatar Updation Completed Sucessfully!" };

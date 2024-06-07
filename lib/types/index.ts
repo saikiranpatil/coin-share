@@ -5,3 +5,5 @@ interface cashFlowDataProps {
 }
 
 type cashFlowProps = cashFlowDataProps[];
+
+type editAvatarType = "user" | "group";

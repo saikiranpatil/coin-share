@@ -1,9 +1,8 @@
 "use client";
+import React, { useState } from 'react';
 
-import {
-    Avatar,
-    AvatarImage
-} from '@/components/ui/avatar';
+import { cn } from '@/lib/utils';
+
 import {
     Edit,
     Edit2,
@@ -11,6 +10,12 @@ import {
     Trash
 } from 'lucide-react';
 
+import { changeUserAvatar } from '@/lib/actions/user';
+
+import {
+    Avatar,
+    AvatarImage
+} from '@/components/ui/avatar';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -18,17 +23,17 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { cn } from '@/lib/utils';
-import React, { useRef, useState } from 'react';
-import ViewAvatarModal from './view-avatar-modal';
-import { changeUserAvatar } from '@/lib/actions/user';
 import { toast } from '../ui/use-toast';
 
+import ViewAvatarModal from './view-avatar-modal';
+
 interface EditAvatarProps extends React.HTMLAttributes<HTMLDivElement> {
+    id: string;
+    type: editAvatarType;
     imageUrl: string | undefined;
 }
 
-const EditAvatar = React.forwardRef<HTMLDivElement, EditAvatarProps>(({ imageUrl, children, className, ...props }, ref) => {
+const EditAvatar = React.forwardRef<HTMLDivElement, EditAvatarProps>(({ id, type, imageUrl, children, className, ...props }, ref) => {
     const [open, setOpen] = useState(false);
 
     const onUpdateAvatarClick = async (image: string | undefined) => {
@@ -36,7 +41,7 @@ const EditAvatar = React.forwardRef<HTMLDivElement, EditAvatarProps>(({ imageUrl
             description: "Updating User Avatar..."
         })
 
-        const { error, success } = await changeUserAvatar(image);
+        const { error, success } = await changeUserAvatar(id, type, image);
         if (error) {
             toast({
                 title: "Error",
@@ -56,7 +61,7 @@ const EditAvatar = React.forwardRef<HTMLDivElement, EditAvatarProps>(({ imageUrl
         let input = document.createElement('input');
         input.type = 'file';
         input.accept = 'image/*';
-        input.onchange = (e) => handleImageFileChange(e);
+        input.onchange = (e) => handleImageFileChange(e as unknown as React.ChangeEvent<HTMLInputElement>);
         input.click();
     }
 

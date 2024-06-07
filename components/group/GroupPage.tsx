@@ -21,6 +21,7 @@ import {
 import { Button } from "@/components/ui/button";
 import NotFound from "../not-found";
 import TransactionsCard from "../transactions/TransactionsCard";
+import EditAvatar from "../edit-avatar/edit-avatar";
 
 const GroupPage = async ({ params }: { params: GroupPageProps }) => {
   const { groupId } = params;
@@ -37,10 +38,7 @@ const GroupPage = async ({ params }: { params: GroupPageProps }) => {
   return (
     <main className="flex flex-col justify-center gap-4 p-4 md:gap-8 md:p-8">
       <div className="flex flex-col sm:flex-row items-center justify-center">
-        <Avatar className='inline-block h-48 w-48 z-[1] m-6'>
-          <AvatarImage src={group.imageUrl || "/default_user.png"} />
-          <AvatarFallback>CN</AvatarFallback>
-        </Avatar>
+        <EditAvatar id={groupId} type="group" imageUrl={group.imageUrl} />
         <Card className='space-y-4 p-6 text-center sm:text-left'>
           <h1 className="whitespace-nowrap text-3xl font-semibold tracking-tight">
             {group.name}
