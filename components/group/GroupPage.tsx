@@ -36,7 +36,7 @@ const GroupPage = async ({ params }: { params: GroupPageProps }) => {
       className="ml-auto gap-1"
       size="sm"
     >
-      <Link href={`/${groupId}/transactions/add`}>
+      <Link href={`/group/${groupId}/transactions/add`}>
         <Plus className="h-4 w-4" />
         Add Transaction
       </Link>
