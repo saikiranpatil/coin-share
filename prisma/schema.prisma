@@ -20,7 +20,7 @@ model Image {
   publicId  String
   createdAt DateTime @default(now())
   user      User?
-  Group     Group?
+  group     Group?
 }
 
 model User {
