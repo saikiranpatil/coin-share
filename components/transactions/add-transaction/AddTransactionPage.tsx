@@ -37,10 +37,6 @@ const AddTransactionPage = ({ groupId }: { groupId: string | undefined }) => {
     const [users, setUsers] = useState<UserSelectListProps[]>([]);
 
     useEffect(() => {
-        if (groupId) {
-            return;
-        }
-
         const fetchUsers = async () => {
             if (!transactionData.basicDetails?.groupId) return;
 
@@ -58,7 +54,7 @@ const AddTransactionPage = ({ groupId }: { groupId: string | undefined }) => {
         }
 
         fetchUsers();
-    }, [groupId, transactionData.basicDetails?.groupId]);
+    }, [transactionData.basicDetails?.groupId]);
 
     return (
         <div className="container mx-auto px-4 py-8 md:py-12 lg:py-16 max-w-xl">
