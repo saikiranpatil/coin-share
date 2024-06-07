@@ -12,7 +12,7 @@ import { UserPlus } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { toast } from "@/components/ui/use-toast"
-import SelectUser from "@/components/select-user"
+import SelectUser from "@/components/my-ui/select-user"
 
 const AddGroupMemberModal = () => {
     const { groupId }: { groupId: string } = useParams();

@@ -5,23 +5,18 @@ import { getGroupDetails } from "@/lib/actions/group";
 import { Plus } from "lucide-react";
 
 import ErrorPage from "@/components/error-page";
-import CardWrapper from "@/components/card-wrapper";
+import CardWrapper from "@/components/my-ui/card-wrapper";
 import GroupMemberCard from "@/components/group/GroupMemberCard";
 import AddGroupMemberModal from "@/components/group/AddGroupMemberModal";
 
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage
-} from "@/components/ui/avatar";
 import {
   Card,
   CardDescription
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import NotFound from "../not-found";
-import TransactionsCard from "../transactions/TransactionsCard";
-import EditAvatar from "../edit-avatar/edit-avatar";
+import TransactionsCard from "../my-ui/transactions-card/TransactionsCard";
+import EditAvatar from "@/components/my-ui/edit-avatar/edit-avatar";
 
 const GroupPage = async ({ params }: { params: GroupPageProps }) => {
   const { groupId } = params;

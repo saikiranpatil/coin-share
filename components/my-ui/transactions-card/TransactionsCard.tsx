@@ -5,8 +5,8 @@ import {
     ListFilter,
 } from "lucide-react";
 
-import CardWrapper from "@/components/card-wrapper"
-import TransactionsTable from "@/components/transactions/TransactionsTable";
+import CardWrapper from "@/components/my-ui/card-wrapper"
+import TransactionsTable from "./TransactionsTable";
 
 import {
     DropdownMenu,

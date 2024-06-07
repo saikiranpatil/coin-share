@@ -11,7 +11,7 @@ import {
     Step,
     Stepper,
     type StepItem,
-} from "@/components/stepper"
+} from "@/components/my-ui/stepper"
 import {
     Card,
     CardContent,

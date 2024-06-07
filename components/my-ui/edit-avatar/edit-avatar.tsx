@@ -3,14 +3,13 @@ import React, { useState } from 'react';
 
 import { cn } from '@/lib/utils';
 
+import { changeUserAvatar } from '@/lib/actions/user';
 import {
     Edit,
     Edit2,
     Eye,
     Trash
 } from 'lucide-react';
-
-import { changeUserAvatar } from '@/lib/actions/user';
 
 import {
     Avatar,
@@ -23,7 +22,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { toast } from '../ui/use-toast';
+import { toast } from '@/components/ui/use-toast';
 
 import ViewAvatarModal from './view-avatar-modal';
 

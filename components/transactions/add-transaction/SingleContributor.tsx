@@ -12,8 +12,8 @@ import {
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button"
 
-import { useStepper } from "@/components/stepper";
-import SelectUser from "@/components/select-user";
+import { useStepper } from "@/components/my-ui/stepper";
+import SelectUser from "@/components/my-ui/select-user";
 
 interface SingleContributorProps {
     transactionData: AddTransactionDataProps;

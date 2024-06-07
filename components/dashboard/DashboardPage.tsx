@@ -6,13 +6,13 @@ import { CardDescription } from "@/components/ui/card"
 
 import DashboardHeader from '@/components/dashboard/DashboardHeader';
 import DashboardStats from '@/components/dashboard/DashboardStats';
-import TransactionsCard from '@/components/transactions/TransactionsCard';
+import TransactionsCard from '@/components/my-ui/transactions-card/TransactionsCard';
 
 import { getUserDetails } from '@/lib/actions/user';
 import DashboardGoupCard from '@/components/dashboard/DashboardGoupCard';
 import NotFound from '@/components/not-found';
 import ErrorPage from '@/components/error-page';
-import CardWrapper from '../card-wrapper';
+import CardWrapper from '../my-ui/card-wrapper';
 
 export default async function Dashboard() {
   const { user, error } = await getUserDetails();

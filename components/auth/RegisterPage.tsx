@@ -15,7 +15,7 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 
-import AuthenticationCard from "@/components/auth-card/AuthCard";
+import AuthenticationCard from "@/components/my-ui/auth-card/AuthCard";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";

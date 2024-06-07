@@ -2,7 +2,7 @@ import {
   Dialog,
   DialogContent,
   DialogHeader
-} from "../ui/dialog"
+} from "@/components/ui/dialog"
 import {
   Avatar,
   AvatarFallback,

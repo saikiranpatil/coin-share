@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/table"
 import { CardDescription } from '@/components/ui/card';
 import { transactionStatusClassMap } from '@/lib/constants';
-import { ScrollArea, ScrollBar } from '../ui/scroll-area';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 
 interface TransactionsTableProps {
   transactions: TransactionTableProps[];

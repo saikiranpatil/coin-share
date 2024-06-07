@@ -1,35 +1,7 @@
-import {
-    File,
-    ListFilter,
-} from "lucide-react"
-
-import TransactionsTable from "@/components/transactions/TransactionsTable"
-import { Button } from "@/components/ui/button"
-import {
-    DropdownMenu,
-    DropdownMenuCheckboxItem,
-    DropdownMenuContent,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import {
-    Tabs,
-    TabsContent,
-    TabsList,
-    TabsTrigger,
-} from "@/components/ui/tabs"
-import {
-    CardTitle,
-    CardHeader,
-    CardContent,
-    Card,
-    CardDescription
-} from "@/components/ui/card"
 import { getAllTransactionsByUser } from "@/lib/actions/transaction"
-import ErrorPage from "../error-page"
-import TransactionsCard from "./TransactionsCard"
 
+import ErrorPage from "@/components/error-page"
+import TransactionsCard from "@/components/my-ui/transactions-card/TransactionsCard"
 
 export default async function TransactionsPage() {
     const { transactions, error } = await getAllTransactionsByUser();

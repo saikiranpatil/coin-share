@@ -12,8 +12,8 @@ import {
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import SelectUser from "@/components/select-user";
-import { useStepper } from "@/components/stepper";
+import SelectUser from "@/components/my-ui/select-user";
+import { useStepper } from "@/components/my-ui/stepper";
 import FormError from "@/components/form/FormError";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";

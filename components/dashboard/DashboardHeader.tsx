@@ -7,7 +7,7 @@ import { Calendar } from 'lucide-react'
 
 import { Card } from '../ui/card'
 import { Button } from '../ui/button'
-import EditAvatar from '../edit-avatar/edit-avatar'
+import EditAvatar from '@/components/my-ui/edit-avatar/edit-avatar'
 
 interface DashboardHeaderProps {
     user: UserSelectListProps
