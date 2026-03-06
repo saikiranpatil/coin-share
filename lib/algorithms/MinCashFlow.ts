@@ -54,9 +54,9 @@ const getMinAmount = (cashFlow: cashFlowProps) => {
 
         netAmount[fromIndex].amount -= transaction.amount;
         netAmount[toIndex].amount += transaction.amount;
-
-        return netAmount;
     }
+
+    return netAmount;
 }
 
 export const getMinCashFlow: (netAmount: Entry[]) => cashFlowDataProps[] = (netAmount) => {
