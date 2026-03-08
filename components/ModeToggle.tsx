@@ -1,22 +1,15 @@
 "use client"
 
-import { useState } from "react"
-
 import { Moon, Sun } from "lucide-react"
 import { useTheme } from "next-themes"
 
 import { Button } from "@/components/ui/button"
 
 export function ModeToggle() {
-  const { setTheme } = useTheme();
-  const [mode, setMode] = useState("dark");
-  setTheme(mode);
+  const { theme, setTheme } = useTheme()
 
   const toggleMode = () => {
-    const otherTheme = mode === "light" ? "dark" : "light";
-
-    setTheme(otherTheme);
-    setMode(otherTheme);
+    setTheme(theme === "light" ? "dark" : "light")
   }
 
   return (

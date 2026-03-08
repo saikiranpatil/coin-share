@@ -1,76 +1,85 @@
 @tailwind base;
-  @tailwind components;
-  @tailwind utilities;
+@tailwind components;
+@tailwind utilities;
 
-  @layer base {
-    :root {
-      --background: 0 0% 100%;
-      --foreground: 224 71.4% 4.1%;
+@layer base {
+  :root {
+    --background: 150 20% 98%;
+    --foreground: 155 40% 8%;
 
-      --card: 0 0% 100%;
-      --card-foreground: 224 71.4% 4.1%;
+    --card: 0 0% 100%;
+    --card-foreground: 155 40% 8%;
 
-      --popover: 0 0% 100%;
-      --popover-foreground: 224 71.4% 4.1%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 155 40% 8%;
 
-      --primary: 220.9 39.3% 11%;
-      --primary-foreground: 210 20% 98%;
+    --primary: 152 60% 32%;        /* deep green — money, trust */
+    --primary-foreground: 0 0% 100%;
 
-      --secondary: 220 14.3% 95.9%;
-      --secondary-foreground: 220.9 39.3% 11%;
+    --secondary: 148 30% 92%;
+    --secondary-foreground: 152 60% 20%;
 
-      --muted: 220 14.3% 95.9%;
-      --muted-foreground: 220 8.9% 46.1%;
+    --muted: 150 15% 94%;
+    --muted-foreground: 155 15% 45%;
 
-      --accent: 220 14.3% 95.9%;
-      --accent-foreground: 220.9 39.3% 11%;
+    --accent: 168 55% 40%;         /* teal — settlements, actions */
+    --accent-foreground: 0 0% 100%;
 
-      --destructive: 0 84.2% 60.2%;
-      --destructive-foreground: 210 20% 98%;
+    --destructive: 4 80% 55%;      /* red — debts owed */
+    --destructive-foreground: 0 0% 100%;
 
-      --border: 220 13% 91%;
-      --input: 220 13% 91%;
-      --ring: 224 71.4% 4.1%;
+    --border: 150 15% 88%;
+    --input: 150 15% 88%;
+    --ring: 152 60% 32%;
 
-      --radius: 0.5rem;
-    }
+    --radius: 0.5rem;
 
-    .dark {
-      --background: 224 71.4% 4.1%;
-      --foreground: 210 20% 98%;
-
-      --card: 224 71.4% 4.1%;
-      --card-foreground: 210 20% 98%;
-
-      --popover: 224 71.4% 4.1%;
-      --popover-foreground: 210 20% 98%;
-
-      --primary: 210 20% 98%;
-      --primary-foreground: 220.9 39.3% 11%;
-
-      --secondary: 215 27.9% 16.9%;
-      --secondary-foreground: 210 20% 98%;
-
-      --muted: 215 27.9% 16.9%;
-      --muted-foreground: 217.9 10.6% 64.9%;
-
-      --accent: 215 27.9% 16.9%;
-      --accent-foreground: 210 20% 98%;
-
-      --destructive: 0 62.8% 30.6%;
-      --destructive-foreground: 210 20% 98%;
-
-      --border: 215 27.9% 16.9%;
-      --input: 215 27.9% 16.9%;
-      --ring: 216 12.2% 83.9%;
-    }
+    /* Custom semantic tokens for expense app */
+    --positive: 142 65% 38%;       /* you are owed */
+    --negative: 4 80% 55%;         /* you owe */
+    --settled: 210 15% 60%;        /* settled/neutral */
   }
 
-  @layer base {
-    * {
-      @apply border-border;
-    }
-    body {
-      @apply bg-background text-foreground;
-    }
+  .dark {
+    --background: 155 25% 6%;
+    --foreground: 150 20% 95%;
+
+    --card: 155 25% 9%;
+    --card-foreground: 150 20% 95%;
+
+    --popover: 155 25% 9%;
+    --popover-foreground: 150 20% 95%;
+
+    --primary: 152 55% 45%;
+    --primary-foreground: 155 40% 5%;
+
+    --secondary: 155 20% 14%;
+    --secondary-foreground: 150 20% 90%;
+
+    --muted: 155 20% 13%;
+    --muted-foreground: 150 15% 55%;
+
+    --accent: 168 50% 42%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 4 70% 45%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 155 20% 16%;
+    --input: 155 20% 16%;
+    --ring: 152 55% 45%;
+
+    --positive: 142 55% 45%;
+    --negative: 4 70% 50%;
+    --settled: 210 12% 45%;
   }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}

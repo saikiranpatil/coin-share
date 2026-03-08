@@ -27,7 +27,7 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
-} from "@/components/ui/form"
+} from "@/components/ui/form"   
 import { Input } from "@/components/ui/input"
 
 import FormError from "@/components/form/FormError"
@@ -144,7 +144,7 @@ const CreateGroupModal = () => {
                             className="w-full"
                             disabled={isPending}
                         >
-                            Submit
+                             Create Group
                         </Button>
                     </form>
                 </Form>

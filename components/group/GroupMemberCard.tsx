@@ -1,18 +1,11 @@
 import { groupStatusClassMap } from "@/lib/constants";
-
-import {
-    Avatar,
-    AvatarFallback,
-    AvatarImage
-} from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import GroupSettlementModal from "./GroupSettlementModal";
 
 const GroupMemberCard = ({ groupMember }: { groupMember: GroupMemberPageProps }) => {
     const { tag, text } = groupMember.status;
     return (
-        <div
-            className="flex items-center gap-4 p-4 transition-colors border-b border-gray-200 dark:border-gray-700"
-        >
+        <div className="flex items-center gap-4 p-4 transition-colors border-b border-border last:border-b-0">
             <Avatar className="hidden h-12 w-12 sm:flex">
                 <AvatarImage alt="Avatar" src={groupMember.imageUrl || "/default_user.png"} />
                 <AvatarFallback>OM</AvatarFallback>

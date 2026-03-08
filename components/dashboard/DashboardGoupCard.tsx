@@ -1,10 +1,5 @@
 import Link from "next/link"
-
-import {
-    AvatarImage,
-    AvatarFallback,
-    Avatar
-} from "@/components/ui/avatar";
+import { AvatarImage, AvatarFallback, Avatar } from "@/components/ui/avatar";
 import { groupStatusClassMap } from "@/lib/constants";
 
 interface DashboardGoupCardProps {
@@ -12,16 +7,13 @@ interface DashboardGoupCardProps {
     name: string;
     imageUrl?: string;
     membersCount: number;
-    status: {
-        tag: GroupStatusTagProps,
-        text: string;
-    }
+    status: { tag: GroupStatusTagProps; text: string; }
 }
 
 const DashboardGoupCard = ({ group }: { group: DashboardGoupCardProps }) => {
     return (
         <Link
-            className="flex items-center gap-4 rounded-md bg-gray-100 p-4 transition-colors hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700"
+            className="flex items-center gap-4 rounded-md bg-secondary/60 p-4 transition-colors hover:bg-secondary border border-border"
             href={`/group/${group.id}`}
         >
             <Avatar className="hidden h-12 w-12 sm:flex">
@@ -33,7 +25,9 @@ const DashboardGoupCard = ({ group }: { group: DashboardGoupCardProps }) => {
                 <p className="text-sm text-muted-foreground">{group.membersCount} members</p>
             </div>
             <div className="flex flex-col items-end gap-1">
-                <span className={`text-xs font-medium ${groupStatusClassMap[group.status.tag]}`}>{group.status.text}</span>
+                <span className={`text-xs font-medium ${groupStatusClassMap[group.status.tag]}`}>
+                    {group.status.text}
+                </span>
             </div>
         </Link>
     )
