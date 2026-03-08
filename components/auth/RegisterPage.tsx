@@ -42,17 +42,15 @@
 
         const onSubmit = (values: registerType) => {
             setFormError("");
-            setFormSuccess("");
 
             startTransation(async () => {
-                const { error, success } = await register(values);
+                const { error } = await register(values);
 
-                if (!error && success) {
+                if (!error) {
                     redirect("/dashboard");
                 }
 
                 setFormError(error);
-                setFormSuccess(success);
             });
         }
 

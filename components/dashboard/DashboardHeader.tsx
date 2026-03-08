@@ -1,12 +1,10 @@
 import React from 'react'
 
 import { auth } from '@/lib/db/auth'
-import Link from 'next/link'
 
 import { Calendar } from 'lucide-react'
 
 import { Card } from '../ui/card'
-import { Button } from '../ui/button'
 import EditAvatar from '@/components/my-ui/edit-avatar/edit-avatar'
 
 interface DashboardHeaderProps {
@@ -36,11 +34,6 @@ const DashboardHeader = async ({ user }: DashboardHeaderProps) => {
                         </span>
                     </div>
                 </div>
-                <Button>
-                    <Link href="/profile/edit">
-                        Edit Profile
-                    </Link>
-                </Button>
             </Card>
         </>
     )

@@ -220,7 +220,7 @@ const Recipients = ({ users, transactionData, setTransactionData }: RecipientsPr
           <span className="font-medium">₹{leftAmount}</span>
         </div>
       </div>
-      <FormError message={selectedAmount && errorState} />
+      <FormError message={selectedAmount !== 0 ? errorState : ""} />
       <div className="flex justify-end w-full gap-4">
         <Button
           disabled={isDisabledStep}

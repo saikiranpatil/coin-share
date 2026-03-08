@@ -15,7 +15,7 @@ import ErrorPage from '@/components/error-page';
 import CardWrapper from '../my-ui/card-wrapper';
 
 export default async function Dashboard() {
-  const { user, error } = await getUserDetails();
+  const { data: user, error } = await getUserDetails();
 
   if (error) {
     return <ErrorPage message={error} />;

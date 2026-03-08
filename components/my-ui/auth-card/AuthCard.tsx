@@ -23,7 +23,7 @@ const AuthCard = ({
   headerLabel,
   backButtonLabel,
   backButtonHref,
-  showSocial = true
+  showSocial
 }: authCardProps) => {
   return (
     <Card className="w-[400px] shadow-md">

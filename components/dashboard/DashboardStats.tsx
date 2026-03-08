@@ -1,5 +1,5 @@
 import StatsCard from '@/components/dashboard/StatsCard';
-import { userStatsData } from '@/lib/actions/user';
+import { getUserStats } from '@/lib/actions/user';
 import { IconKey } from '@/lib/constants/icons';
 
 interface statsProps {
@@ -10,24 +10,35 @@ interface statsProps {
 }
 
 const DashboardStats = async () => {
-    const [totalBalance, totalTransactionAmount, totalTransactionCount] = await userStatsData();
+    const { data: userStatsData, error } = await getUserStats();
+
+    const defaultSummary = {
+        totalBalance: 0,
+        totalVolume: 0,
+        totalTransactions: 0,
+    };
+
+    const summary = {
+        ...defaultSummary,
+        ...userStatsData
+    }
 
     const statsData: statsProps[] = [
         {
-            statsTitle: `Totally, ${typeof totalBalance === "number" && totalBalance < 0 ? "you owe" : "you get"}`,
-            statsValue: `₹ ${typeof totalBalance === "number" ? Math.abs(totalBalance) : totalBalance}`,
+            statsTitle: `Totally, ${typeof summary.totalBalance === "number" && summary.totalBalance < 0 ? "you owe" : "you get"}`,
+            statsValue: `₹ ${typeof summary.totalBalance === "number" ? Math.abs(summary.totalBalance) : summary.totalBalance}`,
             statsIcon: "IndianRupee",
             statsDescription: "+20.1% from last month"
         },
         {
             statsTitle: "Total Expense",
-            statsValue: `₹ ${totalTransactionAmount}`,
+            statsValue: `₹ ${summary.totalVolume}`,
             statsIcon: "ReceiptText",
             statsDescription: "+20.1% from last month"
         },
         {
             statsTitle: "Total Transactions",
-            statsValue: `${totalTransactionCount}`,
+            statsValue: `${summary.totalTransactions}`,
             statsIcon: "Activity",
             statsDescription: "+19% from last month"
         },

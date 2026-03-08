@@ -1,9 +1,36 @@
 import { type ClassValue, clsx } from "clsx"
 import moment from "moment";
-import { twMerge } from "tailwind-merge"
+import { twMerge } from "tailwind-merge";
+
+import type { Session } from "next-auth";
+import { auth } from "./db/auth";
+
+export type ActionResult<T = undefined> =
+  | { data: T; error?: never }
+  | { error: string; data?: never };
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
+}
+
+export function withAuth<TArgs extends unknown[], TReturn>(
+  handler: (userId: string, session: Session, ...args: TArgs) => Promise<ActionResult<TReturn>>
+) {
+  return async (...args: TArgs): Promise<ActionResult<TReturn>> => {
+    const session = await auth();
+
+    if (!session?.user?.id) {
+      return { error: "Unauthorized: session or user information is missing" };
+    }
+
+    try {
+      return await handler(session.user.id, session, ...args);
+    } catch (err) {
+      // Log server-side with full context; surface a safe message to the client
+      console.error("[Action Error]", err);
+      return { error: "An unexpected error occurred. Please try again." };
+    }
+  };
 }
 
 export const getTransactionStatusOfUser: getTransactionStatusOfUserProps = (userId, transactions, type) => {
@@ -84,7 +111,7 @@ interface getFilteredGoupDetailsProps {
   }, userId: string): any
 }
 
-export const getFilteredGoupDetails: getFilteredGoupDetailsProps = (group, userId) => {
+export const getFilteredGroupDetails: getFilteredGoupDetailsProps = (group, userId) => {
   const { name, image, userGroupBalance } = group;
   let userBalanceInGroup = 0;
   const balanceMap: { [key: string]: number } = {};
