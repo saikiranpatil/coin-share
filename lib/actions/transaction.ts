@@ -64,13 +64,13 @@ export const createTransaction = async (transaction: createTransactionProps) => 
                 groupId,
                 contributors: {
                     create: filteredContributors.map(contributor => ({
-                        userId: contributor.id,
+                        user: { connect: { id: contributor.id as string } },
                         amount: contributor.amount
                     }))
                 },
                 recipients: {
                     create: recipients.map(recipient => ({
-                        userId: recipient.id,
+                        user: { connect: { id: recipient.id as string } },
                         amount: recipient.amount
                     }))
                 }
