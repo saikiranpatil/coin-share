@@ -46,6 +46,8 @@ const LoginPage = () => {
         startTransation(async () => {
             const data = await login(values);
 
+            console.log(data);
+
             setFormError(data?.error);
             setFormSuccess(data?.success);
         });

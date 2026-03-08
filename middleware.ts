@@ -25,7 +25,8 @@ export default auth((req) => {
     }
 
     if (isAuthRoutes) {
-        // if already logged in and tried to login, redirect them to default redirect link
+        // if already logged in and tried to login
+        // redirect them to default redirect link
         if (isLoggedIn) {
             return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
         }
@@ -34,7 +35,8 @@ export default auth((req) => {
         return;
     }
 
-    // if not logged in and tried to access the routes other than public routes redirect to login page
+    // if not logged in and tried to access the routes other than public routes 
+    // redirect to login page
     if (!isLoggedIn && !isPublicRoute) {
         return Response.redirect(new URL("/login", nextUrl));
     }
@@ -42,6 +44,9 @@ export default auth((req) => {
     return;
 })
 
+// Define regex express to apply above middleware
+// for all pages and API routes, 
+// but skip static files and Next.js internal files
 export const config = {
     matcher: ['/((?!.*\\..*|_next).*)', '/', '/(api|trpc)(.*)'],
 };

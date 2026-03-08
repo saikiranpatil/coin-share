@@ -73,6 +73,7 @@ export const register = async (values: registerType) => {
 
         return { success: "User created!" };
     } catch (error) {
+        console.log(error);
         return { error: "Something went wrong while registering user" };
     }
 }

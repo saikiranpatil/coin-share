@@ -4,24 +4,17 @@ import Link from "next/link"
 import { usePathname } from "next/navigation";
 
 import {
-  CircleUser,
   Menu,
   PieChart,
+  LogOutIcon,
 } from 'lucide-react';
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   SheetTrigger,
   SheetContent,
   Sheet
-} from "@/components/ui/sheet"
-import {
-  DropdownMenuTrigger,
-  DropdownMenuSeparator,
-  DropdownMenuItem,
-  DropdownMenuContent,
-  DropdownMenu
-} from "@/components/ui/dropdown-menu";
+} from "@/components/ui/sheet";
 
 import { ModeToggle } from "@/components/ModeToggle";
 import { navItems } from "@/lib/constants";
@@ -74,28 +67,11 @@ export default function Navbar() {
         </SheetContent>
       </Sheet>
       <div className="flex items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button className="rounded-full" size="icon" variant="secondary">
-              <CircleUser className="h-5 w-5" />
-              <span className="sr-only">Toggle user menu</span>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem>
-              <Link href="/profile/edit">
-                Edit Profile
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onClick={() => logout()}
-            >
-              Logout
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
         <ModeToggle />
+        <Button variant="outline" size="icon" onClick={() => logout()}>
+          <LogOutIcon className="h-5 w-5" />
+          <span className="sr-only">Toggle theme</span>
+        </Button>
       </div>
     </header>
   )

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
     title: "Group | Coin Share",
-    description: "Group page fot the group ${group name}$",
+    description: "Group page for the group ${group name}$",
 };
 
 export default function RootLayout({
