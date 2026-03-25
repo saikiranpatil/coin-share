@@ -183,3 +183,7 @@ export const getStatusTextForGroup = (balance: number) => {
     text: statusText
   };
 }
+
+export function uid() {
+  return Math.random().toString(36).slice(2);
+}

@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
-import "../globals.css";
-
 import Navbar from "@/components/Navbar";
+import AIChat from "@/components/ai/AIChat";
 
 export const metadata: Metadata = {
-  title: "Home | Coin Share",
-  description: "Coin Share, app to manage and settle group transactions.",
+  title: "CoinShare",
+  description: "Split expenses with your group",
 };
 
 export default function RootLayout({
@@ -14,9 +13,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <>
+    <div className="min-h-screen flex flex-col">
       <Navbar />
-      {children}
-    </>
+      <main className="flex-1">
+        {children}
+      </main>
+      <AIChat />
+    </div>
   );
 }

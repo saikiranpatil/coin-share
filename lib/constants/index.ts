@@ -34,3 +34,24 @@ export const uploaderOptions = {
     crop: "thumb",
     gravity: "faces",
 };
+
+export const TOOL_LABELS: Record<string, string> = {
+    get_balances: 'Checking balances',
+    list_groups: 'Fetching groups',
+    get_group_details: 'Loading group details',
+    list_transactions: 'Fetching transactions',
+    search_users: 'Searching users',
+    create_expense: 'Creating expense',
+    settle_debt: 'Recording settlement',
+};
+
+export const PROVIDER_LABELS: Record<string, string> = {
+    auto: 'Auto',
+    groq: 'Groq',
+    gemini: 'Gemini',
+};
+
+export const PROVIDER_COLORS: Record<string, string> = {
+    groq: 'text-emerald-400',
+    gemini: 'text-blue-400',
+};

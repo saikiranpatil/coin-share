@@ -8,8 +8,6 @@ import { getFilteredTransactions } from "../utils";
 import { resolveGroupBalances } from "./group";
 import { withAuth, type ActionResult } from "../utils";
 
-// ─── Types ─────────────────────────────────────────────────────────────────────
-
 interface TransactionParty {
   id: string;
   amount: number;
@@ -29,8 +27,6 @@ interface CreateTransactionInput {
   recipients: AddTransactionDataMembersProps[];
 }
 
-// ─── Helpers ───────────────────────────────────────────────────────────────────
-
 function resolveContributors(
   contributors: CreateTransactionInput["contributors"],
   parsedAmount: number
@@ -44,8 +40,6 @@ function resolveContributors(
 function sumAmounts(parties: { amount: number }[]): number {
   return parties.reduce((sum, p) => sum + p.amount, 0);
 }
-
-// ─── Actions ───────────────────────────────────────────────────────────────────
 
 export const createTransaction = withAuth(
   async (userId, _session, input: CreateTransactionInput) => {
